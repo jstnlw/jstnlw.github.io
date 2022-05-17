@@ -38,7 +38,7 @@ section {
   align-items: center;
   justify-content: center;
   position: relative;
-
+  color: #fff;
 }
 
 .content-wrap p {
