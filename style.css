@@ -59,7 +59,8 @@ section {
   position: relative;
 }
 
-.content-wrap p {
-  max-width: 50%;
+.content-wrap h1 {
+  max-width: 80%;
   text-align: center;
+  color: #fff;
 }
