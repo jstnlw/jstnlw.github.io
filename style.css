@@ -4,6 +4,10 @@ html, body {
   margin: 0;
 }
 
+p {
+  padding: 16px;
+}
+
 section {
   position: relative;
   width: 100%;
