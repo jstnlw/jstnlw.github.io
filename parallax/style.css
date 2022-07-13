@@ -28,5 +28,11 @@ html, body{
   top: 0;
   left: 50%;
   transform: translate(-50%,0);
-  pointer-events: none
+  pointer-events: none;
 }
+<picture>
+<source media="(max-width: 766px)" srcset="assets/sample-sm.jpg">
+<source media="(max-width: 1013px)" srcset="assets/sample-md.jpg">
+<source media="(min-width: 1014px)" srcset="assets/sample-lg.jpg">
+<img src="assets/sample-lg.jpg" data-speed="-1" class="img-parallax"/>
+</picture>
