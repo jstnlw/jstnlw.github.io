@@ -17,11 +17,13 @@
         height: 100vh;
         margin: 0;
         padding: 32px;
+        color: #333;
+        text-align: left;
       }
-      .parallax {
+      .cmp-parallax {
         height: 350px;
       }
-      .parallax img {
+      .cmp-parallax img {
         width: 100vmax;
         /* height: 100vh; */
         position: fixed;
@@ -31,7 +33,7 @@
         z-index: -1;
       }
       @media (min-width:1024px) {
-        .parallax img {
+        .cmp-parallax img {
             height: 100vh;
         }
       }
@@ -44,14 +46,18 @@
         overflow: hidden;
         clip: rect(0, auto, auto, 0);
       }
-      .contents {
+      .main-container {
+        max-width: 66.66%;
         height: 100%;
+        margin: 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-direction: column;
       }
-      .contents h1 {
+      .main-container h1,p {
         margin: 0;
+        text-align: center;
         color: #fff;
       }
     </style>
@@ -66,7 +72,7 @@
           praesentium?
         </p>
       </section>
-      <section class="parallax">
+      <section class="cmp-parallax">
         <div class="parallax-container">
             <!-- <img src="assets/sample-sm.jpg" class="d-sm-none"
             />
@@ -80,8 +86,9 @@
                 <source media="(min-width: 1014px)" srcset="assets/sample-lg.jpg" />
                 <img src="assets/sample-sm.jpg" />
             </picture>
-            <div class="contents">
+            <div class="main-container">
                 <h1>Parallax Demo</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis non ducimus qui, magni, voluptate unde aliquid est fugiat enim libero iste rem animi dolorum, sunt sapiente cupiditate facilis. Quo, ex?</p>
             </div>
         </div>
       </section>
