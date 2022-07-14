@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parallax Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <section class="lorem">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, cupiditate. Cupiditate nisi accusamus eum maiores deserunt amet, dolorem, facilis vitae exercitationem labore quia repudiandae! Possimus mollitia ullam ratione animi omnis.</p>
+      </section>
+      <section>
+        <div class="block">
+          <!-- <picture> -->
+          <!-- <source media="(max-width: 766px)" srcset="assets/sample-sm.jpg" /> -->
+          <!-- <source media="(max-width: 1013px)" srcset="assets/sample-md.jpg" /> -->
+          <!-- <source media="(min-width: 1014px)" srcset="assets/sample-lg.jpg" /> -->
+          <img
+            src="assets/sample-sm.jpg"
+            data-speed="-1"
+            class="img-parallax d-sm-none"
+          />
+          <img
+            src="assets/sample-md.jpg"
+            data-speed="-1"
+            class="img-parallax d-none d-md-block"
+          />
+          <img
+            src="assets/sample-lg.jpg"
+            data-speed="-1"
+            class="img-parallax d-none d-xl-block"
+          />
+          <!-- </picture> -->
+          <div>
+            <h2>hello</h2>
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+              Voluptas, dolore.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="lorem">
+        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Possimus, quis itaque praesentium, ratione ullam dolor suscipit libero, mollitia aperiam illo explicabo minima fugit exercitationem cum! Ullam quisquam voluptatem delectus animi.</p>
+      </section>
+      <!-- Qualtrics survey custom trigger -->
+    </main>
+  </body>
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"
+  ></script>
+  <script src="script.js"></script>
+</html>
