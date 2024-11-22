@@ -126,6 +126,7 @@ h1 {
 /* Style the labels at the bottom of the calendar */
 .event-labels {
   max-width: 1200px;
+  padding: 0 20px;
   margin-top: 20px;
   display: flex;
   justify-content: center; /* Center the labels horizontally */
