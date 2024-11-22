@@ -68,8 +68,9 @@ function generateCalendar(year, eventDates) {
                     document.body.appendChild(tooltip);
 
                     // Position the tooltip near the hovered date
-                    tooltip.style.left = `${dayDiv.getBoundingClientRect().left}px`;
-                    tooltip.style.top = `${dayDiv.getBoundingClientRect().top - tooltip.offsetHeight - 5}px`;
+                    const rect = dayDiv.getBoundingClientRect();
+                    tooltip.style.left = `${rect.left + window.scrollX}px`;
+                    tooltip.style.top = `${rect.top + window.scrollY - tooltip.offsetHeight - 5}px`;
 
                     // If it's a patch event, highlight the entire duration
                     if (event.type === "patch") {
@@ -118,9 +119,14 @@ function generateCalendar(year, eventDates) {
 function highlightPatchDuration(startDate, endDate) {
     const allDays = document.querySelectorAll(".day");
 
+    // Set the patch end date to 6 weeks (42 days) after the start date
+    const patchEndDate = new Date(startDate);
+    patchEndDate.setDate(startDate.getDate() + 42);  // 6 weeks = 42 days
+
+    // Loop through all the days and highlight those within the patch duration
     allDays.forEach(day => {
         const dayDate = new Date(`${day.parentElement.parentElement.querySelector(".month-header").textContent} ${day.textContent}, 2025`);
-        if (dayDate >= startDate && dayDate <= endDate) {
+        if (dayDate >= startDate && dayDate <= patchEndDate) {
             day.classList.add("highlight-duration");
         }
     });
