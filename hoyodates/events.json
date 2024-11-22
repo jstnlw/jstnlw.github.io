@@ -1,0 +1,29 @@
+{
+    "honkaiStarRail": [
+      { "type": "livestream", "date": "2025-01-03", "game": "HSR", "version": "3.0" },
+      { "type": "patch", "date": "2025-01-15", "game": "HSR", "version": "3.0" },
+      { "type": "livestream", "date": "2025-02-20", "game": "HSR", "version": "3.1" },
+      { "type": "patch", "date": "2025-03-05", "game": "HSR", "version": "3.1" },
+      { "type": "livestream", "date": "2025-04-10", "game": "HSR", "version": "3.2" },
+      { "type": "patch", "date": "2025-04-20", "game": "HSR", "version": "3.2" },
+      { "type": "livestream", "date": "2025-06-12", "game": "HSR", "version": "3.3" },
+      { "type": "patch", "date": "2025-06-25", "game": "HSR", "version": "3.3" },
+      { "type": "livestream", "date": "2025-08-10", "game": "HSR", "version": "3.4" },
+      { "type": "patch", "date": "2025-09-01", "game": "HSR", "version": "3.4" },
+      { "type": "livestream", "date": "2025-10-05", "game": "HSR", "version": "3.5" },
+      { "type": "patch", "date": "2025-10-15", "game": "HSR", "version": "3.5" }
+    ],
+    "zenlessZoneZero": [
+      { "type": "livestream", "date": "2025-01-31", "game": "ZZZ", "version": "1.3" },
+      { "type": "patch", "date": "2025-02-12", "game": "ZZZ", "version": "1.3" },
+      { "type": "livestream", "date": "2025-03-25", "game": "ZZZ", "version": "1.4" },
+      { "type": "patch", "date": "2025-04-18", "game": "ZZZ", "version": "1.4" },
+      { "type": "livestream", "date": "2025-05-10", "game": "ZZZ", "version": "1.5" },
+      { "type": "patch", "date": "2025-06-01", "game": "ZZZ", "version": "1.5" },
+      { "type": "livestream", "date": "2025-07-15", "game": "ZZZ", "version": "1.6" },
+      { "type": "patch", "date": "2025-08-10", "game": "ZZZ", "version": "1.6" },
+      { "type": "livestream", "date": "2025-09-30", "game": "ZZZ", "version": "1.7" },
+      { "type": "patch", "date": "2025-10-25", "game": "ZZZ", "version": "1.7" },
+      { "type": "livestream", "date": "2025-11-15", "game": "ZZZ", "version": "1.8" }
+    ]
+  }
