@@ -38,7 +38,7 @@ function generateCalendar(year, eventDates) {
         const daysDiv = document.createElement("div");
         daysDiv.className = "days";
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const firstDay = new Date(year, month, 1).getDay();
+        const firstDay = (new Date(year, month, 1).getDay() + 6) % 7; // Adjusted weekday calculation
 
         // Add empty placeholders for days before the 1st of the month
         for (let i = 0; i < firstDay; i++) {
@@ -121,7 +121,7 @@ function highlightPatchDuration(startDate, endDate) {
 
     // Set the patch end date to 6 weeks (42 days) after the start date
     const patchEndDate = new Date(startDate);
-    patchEndDate.setDate(startDate.getDate() + 42);  // 6 weeks = 42 days
+    patchEndDate.setDate(startDate.getDate() + 41);  // 6 weeks = 42 days
 
     // Loop through all the days and highlight those within the patch duration
     allDays.forEach(day => {
