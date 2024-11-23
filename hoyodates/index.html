@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ZZZ/HSR</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <h1 style="text-align: center">HSR/ZZZ 2025</h1>
-    <!-- Event labels (Livestream and Patch) -->
-    <div class="event-labels">
-		<div class="color-label" style="background-color: #B4F8C8;">HSR Livestream</div>
-		<div class="color-label" style="background-color: #A0E7E5;">HSR Patch</div>
-		<div class="color-label" style="background-color: #FBE7C6;">ZZZ Livestream</div>
-		<div class="color-label" style="background-color: #FFAEBC;">ZZZ Patch</div>
-	  </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025 Calendar</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="label">
+    <ul>
+      <li class="label-hsr-livestream">HSR Livestream</li>
+      <li class="label-hsr-patch">HSR Patch</li>
+      <li class="label-zzz-livestream">ZZZ Livestream</li>
+      <li class="label-zzz-patch">ZZZ Patch</li>
+    </ul>
+  </div>
+  <div class="calendar" id="calendar"></div>
 
-    <!-- Calendar container -->
-    <div class="calendar-container" id="calendar"></div>
-
-    <script src="calendar.js"></script>
-  </body>
+  <script src="main.js"></script>
+</body>
 </html>
