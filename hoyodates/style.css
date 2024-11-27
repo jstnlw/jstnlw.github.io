@@ -27,6 +27,7 @@ body {
 	margin: 1rem;
 	width: 100%;
 	max-width: 1200px;
+	position: relative;
 }
 
 .month {
@@ -89,7 +90,12 @@ body {
 	background-color: var(--hsr-patch);
 }
 
-.highlight-duration-hsr {
+.highlight-hsr-banner-one {
+	background-color: var(--hsr-patch) !important;
+	font-weight: normal !important;
+}
+
+.highlight-hsr-banner-two {
 	background-color: var(--hsr-patch) !important;
 	font-weight: normal !important;
 	opacity: 0.5;
@@ -103,7 +109,12 @@ body {
 	background-color: var(--zzz-patch);
 }
 
-.highlight-duration-zzz {
+.highlight-zzz-banner-one {
+	background-color: var(--zzz-patch) !important;
+	font-weight: normal !important;
+}
+
+.highlight-zzz-banner-two {
 	background-color: var(--zzz-patch) !important;
 	font-weight: normal !important;
 	opacity: 0.5;

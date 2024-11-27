@@ -44,42 +44,69 @@ const removeTooltip = () => {
 // Attach hover events for tooltips and highlight future days
 const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType) => {
   dayDiv.addEventListener('mouseenter', (e) => {
-    const tooltip = createTooltip(text, e.pageX + 10, e.pageY + 10); // Add offset to tooltip position
+    const rect = dayDiv.getBoundingClientRect(); // Get the position of the day cell
+    const tooltip = createTooltip(text);
 
-    // Highlight the next 41 days if it's a patch day
-    highlightDates.forEach((date) => {
+    // Center the tooltip horizontally and place it slightly above the day cell
+    // tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+    // tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`; // Adjust for spacing above
+    // tooltip.style.left = `${e.pageX + 10}px`;
+    // tooltip.style.top = `${e.pageY + 10}px`;
+
+    // Highlight the first 20 days with one class and the next 20 days with another
+    highlightDates.forEach((date, index) => {
       const targetDayDiv = document.querySelector(`.day[data-date='${date.toISOString().split('T')[0]}']`);
       if (targetDayDiv) {
-        if (patchType === 'hsr') {
-          targetDayDiv.classList.add('highlight-duration-hsr');
-        } else if (patchType === 'zzz') {
-          targetDayDiv.classList.add('highlight-duration-zzz');
+        if (index < 20) {
+          // First 20 days
+          if (patchType === 'hsr') {
+            targetDayDiv.classList.add('highlight-hsr-banner-one');
+          } else if (patchType === 'zzz') {
+            targetDayDiv.classList.add('highlight-zzz-banner-one');
+          }
+        } else if (index < 41) {
+          // Next 20 days
+          if (patchType === 'hsr') {
+            targetDayDiv.classList.add('highlight-hsr-banner-two');
+          } else if (patchType === 'zzz') {
+            targetDayDiv.classList.add('highlight-zzz-banner-two');
+          }
         }
       }
     });
-    
+
     dayDiv.addEventListener('mousemove', (e) => {
-      tooltip.style.left = `${e.pageX + 10}px`;
-      tooltip.style.top = `${e.pageY + 10}px`;
+      tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+    //   tooltip.style.left = `${e.pageX + 10}px`;
+      tooltip.style.top = `${e.pageY - 48}px`;
     });
   });
 
   dayDiv.addEventListener('mouseleave', () => {
     removeTooltip();
 
-    // Remove future day highlights
-    highlightDates.forEach((date) => {
+    // Remove the highlights for both ranges
+    highlightDates.forEach((date, index) => {
       const targetDayDiv = document.querySelector(`.day[data-date='${date.toISOString().split('T')[0]}']`);
       if (targetDayDiv) {
-        if (patchType === 'hsr') {
-          targetDayDiv.classList.remove('highlight-duration-hsr');
-        } else if (patchType === 'zzz') {
-          targetDayDiv.classList.remove('highlight-duration-zzz');
+        if (index < 20) {
+          if (patchType === 'hsr') {
+            targetDayDiv.classList.remove('highlight-hsr-banner-one');
+          } else if (patchType === 'zzz') {
+            targetDayDiv.classList.remove('highlight-zzz-banner-one');
+          }
+        } else if (index < 41) {
+          if (patchType === 'hsr') {
+            targetDayDiv.classList.remove('highlight-hsr-banner-two');
+          } else if (patchType === 'zzz') {
+            targetDayDiv.classList.remove('highlight-zzz-banner-two');
+          }
         }
       }
     });
   });
 };
+
 
 
 // Render the calendar
