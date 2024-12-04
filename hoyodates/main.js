@@ -117,7 +117,7 @@ const renderCalendar = (year) => {
   const hsrLivestream = getHighlightDates(year, 0, 3, 42);  // Starting 3 Jan, every 6 weeks
   const hsrPatch = getHighlightDates(year, 0, 15, 42); // Starting 15 Jan, every 6 weeks
   const zzzLivestream = getHighlightDates(year, 0, 17, 42); // Starting 17 Jan, every 6 weeks
-  const zzzPatch = getHighlightDates(year, 0, 29, 42); // Starting 29 Jan, every 6 weeks
+  const zzzPatch = getHighlightDates(year, 0, 30, 42); // Starting 29 Jan, every 6 weeks
 
   for (let month = 0; month < 12; month++) {
     const firstDay = new Date(year, month, 1).getDay();
