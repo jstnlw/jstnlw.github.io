@@ -93,7 +93,7 @@ const renderCalendar = (year) => {
   const zzzPatch = getHighlightDates(year, 0, 30, 42); // Starting 29 Jan, every 6 weeks
 
   for (let month = 0; month < 12; month++) {
-    const firstDay = new Date(year, month, 1).getDay();
+    const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
     const totalDays = daysInMonth(month, year);
     const monthDiv = document.createElement('div');
     monthDiv.className = 'month';
@@ -107,7 +107,7 @@ const renderCalendar = (year) => {
     // Weekday names
     const weekdays = document.createElement('div');
     weekdays.className = 'weekdays';
-    ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(day => {
+    ['M', 'T', 'W', 'T', 'F', 'S', 'S'].forEach(day => {
       const dayDiv = document.createElement('div');
       dayDiv.textContent = day;
       weekdays.appendChild(dayDiv);
