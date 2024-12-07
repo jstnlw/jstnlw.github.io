@@ -106,8 +106,6 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
   });
 };
 
-
-
 // Render the calendar
 const renderCalendar = (year) => {
   const calendar = document.getElementById('calendar');
@@ -230,8 +228,6 @@ const renderCalendar = (year) => {
     calendar.appendChild(monthDiv);
   }
 };
-
-
 
 // Render the calendar for the year 2025
 renderCalendar(2025);

@@ -5,11 +5,11 @@ html {
 	--bg-color: #333333;
 	--calendar-color: #575757;
 	--font-color: #ffffff;
-	--hsr-livestream: #32c8ff;
-	--hsr-patch: #3265ff  ;
-	--zzz-livestream: #ff9696;
+	--hsr-livestream: #1fa5cc;
+	--hsr-patch: #32c8ff;
+	--zzz-livestream: #e04d4d;
 	--zzz-patch: #ff6464;
-	--gi-livestream: #96c8c8;
+	--gi-livestream: #4fa0a0;
 	--gi-patch: #64c8c8;
 }
 
@@ -83,6 +83,7 @@ body {
 
 .days div {
 	color: var(--font-color);
+	margin: 2px;
 }
 
 /* Empty grid cells for spacing */
@@ -271,7 +272,6 @@ li.label-gi-livestream::before {
 
 	.days div {
 		font-size: 1rem;
-		margin: 2px;
 	}
 }
 
