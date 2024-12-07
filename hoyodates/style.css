@@ -3,12 +3,14 @@
 ====================================================== */
 html {
 	--bg-color: #333333;
-	--calendar-color: #575757 ;
+	--calendar-color: #575757;
 	--font-color: #ffffff;
-	--hsr-livestream: #A4D6B1;
-	--hsr-patch: #69D2E7;
-	--zzz-livestream: #FC9D9A;
-	--zzz-patch: #FE4365;
+	--hsr-livestream: #32c8ff;
+	--hsr-patch: #3265ff  ;
+	--zzz-livestream: #ff9696;
+	--zzz-patch: #ff6464;
+	--gi-livestream: #96c8c8;
+	--gi-patch: #64c8c8;
 }
 
 /* ======================================================
@@ -123,13 +125,31 @@ body {
 	background-color: var(--zzz-patch) !important;
 }
 
+.highlight-gi-livestream {
+	background-color: var(--gi-livestream);
+	font-weight: bold;
+}
+
+.highlight-gi-patch,
+.highlight-gi-banner-one,
+.highlight-gi-banner-two {
+	background-color: var(--gi-patch);
+}
+
+.highlight-gi-banner-one,
+.highlight-gi-banner-two {
+	background-color: var(--gi-patch) !important;
+}
+
 .highlight-hsr-banner-one,
-.highlight-zzz-banner-one {
+.highlight-zzz-banner-one,
+.highlight-gi-banner-one {
 	font-weight: normal;
 }
 
 .highlight-hsr-banner-two,
-.highlight-zzz-banner-two {
+.highlight-zzz-banner-two,
+.highlight-gi-banner-two {
 	font-weight: normal;
 	opacity: 0.6;
 }
@@ -211,9 +231,18 @@ li:last-child {
 	background-color: var(--zzz-patch);
 }
 
+.label-gi-livestream {
+	background-color: var(--gi-livestream);
+}
+
+.label-gi-patch {
+	background-color: var(--gi-patch);
+}
+
 /* Label Icons */
 li.label-hsr-livestream::before,
-li.label-zzz-livestream::before {
+li.label-zzz-livestream::before,
+li.label-gi-livestream::before {
 	content: "";
 	width: 32px;
 	height: 32px;
@@ -229,6 +258,9 @@ li.label-hsr-livestream::before {
 
 li.label-zzz-livestream::before {
 	background-image: url(assets/zzz-icon.webp);
+}
+li.label-gi-livestream::before {
+	background-image: url(assets/gi-icon.webp);
 }
 
 /* ======================================================

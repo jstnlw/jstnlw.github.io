@@ -44,16 +44,9 @@ const removeTooltip = () => {
 // Attach hover events for tooltips and highlight future days
 const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType) => {
   dayDiv.addEventListener('mouseenter', (e) => {
-    const rect = dayDiv.getBoundingClientRect(); // Get the position of the day cell
+    const rect = dayDiv.getBoundingClientRect();
     const tooltip = createTooltip(text);
 
-    // Center the tooltip horizontally and place it slightly above the day cell
-    // tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
-    // tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`; // Adjust for spacing above
-    // tooltip.style.left = `${e.pageX + 10}px`;
-    // tooltip.style.top = `${e.pageY + 10}px`;
-
-    // Highlight the first 20 days with one class and the next 20 days with another
     highlightDates.forEach((date, index) => {
       const targetDayDiv = document.querySelector(`.day[data-date='${date.toISOString().split('T')[0]}']`);
       if (targetDayDiv) {
@@ -63,6 +56,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.add('highlight-hsr-banner-one');
           } else if (patchType === 'zzz') {
             targetDayDiv.classList.add('highlight-zzz-banner-one');
+          } else if (patchType === 'gi') {
+            targetDayDiv.classList.add('highlight-gi-banner-one');
           }
         } else if (index < 41) {
           // Next 20 days
@@ -70,6 +65,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.add('highlight-hsr-banner-two');
           } else if (patchType === 'zzz') {
             targetDayDiv.classList.add('highlight-zzz-banner-two');
+          } else if (patchType === 'gi') {
+            targetDayDiv.classList.add('highlight-gi-banner-two');
           }
         }
       }
@@ -77,7 +74,6 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
 
     dayDiv.addEventListener('mousemove', (e) => {
       tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
-    //   tooltip.style.left = `${e.pageX + 10}px`;
       tooltip.style.top = `${e.pageY - 48}px`;
     });
   });
@@ -85,7 +81,6 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
   dayDiv.addEventListener('mouseleave', () => {
     removeTooltip();
 
-    // Remove the highlights for both ranges
     highlightDates.forEach((date, index) => {
       const targetDayDiv = document.querySelector(`.day[data-date='${date.toISOString().split('T')[0]}']`);
       if (targetDayDiv) {
@@ -94,12 +89,16 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.remove('highlight-hsr-banner-one');
           } else if (patchType === 'zzz') {
             targetDayDiv.classList.remove('highlight-zzz-banner-one');
+          } else if (patchType === 'gi') {
+            targetDayDiv.classList.remove('highlight-gi-banner-one');
           }
         } else if (index < 41) {
           if (patchType === 'hsr') {
             targetDayDiv.classList.remove('highlight-hsr-banner-two');
           } else if (patchType === 'zzz') {
             targetDayDiv.classList.remove('highlight-zzz-banner-two');
+          } else if (patchType === 'gi') {
+            targetDayDiv.classList.remove('highlight-gi-banner-two');
           }
         }
       }
@@ -113,11 +112,13 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
 const renderCalendar = (year) => {
   const calendar = document.getElementById('calendar');
 
-  // Calculate four sets of highlight dates
-  const hsrLivestream = getHighlightDates(year, 0, 3, 42);  // Starting 3 Jan, every 6 weeks
-  const hsrPatch = getHighlightDates(year, 0, 15, 42); // Starting 15 Jan, every 6 weeks
-  const zzzLivestream = getHighlightDates(year, 0, 17, 42); // Starting 17 Jan, every 6 weeks
-  const zzzPatch = getHighlightDates(year, 0, 29, 42); // Starting 29 Jan, every 6 weeks
+  // Calculate all highlight dates
+  const hsrLivestream = getHighlightDates(year, 0, 3, 42);
+  const hsrPatch = getHighlightDates(year, 0, 15, 42);
+  const zzzLivestream = getHighlightDates(year, 0, 17, 42);
+  const zzzPatch = getHighlightDates(year, 0, 29, 42);
+  const giLivestream = getHighlightDates(year, 0, 31, 42);
+  const giPatch = getHighlightDates(year, 0, 1, 42);
 
   for (let month = 0; month < 12; month++) {
     const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
@@ -144,6 +145,7 @@ const renderCalendar = (year) => {
     // Days grid
     const daysGrid = document.createElement('div');
     daysGrid.className = 'days';
+
     // Add empty divs for days before the first day
     for (let i = 0; i < firstDay; i++) {
       const emptyDiv = document.createElement('div');
@@ -151,16 +153,15 @@ const renderCalendar = (year) => {
       daysGrid.appendChild(emptyDiv);
     }
 
-    // Add day numbers
+    // Add day numbers and apply highlight logic
     for (let day = 1; day <= totalDays; day++) {
       const dayDiv = document.createElement('div');
       dayDiv.className = 'day';
-      dayDiv.textContent = day;
-      // Set a data-date attribute for each day
       const currentDate = new Date(year, month, day);
       dayDiv.setAttribute('data-date', currentDate.toISOString().split('T')[0]);
+      dayDiv.textContent = day;
 
-      // Apply appropriate highlight class and tooltip logic
+      // HSR Highlights
       if (hsrLivestream.some(date => +date === +currentDate)) {
         const index = hsrLivestream.findIndex(date => +date === +currentDate);
         const version = calculatePatchVersion(3.0, index);
@@ -171,7 +172,6 @@ const renderCalendar = (year) => {
         const version = calculatePatchVersion(3.0, index);
         dayDiv.classList.add('highlight-hsr-patch');
 
-        // Calculate the next 41 days
         const futureDates = [];
         for (let i = 1; i <= 41; i++) {
           const futureDate = new Date(currentDate);
@@ -180,7 +180,10 @@ const renderCalendar = (year) => {
         }
 
         attachHoverEvents(dayDiv, `HSR Patch ${version}`, currentDate, futureDates, 'hsr');
-      } else if (zzzLivestream.some(date => +date === +currentDate)) {
+      }
+
+      // ZZZ Highlights
+      else if (zzzLivestream.some(date => +date === +currentDate)) {
         const index = zzzLivestream.findIndex(date => +date === +currentDate);
         const version = calculatePatchVersion(1.5, index);
         dayDiv.classList.add('highlight-zzz-livestream');
@@ -190,7 +193,6 @@ const renderCalendar = (year) => {
         const version = calculatePatchVersion(1.5, index);
         dayDiv.classList.add('highlight-zzz-patch');
 
-        // Calculate the next 41 days
         const futureDates = [];
         for (let i = 1; i <= 41; i++) {
           const futureDate = new Date(currentDate);
@@ -201,13 +203,35 @@ const renderCalendar = (year) => {
         attachHoverEvents(dayDiv, `ZZZ Patch ${version}`, currentDate, futureDates, 'zzz');
       }
 
+      // GI Highlights
+      else if (giLivestream.some(date => +date === +currentDate)) {
+        const index = giLivestream.findIndex(date => +date === +currentDate);
+        const version = calculatePatchVersion(5.3, index);
+        dayDiv.classList.add('highlight-gi-livestream');
+        attachHoverEvents(dayDiv, `GI Livestream ${version}`, currentDate, [], 'gi');
+      } else if (giPatch.some(date => +date === +currentDate)) {
+        const index = giPatch.findIndex(date => +date === +currentDate);
+        const version = calculatePatchVersion(5.3, index);
+        dayDiv.classList.add('highlight-gi-patch');
+
+        const futureDates = [];
+        for (let i = 1; i <= 41; i++) {
+          const futureDate = new Date(currentDate);
+          futureDate.setDate(currentDate.getDate() + i);
+          futureDates.push(futureDate);
+        }
+
+        attachHoverEvents(dayDiv, `GI Patch ${version}`, currentDate, futureDates, 'gi');
+      }
+
       daysGrid.appendChild(dayDiv);
     }
     monthDiv.appendChild(daysGrid);
-
     calendar.appendChild(monthDiv);
   }
 };
+
+
 
 // Render the calendar for the year 2025
 renderCalendar(2025);
