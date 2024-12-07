@@ -11,6 +11,8 @@ html {
 	--zzz-patch: #ff6464;
 	--gi-livestream: #4fa0a0;
 	--gi-patch: #64c8c8;
+	--hi3-livestream: #a87f0a;
+	--hi3-patch: #dcc843;
 }
 
 /* ======================================================
@@ -133,9 +135,23 @@ body {
 	background-color: var(--gi-patch) !important;
 }
 
+.highlight-hi3-livestream {
+	background-color: var(--hi3-livestream);
+}
+
+.highlight-hi3-patch {
+	background-color: var(--hi3-patch);
+}
+
+.highlight-hi3-banner-one,
+.highlight-hi3-banner-two {
+	background-color: var(--hi3-patch) !important;
+}
+
 .highlight-hsr-banner-two,
 .highlight-zzz-banner-two,
-.highlight-gi-banner-two {
+.highlight-gi-banner-two,
+.highlight-hi3-banner-two {
 	opacity: 0.6;
 }
 
@@ -224,10 +240,19 @@ li:last-child {
 	background-color: var(--gi-patch);
 }
 
+.label-hi3-livestream {
+	background-color: var(--hi3-livestream);
+}
+
+.label-hi3-patch {
+	background-color: var(--hi3-patch);
+}
+
 /* Label Icons */
-li.label-hsr-livestream::before,
-li.label-zzz-livestream::before,
-li.label-gi-livestream::before {
+ul.label-hsr li:first-child::before,
+ul.label-zzz li:first-child::before,
+ul.label-gi li:first-child::before,
+ul.label-hi3 li:first-child::before {
 	content: "";
 	width: 32px;
 	height: 32px;
@@ -237,15 +262,18 @@ li.label-gi-livestream::before {
 	border-radius: 8px;
 }
 
-li.label-hsr-livestream::before {
+ul.label-hsr li:first-child::before {
 	background-image: url(assets/hsr-icon.webp);
 }
 
-li.label-zzz-livestream::before {
+ul.label-zzz li:first-child::before {
 	background-image: url(assets/zzz-icon.webp);
 }
-li.label-gi-livestream::before {
+ul.label-gi li:first-child::before {
 	background-image: url(assets/gi-icon.webp);
+}
+ul.label-hi3 li:first-child::before {
+	background-image: url(assets/hi3-icon.webp);
 }
 
 /* ======================================================

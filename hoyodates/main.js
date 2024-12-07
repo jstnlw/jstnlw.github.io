@@ -58,6 +58,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.add('highlight-zzz-banner-one');
           } else if (patchType === 'gi') {
             targetDayDiv.classList.add('highlight-gi-banner-one');
+          } else if (patchType === 'hi3') {
+            targetDayDiv.classList.add('highlight-hi3-banner-one');
           }
         } else if (index < 41) {
           // Next 20 days
@@ -67,6 +69,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.add('highlight-zzz-banner-two');
           } else if (patchType === 'gi') {
             targetDayDiv.classList.add('highlight-gi-banner-two');
+          } else if (patchType === 'hi3') {
+            targetDayDiv.classList.add('highlight-hi3-banner-two');
           }
         }
       }
@@ -91,6 +95,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.remove('highlight-zzz-banner-one');
           } else if (patchType === 'gi') {
             targetDayDiv.classList.remove('highlight-gi-banner-one');
+          } else if (patchType === 'hi3') {
+            targetDayDiv.classList.remove('highlight-hi3-banner-one');
           }
         } else if (index < 41) {
           if (patchType === 'hsr') {
@@ -99,6 +105,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.remove('highlight-zzz-banner-two');
           } else if (patchType === 'gi') {
             targetDayDiv.classList.remove('highlight-gi-banner-two');
+          } else if (patchType === 'hi3') {
+            targetDayDiv.classList.remove('highlight-hi3-banner-two');
           }
         }
       }
@@ -117,6 +125,8 @@ const renderCalendar = (year) => {
   const zzzPatch = getHighlightDates(year, 0, 22, 42);
   const giLivestream = getHighlightDates(year, 0, 31, 42);
   const giPatch = getHighlightDates(year, 0, 1, 42);
+  const hi3Livestream = getHighlightDates(year, 1, 8, 42);
+  const hi3Patch = getHighlightDates(year, 0, 8, 42);
 
   for (let month = 0; month < 12; month++) {
     const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
@@ -204,7 +214,7 @@ const renderCalendar = (year) => {
       // GI Highlights
       else if (giLivestream.some(date => +date === +currentDate)) {
         const index = giLivestream.findIndex(date => +date === +currentDate);
-        const version = calculatePatchVersion(5.3, index);
+        const version = calculatePatchVersion(5.4, index);
         dayDiv.classList.add('highlight-gi-livestream');
         attachHoverEvents(dayDiv, `GI Livestream ${version}`, currentDate, [], 'gi');
       } else if (giPatch.some(date => +date === +currentDate)) {
@@ -220,6 +230,28 @@ const renderCalendar = (year) => {
         }
 
         attachHoverEvents(dayDiv, `GI Patch ${version}`, currentDate, futureDates, 'gi');
+      }
+
+      // HI3 Highlights
+      // else if (hi3Livestream.some(date => +date === +currentDate)) {
+      //   const index = hi3Livestream.findIndex(date => +date === +currentDate);
+      //   const version = calculatePatchVersion(8.1, index);
+      //   dayDiv.classList.add('highlight-hi3-livestream');
+      //   attachHoverEvents(dayDiv, `HI3 Livestream ${version}`, currentDate, [], 'hi3');
+      // } 
+      else if (hi3Patch.some(date => +date === +currentDate)) {
+        const index = hi3Patch.findIndex(date => +date === +currentDate);
+        const version = calculatePatchVersion(8.0, index);
+        dayDiv.classList.add('highlight-hi3-patch');
+
+        const futureDates = [];
+        for (let i = 1; i <= 41; i++) {
+          const futureDate = new Date(currentDate);
+          futureDate.setDate(currentDate.getDate() + i);
+          futureDates.push(futureDate);
+        }
+
+        attachHoverEvents(dayDiv, `HI3 Patch ${version}`, currentDate, futureDates, 'hi3');
       }
 
       daysGrid.appendChild(dayDiv);
