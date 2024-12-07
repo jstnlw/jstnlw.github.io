@@ -95,12 +95,9 @@ body {
 ====================================================== */
 .highlight-hsr-livestream {
 	background-color: var(--hsr-livestream);
-	font-weight: bold;
 }
 
-.highlight-hsr-patch,
-.highlight-hsr-banner-one,
-.highlight-hsr-banner-two {
+.highlight-hsr-patch {
 	background-color: var(--hsr-patch);
 }
 
@@ -111,12 +108,9 @@ body {
 
 .highlight-zzz-livestream {
 	background-color: var(--zzz-livestream);
-	font-weight: bold;
 }
 
-.highlight-zzz-patch,
-.highlight-zzz-banner-one,
-.highlight-zzz-banner-two {
+.highlight-zzz-patch {
 	background-color: var(--zzz-patch);
 }
 
@@ -127,12 +121,9 @@ body {
 
 .highlight-gi-livestream {
 	background-color: var(--gi-livestream);
-	font-weight: bold;
 }
 
-.highlight-gi-patch,
-.highlight-gi-banner-one,
-.highlight-gi-banner-two {
+.highlight-gi-patch {
 	background-color: var(--gi-patch);
 }
 
@@ -141,16 +132,9 @@ body {
 	background-color: var(--gi-patch) !important;
 }
 
-.highlight-hsr-banner-one,
-.highlight-zzz-banner-one,
-.highlight-gi-banner-one {
-	font-weight: normal;
-}
-
 .highlight-hsr-banner-two,
 .highlight-zzz-banner-two,
 .highlight-gi-banner-two {
-	font-weight: normal;
 	opacity: 0.6;
 }
 
