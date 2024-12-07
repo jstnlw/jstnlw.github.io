@@ -115,8 +115,8 @@ const renderCalendar = (year) => {
   // Calculate all highlight dates
   const hsrLivestream = getHighlightDates(year, 0, 3, 42);
   const hsrPatch = getHighlightDates(year, 0, 15, 42);
-  const zzzLivestream = getHighlightDates(year, 0, 17, 42);
-  const zzzPatch = getHighlightDates(year, 0, 29, 42);
+  const zzzLivestream = getHighlightDates(year, 0, 10, 42);
+  const zzzPatch = getHighlightDates(year, 0, 22, 42);
   const giLivestream = getHighlightDates(year, 0, 31, 42);
   const giPatch = getHighlightDates(year, 0, 1, 42);
 
