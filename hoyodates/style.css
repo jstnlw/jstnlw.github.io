@@ -300,6 +300,9 @@ ul.label-hi3 li:first-child::before {
 }
 
 @media (max-width: 480px) {
+	.calendar {
+		gap: 0.5rem;
+	}
 	.label,
 	.weekdays div,
 	.days div {
