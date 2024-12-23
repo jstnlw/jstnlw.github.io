@@ -135,7 +135,7 @@ const renderCalendar = (year) => {
   const giPatch = getHighlightDates(year, 0, 1, 42);
   const hi3Livestream = getHighlightDates(year, 1, 8, 42);
   const hi3Patch = getHighlightDates(year, 0, 8, 42);
-  // const wwLivestream = getHighlightDates(year, 1, 8, 42);
+  const wwLivestream = getHighlightDates(year, 1, 2, 42);
   const wwPatch = getHighlightDates(year, 0, 2, 42);
 
   for (let month = 0; month < 12; month++) {
@@ -265,7 +265,7 @@ const renderCalendar = (year) => {
       }
 
       // WW Highlights
-      // else if (giLivestream.some(date => +date === +currentDate)) {
+      // else if (wwLivestream.some(date => +date === +currentDate)) {
       //   const index = giLivestream.findIndex(date => +date === +currentDate);
       //   const version = calculatePatchVersion(5.4, index);
       //   dayDiv.classList.add('highlight-ww-livestream');
