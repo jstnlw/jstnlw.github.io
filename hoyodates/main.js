@@ -266,14 +266,14 @@ const renderCalendar = (year) => {
 
       // WW Highlights
       // else if (wwLivestream.some(date => +date === +currentDate)) {
-      //   const index = giLivestream.findIndex(date => +date === +currentDate);
-      //   const version = calculatePatchVersion(5.4, index);
+      //   const index = wwLivestream.findIndex(date => +date === +currentDate);
+      //   const version = calculatePatchVersion(2.1, index);
       //   dayDiv.classList.add('highlight-ww-livestream');
       //   attachHoverEvents(dayDiv, `WW Livestream ${version}`, currentDate, [], 'ww');
       // } 
       else if (wwPatch.some(date => +date === +currentDate)) {
-        const index = giPatch.findIndex(date => +date === +currentDate);
-        const version = calculatePatchVersion(5.3, index);
+        const index = wwPatch.findIndex(date => +date === +currentDate);
+        const version = calculatePatchVersion(2.0, index);
         dayDiv.classList.add('highlight-ww-patch');
 
         const futureDates = [];
