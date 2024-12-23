@@ -13,6 +13,8 @@ html {
 	--gi-patch: #64c8c8;
 	--hi3-livestream: #a87f0a;
 	--hi3-patch: #dcc843;
+	--ww-livestream: #00094B;
+	--ww-patch: #003297;
 }
 
 /* ======================================================
@@ -148,10 +150,24 @@ body {
 	background-color: var(--hi3-patch) !important;
 }
 
+.highlight-ww-livestream {
+	background-color: var(--ww-livestream);
+}
+
+.highlight-ww-patch {
+	background-color: var(--ww-patch);
+}
+
+.highlight-ww-banner-one,
+.highlight-ww-banner-two {
+	background-color: var(--ww-patch) !important;
+}
+
 .highlight-hsr-banner-two,
 .highlight-zzz-banner-two,
 .highlight-gi-banner-two,
-.highlight-hi3-banner-two {
+.highlight-hi3-banner-two,
+.highlight-ww-banner-two {
 	opacity: 0.6;
 }
 
@@ -248,11 +264,20 @@ li:last-child {
 	background-color: var(--hi3-patch);
 }
 
+.label-hi3-livestream {
+	background-color: var(--ww-livestream);
+}
+
+.label-ww-patch {
+	background-color: var(--ww-patch);
+}
+
 /* Label Icons */
 ul.label-hsr li:first-child::before,
 ul.label-zzz li:first-child::before,
 ul.label-gi li:first-child::before,
-ul.label-hi3 li:first-child::before {
+ul.label-hi3 li:first-child::before,
+ul.label-ww li:first-child::before {
 	content: "";
 	width: 2rem;
 	height: 2rem;
@@ -274,6 +299,9 @@ ul.label-gi li:first-child::before {
 }
 ul.label-hi3 li:first-child::before {
 	background-image: url(assets/hi3-icon.webp);
+}
+ul.label-ww li:first-child::before {
+	background-image: url(assets/ww-icon.webp);
 }
 
 /* ======================================================
@@ -314,7 +342,8 @@ ul.label-hi3 li:first-child::before {
 	ul.label-hsr li:first-child::before,
 	ul.label-zzz li:first-child::before,
 	ul.label-gi li:first-child::before,
-	ul.label-hi3 li:first-child::before {
+	ul.label-hi3 li:first-child::before,
+	ul.label-ww li:first-child::before {
 		width: 1.5rem;
 		height: 1.5rem;
 		margin-right: 0.5rem;
