@@ -13,8 +13,8 @@ html {
 	--gi-patch: #64c8c8;
 	--hi3-livestream: #a87f0a;
 	--hi3-patch: #dcc843;
-	--ww-livestream: #00094B;
-	--ww-patch: #003297;
+	--ww-livestream: #003d80;
+	--ww-patch: #006ee6;
 }
 
 /* ======================================================
@@ -232,44 +232,49 @@ li:last-child {
 }
 
 /* Label Background Colors */
-.label-hsr-livestream {
+/* .label-hsr-livestream {
 	background-color: var(--hsr-livestream);
-}
+} */
 
 .label-hsr-patch {
-	background-color: var(--hsr-patch);
+	background-image: linear-gradient(var(--hsr-patch), var(--hsr-livestream));
+	/* background-color: var(--hsr-patch); */
 }
 
-.label-zzz-livestream {
+/* .label-zzz-livestream {
 	background-color: var(--zzz-livestream);
-}
+} */
 
 .label-zzz-patch {
-	background-color: var(--zzz-patch);
+	background-image: linear-gradient(var(--zzz-patch), var(--zzz-livestream));
+	/* background-color: var(--zzz-patch); */
 }
 
-.label-gi-livestream {
+/* .label-gi-livestream {
 	background-color: var(--gi-livestream);
-}
+} */
 
 .label-gi-patch {
-	background-color: var(--gi-patch);
+	background-image: linear-gradient(var(--gi-patch), var(--gi-livestream));
+	/* background-color: var(--gi-patch); */
 }
 
-.label-hi3-livestream {
+/* .label-hi3-livestream {
 	background-color: var(--hi3-livestream);
-}
+} */
 
 .label-hi3-patch {
-	background-color: var(--hi3-patch);
+	background-image: linear-gradient(var(--hi3-patch), var(--hi3-livestream));
+	/* background-color: var(--hi3-patch); */
 }
 
-.label-hi3-livestream {
+/* .label-ww-livestream {
 	background-color: var(--ww-livestream);
-}
+} */
 
 .label-ww-patch {
-	background-color: var(--ww-patch);
+	background-image: linear-gradient(var(--ww-patch), var(--ww-livestream));
+	/* background-color: var(--ww-patch); */
 }
 
 /* Label Icons */
@@ -279,11 +284,11 @@ ul.label-gi li:first-child::before,
 ul.label-hi3 li:first-child::before,
 ul.label-ww li:first-child::before {
 	content: "";
-	width: 2rem;
-	height: 2rem;
+	width: 3rem;
+	height: 3rem;
 	background-size: contain;
 	background-repeat: no-repeat;
-	margin-right: 8px;
+	/* margin-right: 8px; */
 	border-radius: 8px;
 }
 
@@ -344,12 +349,12 @@ ul.label-ww li:first-child::before {
 	ul.label-gi li:first-child::before,
 	ul.label-hi3 li:first-child::before,
 	ul.label-ww li:first-child::before {
-		width: 1.5rem;
-		height: 1.5rem;
-		margin-right: 0.5rem;
-		border-radius: 0.25rem;
+		width: 2.8rem;
+		height: 2.8rem;
+		/* margin-right: 0.5rem;
+		border-radius: 0.25rem; */
 	}
-	li:first-child {
+	/* li:first-child {
 		border-top-left-radius: 0.75rem;
 		border-bottom-left-radius: 0.75rem;
 	}
@@ -357,5 +362,5 @@ ul.label-ww li:first-child::before {
 	li:last-child {
 		border-top-right-radius: 0.75rem;
 		border-bottom-right-radius: 0.75rem;
-	}
+	} */
 }
