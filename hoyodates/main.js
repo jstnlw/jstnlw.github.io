@@ -60,6 +60,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.add('highlight-gi-banner-one');
           } else if (patchType === 'hi3') {
             targetDayDiv.classList.add('highlight-hi3-banner-one');
+          } else if (patchType === 'ww') {
+            targetDayDiv.classList.add('highlight-ww-banner-one');
           }
         } else if (index < 41) {
           // Next 20 days
@@ -71,6 +73,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.add('highlight-gi-banner-two');
           } else if (patchType === 'hi3') {
             targetDayDiv.classList.add('highlight-hi3-banner-two');
+          } else if (patchType === 'ww') {
+            targetDayDiv.classList.add('highlight-ww-banner-two');
           }
         }
       }
@@ -97,6 +101,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.remove('highlight-gi-banner-one');
           } else if (patchType === 'hi3') {
             targetDayDiv.classList.remove('highlight-hi3-banner-one');
+          } else if (patchType === 'ww') {
+            targetDayDiv.classList.remove('highlight-ww-banner-one');
           }
         } else if (index < 41) {
           if (patchType === 'hsr') {
@@ -107,6 +113,8 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType)
             targetDayDiv.classList.remove('highlight-gi-banner-two');
           } else if (patchType === 'hi3') {
             targetDayDiv.classList.remove('highlight-hi3-banner-two');
+          } else if (patchType === 'ww') {
+            targetDayDiv.classList.remove('highlight-ww-banner-two');
           }
         }
       }
@@ -127,6 +135,8 @@ const renderCalendar = (year) => {
   const giPatch = getHighlightDates(year, 0, 1, 42);
   const hi3Livestream = getHighlightDates(year, 1, 8, 42);
   const hi3Patch = getHighlightDates(year, 0, 8, 42);
+  const wwLivestream = getHighlightDates(year, 1, 2, 42);
+  const wwPatch = getHighlightDates(year, 0, 2, 42);
 
   for (let month = 0; month < 12; month++) {
     const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
@@ -252,6 +262,28 @@ const renderCalendar = (year) => {
         }
 
         attachHoverEvents(dayDiv, `HI3 Patch ${version}`, currentDate, futureDates, 'hi3');
+      }
+
+      // WW Highlights
+      // else if (wwLivestream.some(date => +date === +currentDate)) {
+      //   const index = wwLivestream.findIndex(date => +date === +currentDate);
+      //   const version = calculatePatchVersion(2.1, index);
+      //   dayDiv.classList.add('highlight-ww-livestream');
+      //   attachHoverEvents(dayDiv, `WW Livestream ${version}`, currentDate, [], 'ww');
+      // } 
+      else if (wwPatch.some(date => +date === +currentDate)) {
+        const index = wwPatch.findIndex(date => +date === +currentDate);
+        const version = calculatePatchVersion(2.0, index);
+        dayDiv.classList.add('highlight-ww-patch');
+
+        const futureDates = [];
+        for (let i = 1; i <= 41; i++) {
+          const futureDate = new Date(currentDate);
+          futureDate.setDate(currentDate.getDate() + i);
+          futureDates.push(futureDate);
+        }
+
+        attachHoverEvents(dayDiv, `WW Patch ${version}`, currentDate, futureDates, 'ww');
       }
 
       daysGrid.appendChild(dayDiv);
