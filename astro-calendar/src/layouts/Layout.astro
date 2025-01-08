@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css'
+import '@styles/global.css'
 ---
 <!doctype html>
 <html lang="en">
@@ -11,6 +11,10 @@ import '../styles/global.css'
 		<title>2025</title>
 	</head>
 	<body>
-		<slot />
+		<main>
+			<div class="container">
+				<slot />
+			</div>
+		</main>
 	</body>
 </html>
