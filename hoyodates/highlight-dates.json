@@ -1,0 +1,652 @@
+[
+    {
+        "game": "HonkaiStarRail",
+        "shorthand": "hsr",
+        "versions": [
+            {
+                "version": 3.0,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "January",
+                        "day": 1
+                    },
+                    {
+                        "type": "patch",
+                        "month": "January",
+                        "day": 15
+                    }
+                ]
+            },
+            {
+                "version": 3.1,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "February",
+                        "day": 14
+                    },
+                    {
+                        "type": "patch",
+                        "month": "February",
+                        "day": 26
+                    }
+                ]
+            },
+            {
+                "version": 3.2,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "March",
+                        "day": 28
+                    },
+                    {
+                        "type": "patch",
+                        "month": "April",
+                        "day": 9
+                    }
+                ]
+            },
+            {
+                "version": 3.3,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "May",
+                        "day": 9
+                    },
+                    {
+                        "type": "patch",
+                        "month": "May",
+                        "day": 21
+                    }
+                ]
+            },
+            {
+                "version": 3.4,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "June",
+                        "day": 20
+                    },
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 2
+                    }
+                ]
+            },
+            {
+                "version": 3.5,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "August",
+                        "day": 1
+                    },
+                    {
+                        "type": "patch",
+                        "month": "August",
+                        "day": 13
+                    }
+                ]
+            },
+            {
+                "version": 3.6,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "September",
+                        "day": 12
+                    },
+                    {
+                        "type": "patch",
+                        "month": "September",
+                        "day": 24
+                    }
+                ]
+            },
+            {
+                "version": 3.7,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "October",
+                        "day": 24
+                    },
+                    {
+                        "type": "patch",
+                        "month": "November",
+                        "day": 5
+                    }
+                ]
+            },
+            {
+                "version": 3.8,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "December",
+                        "day": 5
+                    },
+                    {
+                        "type": "patch",
+                        "month": "December",
+                        "day": 17
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "game": "ZenlessZoneZero",
+        "shorthand": "zzz",
+        "versions": [
+            {
+                "version": 1.5,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "January",
+                        "day": 10
+                    },
+                    {
+                        "type": "patch",
+                        "month": "January",
+                        "day": 22
+                    }
+                ]
+            },
+            {
+                "version": 1.6,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "February",
+                        "day": 21
+                    },
+                    {
+                        "type": "patch",
+                        "month": "March",
+                        "day": 5
+                    }
+                ]
+            },
+            {
+                "version": 1.7,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "April",
+                        "day": 4
+                    },
+                    {
+                        "type": "patch",
+                        "month": "April",
+                        "day": 16
+                    }
+                ]
+            },
+            {
+                "version": 2.0,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "May",
+                        "day": 16
+                    },
+                    {
+                        "type": "patch",
+                        "month": "May",
+                        "day": 28
+                    }
+                ]
+            },
+            {
+                "version": 2.1,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "June",
+                        "day": 27
+                    },
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 9
+                    }
+                ]
+            },
+            {
+                "version": 2.2,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "August",
+                        "day": 8
+                    },
+                    {
+                        "type": "patch",
+                        "month": "August",
+                        "day": 20
+                    }
+                ]
+            },
+            {
+                "version": 2.3,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "September",
+                        "day": 19
+                    },
+                    {
+                        "type": "patch",
+                        "month": "October",
+                        "day": 1
+                    }
+                ]
+            },
+            {
+                "version": 2.4,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "October",
+                        "day": 31
+                    },
+                    {
+                        "type": "patch",
+                        "month": "November",
+                        "day": 12
+                    }
+                ]
+            },
+            {
+                "version": 2.5,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "December",
+                        "day": 12
+                    },
+                    {
+                        "type": "patch",
+                        "month": "December",
+                        "day": 24
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "game": "GenshinImpact",
+        "shorthand": "gi",
+        "versions": [
+            {
+                "version": 5.3,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "January",
+                        "day": 1
+                    }
+                ]
+            },
+            {
+                "version": 5.4,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "January",
+                        "day": 31
+                    },
+                    {
+                        "type": "patch",
+                        "month": "February",
+                        "day": 12
+                    }
+                ]
+            },
+            {
+                "version": 5.5,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "March",
+                        "day": 14
+                    },
+                    {
+                        "type": "patch",
+                        "month": "March",
+                        "day": 26
+                    }
+                ]
+            },
+            {
+                "version": 5.6,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "April",
+                        "day": 25
+                    },
+                    {
+                        "type": "patch",
+                        "month": "May",
+                        "day": 7
+                    }
+                ]
+            },
+            {
+                "version": 5.7,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "June",
+                        "day": 6
+                    },
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 18
+                    }
+                ]
+            },
+            {
+                "version": 5.8,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "July",
+                        "day": 18
+                    },
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 30
+                    }
+                ]
+            },
+            {
+                "version": 5.9,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "August",
+                        "day": 29
+                    },
+                    {
+                        "type": "patch",
+                        "month": "September",
+                        "day": 10
+                    }
+                ]
+            },
+            {
+                "version": 6.0,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "October",
+                        "day": 10
+                    },
+                    {
+                        "type": "patch",
+                        "month": "October",
+                        "day": 22
+                    }
+                ]
+            },
+            {
+                "version": 6.1,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "November",
+                        "day": 21
+                    },
+                    {
+                        "type": "patch",
+                        "month": "December",
+                        "day": 3
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "game": "HonkaiImpact3rd",
+        "shorthand": "hi3",
+        "versions": [
+            {
+                "version": 8.0,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "January",
+                        "day": 8
+                    }
+                ]
+            },
+            {
+                "version": 8.1,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "February",
+                        "day": 19
+                    }
+                ]
+            },
+            {
+                "version": 8.2,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "April",
+                        "day": 2
+                    }
+                ]
+            },
+            {
+                "version": 8.3,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "May",
+                        "day": 14
+                    }
+                ]
+            },
+            {
+                "version": 8.4,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 25
+                    }
+                ]
+            },
+            {
+                "version": 8.5,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "August",
+                        "day": 6
+                    }
+                ]
+            },
+            {
+                "version": 8.6,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "September",
+                        "day": 17
+                    }
+                ]
+            },
+            {
+                "version": 8.7,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "October",
+                        "day": 29
+                    }
+                ]
+            },
+            {
+                "version": 8.8,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "December",
+                        "day": 10
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "game": "WutheringWaves",
+        "shorthand": "ww",
+        "versions": [
+            {
+                "version": 2.0,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "January",
+                        "day": 2
+                    }
+                ]
+            },
+            {
+                "version": 2.1,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "February",
+                        "day": 1
+                    },
+                    {
+                        "type": "patch",
+                        "month": "February",
+                        "day": 13
+                    }
+                ]
+            },
+            {
+                "version": 2.2,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "March",
+                        "day": 15
+                    },
+                    {
+                        "type": "patch",
+                        "month": "March",
+                        "day": 27
+                    }
+                ]
+            },
+            {
+                "version": 2.3,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "April",
+                        "day": 26
+                    },
+                    {
+                        "type": "patch",
+                        "month": "May",
+                        "day": 8
+                    }
+                ]
+            },
+            {
+                "version": 2.4,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "June",
+                        "day": 7
+                    },
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 19
+                    }
+                ]
+            },
+            {
+                "version": 2.5,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "July",
+                        "day": 19
+                    },
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 31
+                    }
+                ]
+            },
+            {
+                "version": 2.6,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "August",
+                        "day": 30
+                    },
+                    {
+                        "type": "patch",
+                        "month": "September",
+                        "day": 11
+                    }
+                ]
+            },
+            {
+                "version": 2.7,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "October",
+                        "day": 11
+                    },
+                    {
+                        "type": "patch",
+                        "month": "October",
+                        "day": 23
+                    }
+                ]
+            },
+            {
+                "version": 2.8,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "November",
+                        "day": 22
+                    },
+                    {
+                        "type": "patch",
+                        "month": "December",
+                        "day": 4
+                    }
+                ]
+            }
+        ]
+    }
+]
