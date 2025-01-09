@@ -1,5 +1,5 @@
 /* ======================================================
-   Color Variables
+Color Variables
 ====================================================== */
 html {
 	--bg-color: #333333;
@@ -18,7 +18,7 @@ html {
 }
 
 /* ======================================================
-   General Body Styles
+General Body Styles
 ====================================================== */
 body {
 	font-family: Arial, sans-serif;
@@ -33,7 +33,7 @@ body {
 }
 
 /* ======================================================
-   Calendar Layout
+Calendar Layout
 ====================================================== */
 .calendar {
 	display: grid;
@@ -60,7 +60,7 @@ body {
 }
 
 /* ======================================================
-   Weekdays & Days Grid
+Weekdays & Days Grid
 ====================================================== */
 .weekdays,
 .days {
@@ -96,8 +96,9 @@ body {
 }
 
 /* ======================================================
-   Highlighted Dates
+Highlighted Dates
 ====================================================== */
+
 .highlight-hsr-livestream {
 	background-color: var(--hsr-livestream);
 }
@@ -106,8 +107,7 @@ body {
 	background-color: var(--hsr-patch);
 }
 
-.highlight-hsr-banner-one,
-.highlight-hsr-banner-two {
+[class*="hsr-banner"] {
 	background-color: var(--hsr-patch) !important;
 }
 
@@ -119,8 +119,7 @@ body {
 	background-color: var(--zzz-patch);
 }
 
-.highlight-zzz-banner-one,
-.highlight-zzz-banner-two {
+[class*="zzz-banner"] {
 	background-color: var(--zzz-patch) !important;
 }
 
@@ -132,8 +131,7 @@ body {
 	background-color: var(--gi-patch);
 }
 
-.highlight-gi-banner-one,
-.highlight-gi-banner-two {
+[class*="gi-banner"] {
 	background-color: var(--gi-patch) !important;
 }
 
@@ -145,8 +143,7 @@ body {
 	background-color: var(--hi3-patch);
 }
 
-.highlight-hi3-banner-one,
-.highlight-hi3-banner-two {
+[class*="hi3-banner"] {
 	background-color: var(--hi3-patch) !important;
 }
 
@@ -158,21 +155,26 @@ body {
 	background-color: var(--ww-patch);
 }
 
-.highlight-ww-banner-one,
-.highlight-ww-banner-two {
+[class*="ww-banner"] {
 	background-color: var(--ww-patch) !important;
 }
 
-.highlight-hsr-banner-two,
-.highlight-zzz-banner-two,
-.highlight-gi-banner-two,
-.highlight-hi3-banner-two,
-.highlight-ww-banner-two {
+[class*="livestream"],
+[class*="patch"] {
+	font-weight: bold;
+}
+
+[class*="banner-one"],
+[class*="banner-two"] {
+	font-weight: normal;
+}
+
+[class*="banner-two"] {
 	opacity: 0.6;
 }
 
 /* ======================================================
-   Tooltip
+Tooltip
 ====================================================== */
 .custom-tooltip {
 	position: absolute;
@@ -191,7 +193,7 @@ body {
 }
 
 /* ======================================================
-   Label Styles
+Label Styles
 ====================================================== */
 .label {
 	display: flex;
@@ -206,115 +208,85 @@ body {
 	background: linear-gradient(to bottom, var(--bg-color), rgba(51,51,51,0));
 }
 
-ul {
-	list-style: none;
+.label button {
 	display: flex;
-	padding: 0;
 	margin: 0;
-	border-radius: 20px;
-	box-shadow: 0px 2px 4px rgba(51, 51, 51, 0.5);
-	/* border: 4px solid var(--bg-color); */
-}
-
-li {
-	display: flex;
-	align-items: center;
 	padding: 0.5rem;
+	border-radius: 20px;
+	border: 0;
+	box-shadow: 0px 2px 4px rgba(51, 51, 51, 0.5);
+	align-items: center;
 	font-weight: bold;
 	color: #fff;
 	text-align: center;
-}
-
-li:first-child {
-	border-top-left-radius: 1rem;
-	border-bottom-left-radius: 1rem;
-}
-
-li:last-child {
-	border-top-right-radius: 1rem;
-	border-bottom-right-radius: 1rem;
+	cursor: pointer;
+	transition: opacity 0.2s ease;
 }
 
 /* Label Background Colors */
-/* .label-hsr-livestream {
-	background-color: var(--hsr-livestream);
-} */
-
-.label-hsr-patch {
+.label-hsr {
 	background-image: linear-gradient(var(--hsr-patch), var(--hsr-livestream));
-	/* background-color: var(--hsr-patch); */
 }
 
-/* .label-zzz-livestream {
-	background-color: var(--zzz-livestream);
-} */
-
-.label-zzz-patch {
+.label-zzz {
 	background-image: linear-gradient(var(--zzz-patch), var(--zzz-livestream));
-	/* background-color: var(--zzz-patch); */
 }
 
-/* .label-gi-livestream {
-	background-color: var(--gi-livestream);
-} */
-
-.label-gi-patch {
+.label-gi {
 	background-image: linear-gradient(var(--gi-patch), var(--gi-livestream));
-	/* background-color: var(--gi-patch); */
 }
 
-/* .label-hi3-livestream {
-	background-color: var(--hi3-livestream);
-} */
-
-.label-hi3-patch {
+.label-hi3 {
 	background-image: linear-gradient(var(--hi3-patch), var(--hi3-livestream));
-	/* background-color: var(--hi3-patch); */
 }
 
-/* .label-ww-livestream {
-	background-color: var(--ww-livestream);
-} */
-
-.label-ww-patch {
+.label-ww {
 	background-image: linear-gradient(var(--ww-patch), var(--ww-livestream));
-	/* background-color: var(--ww-patch); */
 }
 
 /* Label Icons */
-ul.label-hsr li:first-child::before,
-ul.label-zzz li:first-child::before,
-ul.label-gi li:first-child::before,
-ul.label-hi3 li:first-child::before,
-ul.label-ww li:first-child::before {
+.label [class*="label"]:before {
 	content: "";
 	width: 3rem;
 	height: 3rem;
 	background-size: contain;
 	background-repeat: no-repeat;
-	/* margin-right: 8px; */
 	border-radius: 8px;
 }
 
-ul.label-hsr li:first-child::before {
-	background-image: url(assets/hsr-icon.webp);
+.inactive {
+	opacity: 0.5;
+	transition: opacity 0.2s ease;
 }
 
-ul.label-zzz li:first-child::before {
-	background-image: url(assets/zzz-icon.webp);
+button.label-hsr::before {
+	background-image: url("assets/hsr-icon.webp");
 }
-ul.label-gi li:first-child::before {
-	background-image: url(assets/gi-icon.webp);
+
+button.label-zzz::before {
+	background-image: url("assets/zzz-icon.webp");
 }
-ul.label-hi3 li:first-child::before {
-	background-image: url(assets/hi3-icon.webp);
+
+button.label-gi::before {
+	background-image: url("assets/gi-icon.webp");
 }
-ul.label-ww li:first-child::before {
-	background-image: url(assets/ww-icon.webp);
+
+button.label-hi3::before {
+	background-image: url("assets/hi3-icon.webp");
+}
+
+button.label-ww::before {
+	background-image: url("assets/ww-icon.webp");
+}
+
+[class*="hidden"] {
+	background-color: transparent;
+	pointer-events: none;
+	font-weight: normal;
 }
 
 /* ======================================================
-   Responsive Layout
+Responsive Layout
 ====================================================== */
 @media (max-width: 1024px) {
 	.calendar {
@@ -348,23 +320,8 @@ ul.label-ww li:first-child::before {
 	.month {
 		padding: 0.5rem;
 	}
-	ul.label-hsr li:first-child::before,
-	ul.label-zzz li:first-child::before,
-	ul.label-gi li:first-child::before,
-	ul.label-hi3 li:first-child::before,
-	ul.label-ww li:first-child::before {
+	.label [class*="label"]:before {
 		width: 2.8rem;
 		height: 2.8rem;
-		/* margin-right: 0.5rem;
-		border-radius: 0.25rem; */
 	}
-	/* li:first-child {
-		border-top-left-radius: 0.75rem;
-		border-bottom-left-radius: 0.75rem;
-	}
-	
-	li:last-child {
-		border-top-right-radius: 0.75rem;
-		border-bottom-right-radius: 0.75rem;
-	} */
 }
