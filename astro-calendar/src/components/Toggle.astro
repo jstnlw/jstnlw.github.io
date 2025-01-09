@@ -1,0 +1,34 @@
+---
+const toggles = [
+    { id: "toggle-hsr-livestream", label: "HSR Livestream", checked: true },
+    { id: "toggle-hsr-patch", label: "HSR Patch", checked: true },
+    { id: "toggle-zzz-livestream", label: "ZZZ Livestream", checked: true },
+    { id: "toggle=zzz-patch", label: "ZZZ Patch", checked: true },
+];
+---
+<style>
+    @import "@styles/toggle.css";
+</style>
+
+<div class="toggle-container">
+    {toggles.map((toggle) => (
+        <label>
+            <input
+                type="checkbox"
+                id={toggle.id}
+                checked={toggle.checked}
+            />
+            {toggle.label}
+        </label>
+    ))}
+</div>
+
+<script>
+    import { initializeToggles } from './toggle.js';
+
+    if (typeof window !== "undefined") {
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeToggles();
+        });
+    }
+</script>

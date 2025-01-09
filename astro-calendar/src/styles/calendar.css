@@ -1,0 +1,76 @@
+/* /styles/calendar.css */
+
+.calendar-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columns for months */
+	gap: 1rem; /* Space between months */
+	padding: 1rem;
+	font-family: Arial, sans-serif;
+}
+
+.month {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	background: #f9f9f9;
+	padding: 1rem;
+}
+
+h2 {
+	text-align: center;
+	margin-bottom: 1rem;
+	color: #333;
+}
+
+.calendar-grid {
+	display: flex;
+	flex-direction: column;
+}
+
+.weekdays,
+.week {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+}
+
+.day-name,
+.day {
+	text-align: center;
+	padding: 0.5rem;
+	border: 1px solid #eee;
+}
+
+.day-name {
+	font-weight: bold;
+	background-color: #f0f0f0;
+}
+
+.day {
+	&.patch {
+		background-color: #ffcc00; /* Yellow for primary */
+		color: white;
+		font-weight: bold;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	&.livestream {
+		background-color: #00ccff; /* Blue for secondary */
+		color: white;
+		font-weight: bold;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	&.empty {
+		visibility: hidden;
+	}
+	&.hidden {
+		color: black;
+		font-weight: normal;
+		background-color: transparent;
+	}
+}
+
+/* /styles/calendar.css */
