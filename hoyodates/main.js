@@ -3,6 +3,25 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
+const toggleButtons = document.querySelectorAll('button');
+
+toggleButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const game = button.getAttribute('data-game');
+    const highlights = document.querySelectorAll(`.highlight-${game}-livestream, .highlight-${game}-patch`);
+
+    highlights.forEach(highlight => {
+      // Toggle the visibility of highlights for the selected game only
+      if (highlight.classList.contains(`hidden-${game}`)) {
+        highlight.classList.remove(`hidden-${game}`);
+      } else {
+        highlight.classList.add(`hidden-${game}`);
+      }
+    });
+    button.classList.toggle('inactive');
+  });
+});
+
 const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
 const createTooltip = (text, x, y) => {

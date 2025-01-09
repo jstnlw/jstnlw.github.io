@@ -7,11 +7,6 @@
                 "version": 3.0,
                 "dates": [
                     {
-                        "type": "livestream",
-                        "month": "January",
-                        "day": 1
-                    },
-                    {
                         "type": "patch",
                         "month": "January",
                         "day": 15
