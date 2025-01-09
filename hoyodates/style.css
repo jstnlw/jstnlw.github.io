@@ -1,5 +1,5 @@
 /* ======================================================
-   Color Variables
+Color Variables
 ====================================================== */
 html {
 	--bg-color: #333333;
@@ -18,7 +18,7 @@ html {
 }
 
 /* ======================================================
-   General Body Styles
+General Body Styles
 ====================================================== */
 body {
 	font-family: Arial, sans-serif;
@@ -33,7 +33,7 @@ body {
 }
 
 /* ======================================================
-   Calendar Layout
+Calendar Layout
 ====================================================== */
 .calendar {
 	display: grid;
@@ -60,7 +60,7 @@ body {
 }
 
 /* ======================================================
-   Weekdays & Days Grid
+Weekdays & Days Grid
 ====================================================== */
 .weekdays,
 .days {
@@ -96,8 +96,9 @@ body {
 }
 
 /* ======================================================
-   Highlighted Dates
+Highlighted Dates
 ====================================================== */
+
 .highlight-hsr-livestream {
 	background-color: var(--hsr-livestream);
 }
@@ -163,16 +164,22 @@ body {
 	background-color: var(--ww-patch) !important;
 }
 
-.highlight-hsr-banner-two,
-.highlight-zzz-banner-two,
-.highlight-gi-banner-two,
-.highlight-hi3-banner-two,
-.highlight-ww-banner-two {
+[class$="livestream"],
+[class$="patch"] {
+	font-weight: bold;
+}
+
+[class$="banner-one"],
+[class$="banner-two"] {
+	font-weight: normal;
+}
+
+[class$="banner-two"] {
 	opacity: 0.6;
 }
 
 /* ======================================================
-   Tooltip
+Tooltip
 ====================================================== */
 .custom-tooltip {
 	position: absolute;
@@ -191,7 +198,7 @@ body {
 }
 
 /* ======================================================
-   Label Styles
+Label Styles
 ====================================================== */
 .label {
 	display: flex;
@@ -303,18 +310,21 @@ ul.label-hsr li:first-child::before {
 ul.label-zzz li:first-child::before {
 	background-image: url(assets/zzz-icon.webp);
 }
+
 ul.label-gi li:first-child::before {
 	background-image: url(assets/gi-icon.webp);
 }
+
 ul.label-hi3 li:first-child::before {
 	background-image: url(assets/hi3-icon.webp);
 }
+
 ul.label-ww li:first-child::before {
 	background-image: url(assets/ww-icon.webp);
 }
 
 /* ======================================================
-   Responsive Layout
+Responsive Layout
 ====================================================== */
 @media (max-width: 1024px) {
 	.calendar {
@@ -362,7 +372,7 @@ ul.label-ww li:first-child::before {
 		border-top-left-radius: 0.75rem;
 		border-bottom-left-radius: 0.75rem;
 	}
-	
+
 	li:last-child {
 		border-top-right-radius: 0.75rem;
 		border-bottom-right-radius: 0.75rem;
