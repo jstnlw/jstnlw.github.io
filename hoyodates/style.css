@@ -95,6 +95,10 @@ Weekdays & Days Grid
 	background: none;
 }
 
+.today {
+	border: 2px solid #ffffff;
+}
+
 /* ======================================================
 Highlighted Dates
 ====================================================== */
