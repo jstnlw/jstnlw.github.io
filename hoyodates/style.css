@@ -5,16 +5,11 @@ html {
 	--bg-color: #333333;
 	--calendar-color: #575757;
 	--font-color: #ffffff;
-	--hsr-livestream: #1fa5cc;
-	--hsr-patch: #32c8ff;
-	--zzz-livestream: #e04d4d;
-	--zzz-patch: #ff6464;
-	--gi-livestream: #4fa0a0;
-	--gi-patch: #64c8c8;
-	--hi3-livestream: #a87f0a;
-	--hi3-patch: #dcc843;
-	--ww-livestream: #003d80;
-	--ww-patch: #006ee6;
+	--hsr-color: #32c8ff;
+	--zzz-color: #ff6464;
+	--gi-color: #64c8c8;
+	--hi3-color: #dcc843;
+	--ww-color: #006ee6;
 }
 
 /* ======================================================
@@ -81,8 +76,8 @@ Weekdays & Days Grid
 	width: auto;
 	aspect-ratio: 1;
 	font-size: 1rem;
-	border-radius: 0.25rem;
-	transition: background-color 0.2s ease;
+	/* border-radius: 0.25rem; */
+	transition: 0.2s ease;
 }
 
 .days div {
@@ -103,64 +98,57 @@ Weekdays & Days Grid
 Highlighted Dates
 ====================================================== */
 
-.highlight-hsr-livestream {
-	background-color: var(--hsr-livestream);
-}
-
+.highlight-hsr-livestream,
 .highlight-hsr-patch {
-	background-color: var(--hsr-patch);
+	background-color: var(--hsr-color);
 }
 
 [class*="hsr-banner"] {
-	background-color: var(--hsr-patch) !important;
+	background-color: var(--hsr-color) !important;
 }
 
-.highlight-zzz-livestream {
-	background-color: var(--zzz-livestream);
-}
-
+.highlight-zzz-livestream,
 .highlight-zzz-patch {
-	background-color: var(--zzz-patch);
+	background-color: var(--zzz-color);
 }
 
 [class*="zzz-banner"] {
-	background-color: var(--zzz-patch) !important;
+	background-color: var(--zzz-color) !important;
 }
 
-.highlight-gi-livestream {
-	background-color: var(--gi-livestream);
-}
-
+.highlight-gi-livestream,
 .highlight-gi-patch {
-	background-color: var(--gi-patch);
+	background-color: var(--gi-color);
 }
 
 [class*="gi-banner"] {
-	background-color: var(--gi-patch) !important;
+	background-color: var(--gi-color) !important;
 }
 
-.highlight-hi3-livestream {
-	background-color: var(--hi3-livestream);
-}
-
+.highlight-hi3-livestream,
 .highlight-hi3-patch {
-	background-color: var(--hi3-patch);
+	background-color: var(--hi3-color);
 }
 
 [class*="hi3-banner"] {
-	background-color: var(--hi3-patch) !important;
+	background-color: var(--hi3-color) !important;
 }
 
-.highlight-ww-livestream {
-	background-color: var(--ww-livestream);
-}
-
+.highlight-ww-livestream,
 .highlight-ww-patch {
-	background-color: var(--ww-patch);
+	background-color: var(--ww-color);
 }
 
 [class*="ww-banner"] {
-	background-color: var(--ww-patch) !important;
+	background-color: var(--ww-color) !important;
+}
+
+[class*="livestream"] {
+	border-radius: 1rem;
+}
+
+[class*="patch"] {
+	border-radius: 0.25rem;
 }
 
 [class*="livestream"],
@@ -171,6 +159,8 @@ Highlighted Dates
 [class*="banner-one"],
 [class*="banner-two"] {
 	font-weight: normal;
+	border-radius: 0.25rem !important;
+	transition: 0.2s ease;
 }
 
 [class*="banner-two"] {
@@ -229,23 +219,23 @@ Label Styles
 
 /* Label Background Colors */
 .label-hsr {
-	background-image: linear-gradient(var(--hsr-patch), var(--hsr-livestream));
+	background-color: var(--hsr-color);
 }
 
 .label-zzz {
-	background-image: linear-gradient(var(--zzz-patch), var(--zzz-livestream));
+	background-color: var(--zzz-color);
 }
 
 .label-gi {
-	background-image: linear-gradient(var(--gi-patch), var(--gi-livestream));
+	background-color: var(--gi-color);
 }
 
 .label-hi3 {
-	background-image: linear-gradient(var(--hi3-patch), var(--hi3-livestream));
+	background-color: var(--hi3-color);
 }
 
 .label-ww {
-	background-image: linear-gradient(var(--ww-patch), var(--ww-livestream));
+	background-color: var(--ww-color);
 }
 
 /* Label Icons */
