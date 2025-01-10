@@ -87,6 +87,10 @@ const renderCalendar = async (year) => {
   const response = await fetch('highlight-dates.json');
   const data = await response.json();
 
+  // Get today's date without time
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   // Loop through months
   for (let month = 0; month < 12; month++) {
     const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
@@ -128,6 +132,11 @@ const renderCalendar = async (year) => {
       const currentDate = new Date(year, month, day);
       dayDiv.setAttribute('data-date', currentDate.toISOString().split('T')[0]);
       dayDiv.textContent = day;
+
+      // Add .today class if the current date matches today's date
+      if (currentDate.getTime() === today.getTime()) {
+        dayDiv.classList.add('today');
+      }
 
       // Highlight logic based on JSON data
       data.forEach(game => {
