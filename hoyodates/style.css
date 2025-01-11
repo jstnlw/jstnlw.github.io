@@ -76,7 +76,6 @@ Weekdays & Days Grid
 	width: auto;
 	aspect-ratio: 1;
 	font-size: 1rem;
-	/* border-radius: 0.25rem; */
 	transition: 0.2s ease;
 }
 
@@ -92,6 +91,7 @@ Weekdays & Days Grid
 
 .today {
 	border: 2px solid #ffffff;
+	border-radius: 0.25rem;
 }
 
 /* ======================================================
