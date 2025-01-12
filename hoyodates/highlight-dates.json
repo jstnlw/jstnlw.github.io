@@ -1,5 +1,5 @@
 [
-    {
+   {
         "game": "HonkaiStarRail",
         "shorthand": "hsr",
         "versions": [
@@ -10,21 +10,6 @@
                         "type": "patch",
                         "month": "January",
                         "day": 15
-                    }
-                ]
-            },
-            {
-                "version": 3.1,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "February",
-                        "day": 14
-                    },
-                    {
-                        "type": "patch",
-                        "month": "February",
-                        "day": 26
                     }
                 ]
             },
@@ -643,5 +628,126 @@
                 ]
             }
         ]
-    }
+    },
+    {
+        "game": "KualaLumpurHolidays",
+        "shorthand": "klh",
+        "dates": [
+          {
+            "type": "holiday",
+            "month": "January",
+            "day": 1,
+            "name": "New Year's Day"
+          },
+          {
+            "type": "holiday",
+            "month": "January",
+            "day": 29,
+            "name": "Chinese New Year"
+          },
+          {
+            "type": "holiday",
+            "month": "January",
+            "day": 30,
+            "name": "Chinese New Year"
+          },
+          {
+            "type": "holiday",
+            "month": "February",
+            "day": 1,
+            "name": "Federal Territory Day"
+          },
+          {
+            "type": "holiday",
+            "month": "February",
+            "day": 11,
+            "name": "Thaipusam"
+          },
+          {
+            "type": "holiday",
+            "month": "March",
+            "day": 18,
+            "name": "Nuzul Al-Quran"
+          },
+          {
+            "type": "holiday",
+            "month": "March",
+            "day": 31,
+            "name": "Hari Raya Aidilfitri"
+          },
+          {
+            "type": "holiday",
+            "month": "April",
+            "day": 1,
+            "name": "Hari Raya Aidilfitri"
+          },
+          {
+            "type": "holiday",
+            "month": "May",
+            "day": 1,
+            "name": "Labour Day"
+          },
+          {
+            "type": "holiday",
+            "month": "May",
+            "day": 12,
+            "name": "Wesak Day"
+          },
+          {
+            "type": "holiday",
+            "month": "June",
+            "day": 2,
+            "name": "Agong's Birthday"
+          },
+          {
+            "type": "holiday",
+            "month": "June",
+            "day": 7,
+            "name": "Hari Raya Haji"
+          },
+          {
+            "type": "holiday",
+            "month": "June",
+            "day": 27,
+            "name": "Awal Muharram"
+          },
+          {
+            "type": "holiday",
+            "month": "August",
+            "day": 31,
+            "name": "Merdeka Day"
+          },
+          {
+            "type": "holiday",
+            "month": "September",
+            "day": 1,
+            "name": "Merdeka Day Holiday"
+          },
+          {
+            "type": "holiday",
+            "month": "September",
+            "day": 5,
+            "name": "Prophet Muhammad's Birthday"
+          },
+          {
+            "type": "holiday",
+            "month": "September",
+            "day": 16,
+            "name": "Malaysia Day"
+          },
+          {
+            "type": "holiday",
+            "month": "October",
+            "day": 20,
+            "name": "Deepavali"
+          },
+          {
+            "type": "holiday",
+            "month": "December",
+            "day": 25,
+            "name": "Christmas Day"
+          }
+        ]
+      }
+      
 ]
