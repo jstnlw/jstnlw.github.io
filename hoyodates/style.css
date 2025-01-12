@@ -139,12 +139,18 @@ Highlighted Dates
 	background-color: var(--ww-color);
 }
 
+.highlight-holiday {
+	text-decoration: underline;
+	text-decoration-thickness: from-font;
+	text-decoration-thickness: 3px;
+}
+
 [class*="ww-banner"] {
 	background-color: var(--ww-color) !important;
 }
 
 [class*="livestream"] {
-	border-radius: 1rem;
+	border-radius: 50%;
 }
 
 [class*="patch"] {

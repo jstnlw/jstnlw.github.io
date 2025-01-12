@@ -140,29 +140,42 @@ const renderCalendar = async (year) => {
 
       // Highlight logic based on JSON data
       data.forEach(game => {
-        game.versions.forEach(version => {
-          version.dates.forEach(date => {
+        if (game.versions) {
+          game.versions.forEach(version => {
+            version.dates.forEach(date => {
+              const eventMonth = months.indexOf(date.month);
+              if (eventMonth === month && date.day === day) {
+                const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version.toFixed(1)}`;
+                const highlightClass = `highlight-${game.shorthand}-${date.type}`;
+                const isLivestream = date.type === 'livestream';
+
+                dayDiv.classList.add(highlightClass);
+
+                const futureDates = [];
+                if (!isLivestream) {
+                  for (let i = 1; i <= 41; i++) {
+                    const futureDate = new Date(currentDate);
+                    futureDate.setDate(currentDate.getDate() + i);
+                    futureDates.push(futureDate);
+                  }
+                }
+
+                attachHoverEvents(dayDiv, versionText, currentDate, futureDates, game.shorthand, isLivestream);
+              }
+            });
+          });
+        }
+
+        // Handle holidays
+        if (game.dates) {
+          game.dates.forEach(date => {
             const eventMonth = months.indexOf(date.month);
             if (eventMonth === month && date.day === day) {
-              const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version.toFixed(1)}`;
-              const highlightClass = `highlight-${game.shorthand}-${date.type}`;
-              const isLivestream = date.type === 'livestream';
-
-              dayDiv.classList.add(highlightClass);
-
-              const futureDates = [];
-              if (!isLivestream) {
-                for (let i = 1; i <= 41; i++) {
-                  const futureDate = new Date(currentDate);
-                  futureDate.setDate(currentDate.getDate() + i);
-                  futureDates.push(futureDate);
-                }
-              }
-
-              attachHoverEvents(dayDiv, versionText, currentDate, futureDates, game.shorthand, isLivestream);
+              dayDiv.classList.add('highlight-holiday');
+              attachHoverEvents(dayDiv, date.name, currentDate, [], 'holiday', false);
             }
           });
-        });
+        }
       });
 
       daysGrid.appendChild(dayDiv);
