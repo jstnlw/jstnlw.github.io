@@ -3,13 +3,14 @@ Color Variables
 ====================================================== */
 html {
 	--bg-color: #333333;
-	--calendar-color: #575757;
+	--calendar-color: #444444;
 	--font-color: #ffffff;
 	--hsr-color: #32c8ff;
 	--zzz-color: #ff6464;
 	--gi-color: #64c8c8;
 	--hi3-color: #dcc843;
 	--ww-color: #006ee6;
+	--holiday-color: #DC143C;
 }
 
 /* ======================================================
@@ -140,9 +141,8 @@ Highlighted Dates
 }
 
 .highlight-holiday {
-	text-decoration: underline;
-	text-decoration-thickness: from-font;
-	text-decoration-thickness: 3px;
+	color: var(--holiday-color) !important;
+	font-weight: bold;
 }
 
 [class*="ww-banner"] {
