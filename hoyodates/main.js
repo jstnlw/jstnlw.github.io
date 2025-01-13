@@ -153,7 +153,11 @@ const renderCalendar = async (year) => {
 
                 const futureDates = [];
                 if (!isLivestream) {
-                  for (let i = 1; i <= 41; i++) {
+                  // for (let i = 1; i <= 41; i++) {
+                  // ===== ZZZ 1.5 Start
+                  const daysToGenerate = game.shorthand === 'zzz' && version.version === 1.5 ? 48 : 41;
+                  for (let i = 1; i <= daysToGenerate; i++) {
+                  // ===== ZZZ 1.5 End
                     const futureDate = new Date(currentDate);
                     futureDate.setDate(currentDate.getDate() + i);
                     futureDates.push(futureDate);
