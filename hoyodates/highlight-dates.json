@@ -160,12 +160,12 @@
                     {
                         "type": "livestream",
                         "month": "February",
-                        "day": 21
+                        "day": 28
                     },
                     {
                         "type": "patch",
                         "month": "March",
-                        "day": 5
+                        "day": 12
                     }
                 ]
             },
@@ -175,12 +175,12 @@
                     {
                         "type": "livestream",
                         "month": "April",
-                        "day": 4
+                        "day": 11
                     },
                     {
                         "type": "patch",
                         "month": "April",
-                        "day": 16
+                        "day": 23
                     }
                 ]
             },
@@ -190,12 +190,12 @@
                     {
                         "type": "livestream",
                         "month": "May",
-                        "day": 16
+                        "day": 23
                     },
                     {
                         "type": "patch",
-                        "month": "May",
-                        "day": 28
+                        "month": "June",
+                        "day": 4
                     }
                 ]
             },
@@ -204,13 +204,13 @@
                 "dates": [
                     {
                         "type": "livestream",
-                        "month": "June",
-                        "day": 27
+                        "month": "July",
+                        "day": 4
                     },
                     {
                         "type": "patch",
                         "month": "July",
-                        "day": 9
+                        "day": 16
                     }
                 ]
             },
@@ -220,12 +220,12 @@
                     {
                         "type": "livestream",
                         "month": "August",
-                        "day": 8
+                        "day": 15
                     },
                     {
                         "type": "patch",
                         "month": "August",
-                        "day": 20
+                        "day": 27
                     }
                 ]
             },
@@ -235,12 +235,12 @@
                     {
                         "type": "livestream",
                         "month": "September",
-                        "day": 19
+                        "day": 26
                     },
                     {
                         "type": "patch",
                         "month": "October",
-                        "day": 1
+                        "day": 8
                     }
                 ]
             },
@@ -249,13 +249,13 @@
                 "dates": [
                     {
                         "type": "livestream",
-                        "month": "October",
-                        "day": 31
+                        "month": "November",
+                        "day": 7
                     },
                     {
                         "type": "patch",
                         "month": "November",
-                        "day": 12
+                        "day": 19
                     }
                 ]
             },
@@ -265,12 +265,12 @@
                     {
                         "type": "livestream",
                         "month": "December",
-                        "day": 12
+                        "day": 19
                     },
                     {
                         "type": "patch",
                         "month": "December",
-                        "day": 24
+                        "day": 31
                     }
                 ]
             }
