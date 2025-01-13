@@ -1,5 +1,5 @@
 /* ======================================================
-Color Variables
+Variables
 ====================================================== */
 html {
 	--bg-color: #333333;
@@ -11,6 +11,11 @@ html {
 	--hi3-color: #dcc843;
 	--ww-color: #006ee6;
 	--holiday-color: #DC143C;
+	--hsr-icon: url("assets/hsr-icon.webp");
+	--zzz-icon: url("assets/zzz-icon.webp");
+	--gi-icon: url("assets/gi-icon.webp");
+	--hi3-icon: url("assets/hi3-icon.webp");
+	--ww-icon: url("assets/ww-icon.webp");
 }
 
 /* ======================================================
@@ -51,7 +56,7 @@ Calendar Layout
 .month-header {
 	font-weight: bold;
 	font-size: 1.2rem;
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 	color: #fff;
 }
 
@@ -140,11 +145,6 @@ Highlighted Dates
 	background-color: var(--ww-color);
 }
 
-.highlight-holiday {
-	color: var(--holiday-color) !important;
-	font-weight: bold;
-}
-
 [class*="ww-banner"] {
 	background-color: var(--ww-color) !important;
 }
@@ -171,6 +171,17 @@ Highlighted Dates
 
 [class*="banner-two"] {
 	opacity: 0.6;
+}
+
+.highlight-holiday {
+	color: var(--holiday-color) !important;
+	font-weight: bold;
+}
+
+[class*="hidden"] {
+	background-color: transparent;
+	pointer-events: none;
+	font-weight: normal;
 }
 
 /* ======================================================
@@ -255,29 +266,23 @@ Label Styles
 }
 
 .label-hsr::before {
-	background-image: url("assets/hsr-icon.webp");
+	background-image: var(--hsr-icon);
 }
 
 .label-zzz::before {
-	background-image: url("assets/zzz-icon.webp");
+	background-image: var(--zzz-icon);
 }
 
 .label-gi::before {
-	background-image: url("assets/gi-icon.webp");
+	background-image: var(--gi-icon);
 }
 
 .label-hi3::before {
-	background-image: url("assets/hi3-icon.webp");
+	background-image: var(--hi3-icon);
 }
 
 .label-ww::before {
-	background-image: url("assets/ww-icon.webp");
-}
-
-[class*="hidden"] {
-	background-color: transparent;
-	pointer-events: none;
-	font-weight: normal;
+	background-image: var(--ww-icon);
 }
 
 .inactive {
