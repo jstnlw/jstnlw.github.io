@@ -11,7 +11,12 @@
                 "bannerTwo": 20,
                 "dates": [
                     {
-                        "type": "patch or livestream",
+                        "type": "livestream",
+                        "month": "Month",
+                        "day": 0
+                    },
+                    {
+                        "type": "patch",
                         "month": "Month",
                         "day": 0
                     }
