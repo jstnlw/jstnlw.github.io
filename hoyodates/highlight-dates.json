@@ -1,5 +1,25 @@
 [
     {
+        "_comment": "",
+        "game": "Title",
+        "shorthand": "xxx",
+        "versions": [
+            {
+                "version": 1.0,
+                "highlightRange": 41,
+                "bannerOne": 20,
+                "bannerTwo": 20,
+                "dates": [
+                    {
+                        "type": "patch or livestream",
+                        "month": "Month",
+                        "day": 0
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "game": "HonkaiStarRail",
         "shorthand": "hsr",
         "versions": [
@@ -141,6 +161,8 @@
         "versions": [
             {
                 "version": 1.5,
+                "highlightRange": 48,
+                "bannerOne": 20,
                 "dates": [
                     {
                         "type": "livestream",

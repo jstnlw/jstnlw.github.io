@@ -41,17 +41,16 @@ const removeTooltip = () => {
   }
 };
 
-const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType, isLivestream) => {
+const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType, isLivestream, bannerOne, bannerTwo) => {
   dayDiv.addEventListener('mouseenter', (e) => {
     const rect = dayDiv.getBoundingClientRect();
     const tooltip = createTooltip(text, rect.left, rect.top);
 
-    // Only add banners if not livestream
     if (!isLivestream) {
       highlightDates.forEach((date, index) => {
         const targetDayDiv = document.querySelector(`.day[data-date='${date.toISOString().split('T')[0]}']`);
         if (targetDayDiv) {
-          const classToAdd = `highlight-${patchType}-${index < 20 ? 'banner-one' : 'banner-two'}`;
+          const classToAdd = `highlight-${patchType}-${index < bannerOne ? 'banner-one' : 'banner-two'}`;
           targetDayDiv.classList.add(classToAdd);
         }
       });
@@ -66,12 +65,11 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType,
   dayDiv.addEventListener('mouseleave', () => {
     removeTooltip();
 
-    // Remove banners only if not livestream
     if (!isLivestream) {
       highlightDates.forEach((date, index) => {
         const targetDayDiv = document.querySelector(`.day[data-date='${date.toISOString().split('T')[0]}']`);
         if (targetDayDiv) {
-          const classToRemove = `highlight-${patchType}-${index < 20 ? 'banner-one' : 'banner-two'}`;
+          const classToRemove = `highlight-${patchType}-${index < bannerOne ? 'banner-one' : 'banner-two'}`;
           targetDayDiv.classList.remove(classToRemove);
         }
       });
@@ -142,6 +140,10 @@ const renderCalendar = async (year) => {
       data.forEach(game => {
         if (game.versions) {
           game.versions.forEach(version => {
+            const highlightRange = version.highlightRange || 41; // Default to 41 if not specified
+            const bannerOne = version.bannerOne || 20; // Default to 20 if not specified
+            const bannerTwo = version.bannerTwo || highlightRange; // Default to highlightRange if not specified
+
             version.dates.forEach(date => {
               const eventMonth = months.indexOf(date.month);
               if (eventMonth === month && date.day === day) {
@@ -153,18 +155,14 @@ const renderCalendar = async (year) => {
 
                 const futureDates = [];
                 if (!isLivestream) {
-                  // for (let i = 1; i <= 41; i++) {
-                  // ===== ZZZ 1.5 Start
-                  const daysToGenerate = game.shorthand === 'zzz' && version.version === 1.5 ? 48 : 41;
-                  for (let i = 1; i <= daysToGenerate; i++) {
-                  // ===== ZZZ 1.5 End
+                  for (let i = 1; i <= highlightRange; i++) {
                     const futureDate = new Date(currentDate);
                     futureDate.setDate(currentDate.getDate() + i);
                     futureDates.push(futureDate);
                   }
                 }
 
-                attachHoverEvents(dayDiv, versionText, currentDate, futureDates, game.shorthand, isLivestream);
+                attachHoverEvents(dayDiv, versionText, currentDate, futureDates, game.shorthand, isLivestream, bannerOne, bannerTwo);
               }
             });
           });
