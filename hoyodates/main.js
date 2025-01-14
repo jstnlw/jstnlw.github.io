@@ -142,7 +142,7 @@ const renderCalendar = async (year) => {
           game.versions.forEach(version => {
             const highlightRange = version.highlightRange || 41; // Default to 41 if not specified
             const bannerOne = version.bannerOne || 20; // Default to 20 if not specified
-            const bannerTwo = version.bannerTwo || highlightRange; // Default to highlightRange if not specified
+            const bannerTwo = version.bannerTwo || 20; // Default to 20 if not specified
 
             version.dates.forEach(date => {
               const eventMonth = months.indexOf(date.month);
