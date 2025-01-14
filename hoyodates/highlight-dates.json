@@ -5,13 +5,18 @@
         "shorthand": "xxx",
         "versions": [
             {
-                "version": 1.0,
+                "version": 0.0,
                 "highlightRange": 41,
                 "bannerOne": 20,
                 "bannerTwo": 20,
                 "dates": [
                     {
-                        "type": "patch or livestream",
+                        "type": "livestream",
+                        "month": "Month",
+                        "day": 0
+                    },
+                    {
+                        "type": "patch",
                         "month": "Month",
                         "day": 0
                     }
