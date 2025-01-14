@@ -1,1 +1,0 @@
-Krux.ns.maxis.kxjsonp_userdata({"status":"200","body":{"code":"has_segments","kuid":"O-1biuAr","kuid_long":"xm30tl5y1","geo":{"latitude":"3.15","longitude":"101.70","region":null,"domain":null,"country":"my","dma":null,"zip":"50200"},"segments":["q8joxrhsu","vcbsvfr5u","q74p024to"]}});
