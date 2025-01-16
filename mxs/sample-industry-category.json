@@ -31,7 +31,7 @@
             "companies": [
                 {
                     "name": "Cisco",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Cisco_logo_blue_2016.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg"
                 },
                 {
                     "name": "IBM",
@@ -48,7 +48,7 @@
                 },
                 {
                     "name": "Uber",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg"
                 }
             ]
         }
@@ -59,11 +59,11 @@
             "companies": [
                 {
                     "name": "Intel",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Intel_Inside_2020_logo.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg"
                 },
                 {
                     "name": "Qualcomm",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Qualcomm_logo_2020.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg"
                 }
             ]
         },
@@ -72,11 +72,11 @@
             "companies": [
                 {
                     "name": "AT&T",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fb/AT%26T_logo_2016.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg"
                 },
                 {
                     "name": "Verizon",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Verizon_logo_2015.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg"
                 }
             ]
         },
@@ -85,11 +85,11 @@
             "companies": [
                 {
                     "name": "Microsoft Azure",
-                    "logo": "https://azurecomcdn.azureedge.net/cvt-661f462b3f8056a6d3b7d817bc68e1e6c663ac97541a2a7d730098d4c49d0241/images/shared/microsoft-logo.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg"
                 },
                 {
                     "name": "Google Cloud",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Google_Cloud_logo.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
                 }
             ]
         },
@@ -98,11 +98,11 @@
             "companies": [
                 {
                     "name": "OpenAI",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/1/1f/OpenAI_Logo_2022.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
                 },
                 {
                     "name": "NVIDIA",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/6/63/NVIDIA_logo.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
                 }
             ]
         },
@@ -111,7 +111,7 @@
             "companies": [
                 {
                     "name": "Salesforce",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Salesforce_logo.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
                 },
                 {
                     "name": "SAP",
@@ -124,11 +124,11 @@
             "companies": [
                 {
                     "name": "Deloitte",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Deloitte.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
                 },
                 {
                     "name": "Accenture",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/6/69/Accenture_logo.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
                 }
             ]
         },
@@ -137,11 +137,11 @@
             "companies": [
                 {
                     "name": "NIST",
-                    "logo": "https://www.nist.gov/sites/default/files/styles/16x9_760x428/public/images/2021/09/20/NIST_Logo_-_Main_Blue.png"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
                 },
                 {
                     "name": "ITU",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/55/International_Telecommunication_Union_Logo.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
                 }
             ]
         },
@@ -154,7 +154,7 @@
                 },
                 {
                     "name": "Stanford",
-                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Stanford_University_seal_2003.svg"
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
                 }
             ]
         }
