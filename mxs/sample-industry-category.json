@@ -1,0 +1,164 @@
+[
+    {
+        "Industry": [
+            {
+                "type": "Manufacturing",
+                "companies": [
+                    {
+                        "name": "Apple",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+                    },
+                    {
+                        "name": "Toyota",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Toyota_logo.svg"
+                    }
+                ]
+            },
+            {
+                "type": "Healthcare",
+                "companies": [
+                    {
+                        "name": "Pfizer",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/5/57/Pfizer_%282021%29.svg"
+                    },
+                    {
+                        "name": "Moderna",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Moderna_logo.svg"
+                    }
+                ]
+            },
+            {
+                "type": "Digital Cities",
+                "companies": [
+                    {
+                        "name": "Cisco",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Cisco_logo_blue_2016.svg"
+                    },
+                    {
+                        "name": "IBM",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                    }
+                ]
+            },
+            {
+                "type": "Mobility",
+                "companies": [
+                    {
+                        "name": "Tesla",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg"
+                    },
+                    {
+                        "name": "Uber",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.svg"
+                    }
+                ]
+            }
+        ],
+        "Category": [
+            {
+                "type": "Device & Sensors",
+                "companies": [
+                    {
+                        "name": "Intel",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Intel_Inside_2020_logo.svg"
+                    },
+                    {
+                        "name": "Qualcomm",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Qualcomm_logo_2020.svg"
+                    }
+                ]
+            },
+            {
+                "type": "Network & Infrastructure",
+                "companies": [
+                    {
+                        "name": "AT&T",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fb/AT%26T_logo_2016.svg"
+                    },
+                    {
+                        "name": "Verizon",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Verizon_logo_2015.svg"
+                    }
+                ]
+            },
+            {
+                "type": "Cloud & Edge Platform",
+                "companies": [
+                    {
+                        "name": "Microsoft Azure",
+                        "logo": "https://azurecomcdn.azureedge.net/cvt-661f462b3f8056a6d3b7d817bc68e1e6c663ac97541a2a7d730098d4c49d0241/images/shared/microsoft-logo.svg"
+                    },
+                    {
+                        "name": "Google Cloud",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Google_Cloud_logo.svg"
+                    }
+                ]
+            },
+            {
+                "type": "AI & Data",
+                "companies": [
+                    {
+                        "name": "OpenAI",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/1/1f/OpenAI_Logo_2022.svg"
+                    },
+                    {
+                        "name": "NVIDIA",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/6/63/NVIDIA_logo.svg"
+                    }
+                ]
+            },
+            {
+                "type": "Applications, Solutions & IoT",
+                "companies": [
+                    {
+                        "name": "Salesforce",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Salesforce_logo.svg"
+                    },
+                    {
+                        "name": "SAP",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                    }
+                ]
+            },
+            {
+                "type": "System Integrators",
+                "companies": [
+                    {
+                        "name": "Deloitte",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Deloitte.svg"
+                    },
+                    {
+                        "name": "Accenture",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/6/69/Accenture_logo.svg"
+                    }
+                ]
+            },
+            {
+                "type": "Government & Standards",
+                "companies": [
+                    {
+                        "name": "NIST",
+                        "logo": "https://www.nist.gov/sites/default/files/styles/16x9_760x428/public/images/2021/09/20/NIST_Logo_-_Main_Blue.png"
+                    },
+                    {
+                        "name": "ITU",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/5/55/International_Telecommunication_Union_Logo.svg"
+                    }
+                ]
+            },
+            {
+                "type": "Research & Innovation",
+                "companies": [
+                    {
+                        "name": "MIT",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                    },
+                    {
+                        "name": "Stanford",
+                        "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Stanford_University_seal_2003.svg"
+                    }
+                ]
+            }
+        ]
+    }
+]
