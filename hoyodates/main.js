@@ -3,24 +3,38 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-const toggleButtons = document.querySelectorAll('button');
+const createToggleButtons = async () => {
+  const response = await fetch('highlight-dates.json');
+  const data = await response.json();
 
-toggleButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const game = button.getAttribute('data-game');
-    const highlights = document.querySelectorAll(`.highlight-${game}-livestream, .highlight-${game}-patch`);
+  const toggleContainer = document.getElementById('toggle-container'); // The container for the buttons
+  toggleContainer.innerHTML = ""; // Clear existing buttons
 
-    highlights.forEach(highlight => {
-      // Toggle the visibility of highlights for the selected game only
-      if (highlight.classList.contains(`hidden-${game}`)) {
-        highlight.classList.remove(`hidden-${game}`);
-      } else {
-        highlight.classList.add(`hidden-${game}`);
-      }
+  data.forEach(game => {
+    // Exclude specific entries
+    if (game.game === "Title" || game.game === "KualaLumpurHolidays") {
+      return;
+    }
+
+    const button = document.createElement('button');
+    button.className = `label-${game.shorthand.toLowerCase()}`; // Add the shorthand-based class
+    button.setAttribute('data-game', game.shorthand);
+    toggleContainer.appendChild(button);
+
+    button.addEventListener('click', () => {
+      const highlights = document.querySelectorAll(`.highlight-${game.shorthand}-livestream, .highlight-${game.shorthand}-patch`);
+
+      highlights.forEach(highlight => {
+        if (highlight.classList.contains(`hidden-${game.shorthand}`)) {
+          highlight.classList.remove(`hidden-${game.shorthand}`);
+        } else {
+          highlight.classList.add(`hidden-${game.shorthand}`);
+        }
+      });
+      button.classList.toggle('inactive');
     });
-    button.classList.toggle('inactive');
   });
-});
+};
 
 const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
@@ -84,6 +98,9 @@ const renderCalendar = async (year) => {
   // Fetch the external JSON
   const response = await fetch('highlight-dates.json');
   const data = await response.json();
+
+  // Call createToggleButtons to dynamically generate the toggle buttons
+  createToggleButtons();
 
   // Get today's date without time
   const today = new Date();
