@@ -24,27 +24,105 @@ html {
 General Body Styles
 ====================================================== */
 body {
+	margin: 0;
+	padding: 0 1rem 1rem;
 	font-family: Arial, sans-serif;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	margin: 0;
-	padding: 1rem;
 	background-color: var(--bg-color);
 	color: #fff;
+}
+
+/* ======================================================
+Label Styles
+====================================================== */
+
+header {
+	width: 100%;
+	position: sticky;
+	top: 0;
+	z-index: 99;
+	background: linear-gradient(to bottom, var(--bg-color), rgba(51,51,51,0));
+}
+
+.label {
+	margin: 0 auto;
+	padding: 1rem 0 0;
+	max-width: 500px;
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	gap: 0.5rem;
+}
+
+.label button {
+	width: 100%;
+	display: flex;
+	margin: 0;
+	padding: 0.5rem;
+	border-radius: 1rem;
+	border: 0;
+	box-shadow: 0px 2px 4px rgba(51, 51, 51, 0.5);
+	align-items: center;
+	font-weight: bold;
+	color: #fff;
+	text-align: center;
+	cursor: pointer;
+	transition: opacity 0.2s ease;
+}
+
+/* Label Icons */
+.label [class*="label"]:before {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1;
+	content: "";
+	background-size: cover;
+	background-repeat: no-repeat;
+	border-radius: 8px;
+}
+
+.label-hsr::before {
+	background-image: var(--hsr-icon);
+}
+
+.label-zzz::before {
+	background-image: var(--zzz-icon);
+}
+
+.label-gi::before {
+	background-image: var(--gi-icon);
+}
+
+.label-hi3::before {
+	background-image: var(--hi3-icon);
+}
+
+.label-ww::before {
+	background-image: var(--ww-icon);
+}
+
+.label-gfl2::before {
+	background-image: var(--gfl2-icon);
+}
+
+.inactive {
+	opacity: 0.5;
+	transition: opacity 0.2s ease;
 }
 
 /* ======================================================
 Calendar Layout
 ====================================================== */
 .calendar {
+	max-width: 1200px;
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 1rem;
 	margin: 1rem;
 	width: 100%;
-	max-width: 1200px;
 	position: relative;
 }
 
@@ -106,6 +184,7 @@ Weekdays & Days Grid
 Highlighted Dates
 ====================================================== */
 
+.label-hsr,
 .highlight-hsr-livestream,
 .highlight-hsr-patch {
 	background-color: var(--hsr-color);
@@ -115,6 +194,7 @@ Highlighted Dates
 	background-color: var(--hsr-color) !important;
 }
 
+.label-zzz,
 .highlight-zzz-livestream,
 .highlight-zzz-patch {
 	background-color: var(--zzz-color);
@@ -124,6 +204,7 @@ Highlighted Dates
 	background-color: var(--zzz-color) !important;
 }
 
+.label-gi,
 .highlight-gi-livestream,
 .highlight-gi-patch {
 	background-color: var(--gi-color);
@@ -133,6 +214,7 @@ Highlighted Dates
 	background-color: var(--gi-color) !important;
 }
 
+.label-hi3,
 .highlight-hi3-livestream,
 .highlight-hi3-patch {
 	background-color: var(--hi3-color);
@@ -142,6 +224,7 @@ Highlighted Dates
 	background-color: var(--hi3-color) !important;
 }
 
+.label-ww,
 .highlight-ww-livestream,
 .highlight-ww-patch {
 	background-color: var(--ww-color);
@@ -151,6 +234,7 @@ Highlighted Dates
 	background-color: var(--ww-color) !important;
 }
 
+.label-gfl2,
 .highlight-gfl2-livestream,
 .highlight-gfl2-patch {
 	background-color: var(--gfl2-color);
@@ -215,104 +299,11 @@ Tooltip
 }
 
 /* ======================================================
-Label Styles
-====================================================== */
-.label {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 0.5rem;
-	width: 100%;
-	padding: 0.5rem;
-	position: sticky;
-	top: 0;
-	z-index: 99;
-	background: linear-gradient(to bottom, var(--bg-color), rgba(51,51,51,0));
-}
-
-.label button {
-	display: flex;
-	margin: 0;
-	padding: 0.5rem;
-	border-radius: 1rem;
-	border: 0;
-	box-shadow: 0px 2px 4px rgba(51, 51, 51, 0.5);
-	align-items: center;
-	font-weight: bold;
-	color: #fff;
-	text-align: center;
-	cursor: pointer;
-	transition: opacity 0.2s ease;
-}
-
-/* Label Background Colors */
-.label-hsr {
-	background-color: var(--hsr-color);
-}
-
-.label-zzz {
-	background-color: var(--zzz-color);
-}
-
-.label-gi {
-	background-color: var(--gi-color);
-}
-
-.label-hi3 {
-	background-color: var(--hi3-color);
-}
-
-.label-ww {
-	background-color: var(--ww-color);
-}
-
-.label-gfl2 {
-	background-color: var(--gfl2-color);
-}
-
-/* Label Icons */
-.label [class*="label"]:before {
-	content: "";
-	width: 3rem;
-	height: 3rem;
-	background-size: contain;
-	background-repeat: no-repeat;
-	border-radius: 8px;
-}
-
-.label-hsr::before {
-	background-image: var(--hsr-icon);
-}
-
-.label-zzz::before {
-	background-image: var(--zzz-icon);
-}
-
-.label-gi::before {
-	background-image: var(--gi-icon);
-}
-
-.label-hi3::before {
-	background-image: var(--hi3-icon);
-}
-
-.label-ww::before {
-	background-image: var(--ww-icon);
-}
-
-.label-gfl2::before {
-	background-image: var(--gfl2-icon);
-}
-
-.inactive {
-	opacity: 0.5;
-	transition: opacity 0.2s ease;
-}
-
-/* ======================================================
 Footer
 ====================================================== */
 footer {
+	font-family: 'Times New Roman', Times, serif;
+	font-style: italic;
 	font-size: 0.5rem;
 }
 
@@ -320,10 +311,6 @@ footer {
 Responsive Layout
 ====================================================== */
 @media (max-width: 1024px) {
-	.calendar {
-		grid-template-columns: repeat(3, 1fr);
-	}
-
 	.month-header {
 		font-size: 1rem;
 	}
@@ -335,13 +322,14 @@ Responsive Layout
 
 @media (max-width: 768px) {
 	.calendar {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(3, 1fr);
 	}
 }
 
 @media (max-width: 480px) {
 	.calendar {
 		gap: 0.5rem;
+		grid-template-columns: repeat(2, 1fr);
 	}
 	.weekdays div,
 	.days div {
@@ -351,14 +339,11 @@ Responsive Layout
 		padding: 0.5rem;
 	}
 	.label {
-		gap: 0.5rem;
+		width: 100%;
+		gap: 1vw;
 	}
 	.label button {
 		border-radius: 0.75rem;
 		padding: 0.25rem;
-	}
-	.label [class*="label"]:before {
-		width: 2.5rem;
-		height: 2.5rem;
 	}
 }
