@@ -12,7 +12,7 @@ const createToggleButtons = async () => {
 
   data.forEach(game => {
     // Exclude specific entries
-    if (game.game === "Title" || game.game === "KualaLumpurHolidays") {
+    if (game.game === "Template" || game.game === "Holidays") {
       return;
     }
 
