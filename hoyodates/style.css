@@ -321,9 +321,15 @@ Responsive Layout
 }
 
 @media (max-width: 480px) {
+	body {
+		background-color: #000000;
+	}
 	.calendar {
 		gap: 0.5rem;
 		grid-template-columns: repeat(2, 1fr);
+	}
+	.month-header {
+		margin: 0.25rem 0 0.5rem;
 	}
 	.weekdays div,
 	.days div {
@@ -331,6 +337,7 @@ Responsive Layout
 	}
 	.month {
 		padding: 0.5rem;
+		background-color: #222222;
 	}
 	.label {
 		width: 100%;
