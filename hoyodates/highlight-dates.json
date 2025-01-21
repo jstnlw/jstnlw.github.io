@@ -1,8 +1,7 @@
 [
     {
-        "_comment": "",
-        "game": "Title",
-        "shorthand": "xxx",
+        "game": "Template",
+        "shorthand": "temp",
         "versions": [
             {
                 "version": 1.0,
@@ -757,8 +756,8 @@
         ]
     },
     {
-        "game": "KualaLumpurHolidays",
-        "shorthand": "klh",
+        "game": "Holidays",
+        "shorthand": "hol",
         "dates": [
             {
                 "type": "holiday",
