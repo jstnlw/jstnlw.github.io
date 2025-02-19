@@ -675,7 +675,6 @@
         "versions": [
             {
                 "version": 1.1,
-                "bannerOne": 41,
                 "dates": [
                     {
                         "type": "patch",
@@ -686,7 +685,6 @@
             },
             {
                 "version": 1.2,
-                "bannerOne": 41,
                 "dates": [
                     {
                         "type": "patch",
@@ -697,7 +695,6 @@
             },
             {
                 "version": 1.3,
-                "bannerOne": 41,
                 "dates": [
                     {
                         "type": "patch",
@@ -708,7 +705,6 @@
             },
             {
                 "version": 1.4,
-                "bannerOne": 41,
                 "dates": [
                     {
                         "type": "patch",
@@ -719,7 +715,6 @@
             },
             {
                 "version": 1.5,
-                "bannerOne": 41,
                 "dates": [
                     {
                         "type": "patch",
@@ -730,7 +725,6 @@
             },
             {
                 "version": 1.6,
-                "bannerOne": 41,
                 "dates": [
                     {
                         "type": "patch",
@@ -741,7 +735,6 @@
             },
             {
                 "version": 1.7,
-                "bannerOne": 41,
                 "dates": [
                     {
                         "type": "patch",
@@ -752,7 +745,6 @@
             },
             {
                 "version": 1.8,
-                "bannerOne": 41,
                 "dates": [
                     {
                         "type": "patch",
