@@ -1,240 +1,706 @@
-[
-    {
-        "category": "Industry",
-        "items": [
-            {
-                "type": "Manufacturing",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-manufacturing.svg",
-                "partners": [
-                    { "name": "Apple", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
-                    { "name": "Toyota", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Toyota_logo.svg" },
-                    { "name": "Pfizer", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/57/Pfizer_%282021%29.svg" },
-                    { "name": "Moderna", "logo": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Moderna_logo.svg" },
-                    { "name": "Cisco", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg" },
-                    { "name": "IBM", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" },
-                    { "name": "Tesla", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg" },
-                    { "name": "Uber", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg" },
-                    { "name": "Intel", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg" },
-                    { "name": "Qualcomm", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg" },
-                    { "name": "AT&T", "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg" },
-                    { "name": "Verizon", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg" },
-                    { "name": "Microsoft Azure", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
-                    { "name": "Google Cloud", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-                    { "name": "OpenAI", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
-                    { "name": "NVIDIA", "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "Healthcare",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-healthcare.svg",
-                "partners": [
-                    { "name": "Pfizer", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/57/Pfizer_%282021%29.svg" },
-                    { "name": "Moderna", "logo": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Moderna_logo.svg" },
-                    { "name": "Cisco", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg" },
-                    { "name": "IBM", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" },
-                    { "name": "Tesla", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg" },
-                    { "name": "Uber", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg" },
-                    { "name": "Intel", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg" },
-                    { "name": "Qualcomm", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg" },
-                    { "name": "AT&T", "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg" },
-                    { "name": "Verizon", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg" },
-                    { "name": "Microsoft Azure", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
-                    { "name": "Google Cloud", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-                    { "name": "OpenAI", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
-                    { "name": "NVIDIA", "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "Digital Cities",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-digital-cities.svg",
-                "partners": [
-                    { "name": "Cisco", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg" },
-                    { "name": "IBM", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" },
-                    { "name": "Tesla", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg" },
-                    { "name": "Uber", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg" },
-                    { "name": "Intel", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg" },
-                    { "name": "Qualcomm", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg" },
-                    { "name": "AT&T", "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg" },
-                    { "name": "Verizon", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg" },
-                    { "name": "Microsoft Azure", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
-                    { "name": "Google Cloud", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-                    { "name": "OpenAI", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
-                    { "name": "NVIDIA", "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "Mobility",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-mobility.svg",
-                "partners": [
-                    { "name": "Tesla", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg" },
-                    { "name": "Uber", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg" },
-                    { "name": "Intel", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg" },
-                    { "name": "Qualcomm", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg" },
-                    { "name": "AT&T", "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg" },
-                    { "name": "Verizon", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg" },
-                    { "name": "Microsoft Azure", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
-                    { "name": "Google Cloud", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-                    { "name": "OpenAI", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
-                    { "name": "NVIDIA", "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            }
-        ]
-    },
-    {
-        "category": "Category",
-        "items": [
-            {
-                "type": "Device & Sensors",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-device-sensors.svg",
-                "partners": [
-                    { "name": "Intel", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg" },
-                    { "name": "Qualcomm", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg" },
-                    { "name": "AT&T", "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg" },
-                    { "name": "Verizon", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg" },
-                    { "name": "Microsoft Azure", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
-                    { "name": "Google Cloud", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-                    { "name": "OpenAI", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
-                    { "name": "NVIDIA", "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "Network & Infrastructure",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-network-infrastructure.svg",
-                "partners": [
-                    { "name": "AT&T", "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg" },
-                    { "name": "Verizon", "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg" },
-                    { "name": "Microsoft Azure", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
-                    { "name": "Google Cloud", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-                    { "name": "OpenAI", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
-                    { "name": "NVIDIA", "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "Cloud & Edge Platform",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-cloud-edge-platform.svg",
-                "partners": [
-                    { "name": "Microsoft Azure", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" },
-                    { "name": "Google Cloud", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-                    { "name": "OpenAI", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
-                    { "name": "NVIDIA", "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "AI & Data",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-ai-data.svg",
-                "partners": [
-                    { "name": "OpenAI", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
-                    { "name": "NVIDIA", "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "Applications, Solutions & IoT",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-application-solutions-iot.svg",
-                "partners": [
-                    { "name": "Salesforce", "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-                    { "name": "SAP", "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg" },
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "System Integrators",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-system-integrators.svg",
-                "partners": [
-                    { "name": "Deloitte", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg" },
-                    { "name": "Accenture", "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg" },
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "Government & Standards",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-government-standards.svg",
-                "partners": [
-                    { "name": "NIST", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg" },
-                    { "name": "ITU", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg" },
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            },
-            {
-                "type": "Research & Innovation",
-                "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-research-innovation.svg",
-                "partners": [
-                    { "name": "MIT", "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg" },
-                    { "name": "Stanford", "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg" }
-                ]
-            }
-        ]
-    }
-]
+{
+    "category": "Industry",
+    "items": [
+        {
+            "type": "Manufacturing",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-manufacturing.svg",
+            "partners": [
+                {
+                    "name": "Apple",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+                },
+                {
+                    "name": "Toyota",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Toyota_logo.svg"
+                },
+                {
+                    "name": "Pfizer",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/57/Pfizer_%282021%29.svg"
+                },
+                {
+                    "name": "Moderna",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Moderna_logo.svg"
+                },
+                {
+                    "name": "Cisco",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg"
+                },
+                {
+                    "name": "IBM",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                },
+                {
+                    "name": "Tesla",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg"
+                },
+                {
+                    "name": "Uber",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg"
+                },
+                {
+                    "name": "Intel",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg"
+                },
+                {
+                    "name": "Qualcomm",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg"
+                },
+                {
+                    "name": "AT&T",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg"
+                },
+                {
+                    "name": "Verizon",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg"
+                },
+                {
+                    "name": "Microsoft Azure",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg"
+                },
+                {
+                    "name": "Google Cloud",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+                },
+                {
+                    "name": "OpenAI",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+                },
+                {
+                    "name": "NVIDIA",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
+                },
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "Healthcare",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-healthcare.svg",
+            "partners": [
+                {
+                    "name": "Pfizer",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/57/Pfizer_%282021%29.svg"
+                },
+                {
+                    "name": "Moderna",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Moderna_logo.svg"
+                },
+                {
+                    "name": "Cisco",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg"
+                },
+                {
+                    "name": "IBM",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                },
+                {
+                    "name": "Tesla",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg"
+                },
+                {
+                    "name": "Uber",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg"
+                },
+                {
+                    "name": "Intel",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg"
+                },
+                {
+                    "name": "Qualcomm",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg"
+                },
+                {
+                    "name": "AT&T",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg"
+                },
+                {
+                    "name": "Verizon",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg"
+                },
+                {
+                    "name": "Microsoft Azure",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg"
+                },
+                {
+                    "name": "Google Cloud",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+                },
+                {
+                    "name": "OpenAI",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+                },
+                {
+                    "name": "NVIDIA",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
+                },
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "Digital Cities",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-digital-cities.svg",
+            "partners": [
+                {
+                    "name": "Cisco",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg"
+                },
+                {
+                    "name": "IBM",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                },
+                {
+                    "name": "Tesla",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg"
+                },
+                {
+                    "name": "Uber",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg"
+                },
+                {
+                    "name": "Intel",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg"
+                },
+                {
+                    "name": "Qualcomm",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg"
+                },
+                {
+                    "name": "AT&T",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg"
+                },
+                {
+                    "name": "Verizon",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg"
+                },
+                {
+                    "name": "Microsoft Azure",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg"
+                },
+                {
+                    "name": "Google Cloud",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+                },
+                {
+                    "name": "OpenAI",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+                },
+                {
+                    "name": "NVIDIA",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
+                },
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "Mobility",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-mobility.svg",
+            "partners": [
+                {
+                    "name": "Tesla",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg"
+                },
+                {
+                    "name": "Uber",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/58/Uber_logo_2018.svg"
+                },
+                {
+                    "name": "Intel",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg"
+                },
+                {
+                    "name": "Qualcomm",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg"
+                },
+                {
+                    "name": "AT&T",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg"
+                },
+                {
+                    "name": "Verizon",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg"
+                },
+                {
+                    "name": "Microsoft Azure",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg"
+                },
+                {
+                    "name": "Google Cloud",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+                },
+                {
+                    "name": "OpenAI",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+                },
+                {
+                    "name": "NVIDIA",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
+                },
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        }
+    ]
+},
+{
+    "category": "Category",
+    "items": [
+        {
+            "type": "Device & Sensors",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-device-sensors.svg",
+            "partners": [
+                {
+                    "name": "Intel",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/85/Intel_logo_2023.svg"
+                },
+                {
+                    "name": "Qualcomm",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Qualcomm-Logo.svg"
+                },
+                {
+                    "name": "AT&T",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg"
+                },
+                {
+                    "name": "Verizon",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg"
+                },
+                {
+                    "name": "Microsoft Azure",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg"
+                },
+                {
+                    "name": "Google Cloud",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+                },
+                {
+                    "name": "OpenAI",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+                },
+                {
+                    "name": "NVIDIA",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
+                },
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "Network & Infrastructure",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-network-infrastructure.svg",
+            "partners": [
+                {
+                    "name": "AT&T",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/31/AT%26T_logo_2016.svg"
+                },
+                {
+                    "name": "Verizon",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/8/83/Verizon_2024.svg"
+                },
+                {
+                    "name": "Microsoft Azure",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg"
+                },
+                {
+                    "name": "Google Cloud",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+                },
+                {
+                    "name": "OpenAI",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+                },
+                {
+                    "name": "NVIDIA",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
+                },
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "Cloud & Edge Platform",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-cloud-edge-platform.svg",
+            "partners": [
+                {
+                    "name": "Microsoft Azure",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg"
+                },
+                {
+                    "name": "Google Cloud",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+                },
+                {
+                    "name": "OpenAI",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+                },
+                {
+                    "name": "NVIDIA",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
+                },
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "AI & Data",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-ai-data.svg",
+            "partners": [
+                {
+                    "name": "OpenAI",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg"
+                },
+                {
+                    "name": "NVIDIA",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg"
+                },
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "Applications, Solutions & IoT",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-application-solutions-iot.svg",
+            "partners": [
+                {
+                    "name": "Salesforce",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg"
+                },
+                {
+                    "name": "SAP",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg"
+                },
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "System Integrators",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-system-integrators.svg",
+            "partners": [
+                {
+                    "name": "Deloitte",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Logo_of_Deloitte.svg"
+                },
+                {
+                    "name": "Accenture",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+                },
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "Government & Standards",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-government-standards.svg",
+            "partners": [
+                {
+                    "name": "NIST",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/ee/NIST_logo.svg"
+                },
+                {
+                    "name": "ITU",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e1/International_Telecommunication_Union_logo.svg"
+                },
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        },
+        {
+            "type": "Research & Innovation",
+            "icon": "http://business.maxis.com.my/content/dam/enterprise/images/campaign/5g-alliance/icons/icon-research-innovation.svg",
+            "partners": [
+                {
+                    "name": "MIT",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/MIT_logo.svg"
+                },
+                {
+                    "name": "Stanford",
+                    "logo": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Leland_Stanford_Junior_University.svg"
+                }
+            ]
+        }
+    ]
+}
