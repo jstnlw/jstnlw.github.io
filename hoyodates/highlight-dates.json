@@ -568,7 +568,7 @@
                     {
                         "type": "livestream",
                         "month": "March",
-                        "day": 15
+                        "day": 21
                     },
                     {
                         "type": "patch",
@@ -582,8 +582,8 @@
                 "dates": [
                     {
                         "type": "livestream",
-                        "month": "April",
-                        "day": 26
+                        "month": "May",
+                        "day": 2
                     },
                     {
                         "type": "patch",
@@ -598,7 +598,7 @@
                     {
                         "type": "livestream",
                         "month": "June",
-                        "day": 7
+                        "day": 13
                     },
                     {
                         "type": "patch",
@@ -613,7 +613,7 @@
                     {
                         "type": "livestream",
                         "month": "July",
-                        "day": 19
+                        "day": 25
                     },
                     {
                         "type": "patch",
@@ -627,8 +627,8 @@
                 "dates": [
                     {
                         "type": "livestream",
-                        "month": "August",
-                        "day": 30
+                        "month": "September",
+                        "day": 5
                     },
                     {
                         "type": "patch",
@@ -643,7 +643,7 @@
                     {
                         "type": "livestream",
                         "month": "October",
-                        "day": 11
+                        "day": 17
                     },
                     {
                         "type": "patch",
@@ -658,7 +658,7 @@
                     {
                         "type": "livestream",
                         "month": "November",
-                        "day": 22
+                        "day": 28
                     },
                     {
                         "type": "patch",
