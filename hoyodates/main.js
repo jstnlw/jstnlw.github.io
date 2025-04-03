@@ -160,7 +160,7 @@ const renderCalendar = async (year) => {
             version.dates.forEach(date => {
               const eventMonth = months.indexOf(date.month);
               if (eventMonth === month && date.day === day) {
-                const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version.toFixed(2)}`;
+                const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version % 1 === 0 ? version.version.toFixed(1) : version.version.toFixed(2).replace(/(\.\d+?)0$/, '$1')}`;
                 const highlightClass = `highlight-${game.shorthand}-${date.type}`;
                 const isLivestream = date.type === 'livestream';
 
