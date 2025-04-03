@@ -3,12 +3,14 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
+const getYear = new Date().getFullYear();
+
 const createToggleButtons = async () => {
   const response = await fetch('highlight-dates.json');
   const data = await response.json();
 
-  const toggleContainer = document.getElementById('toggle-container'); // The container for the buttons
-  toggleContainer.innerHTML = ""; // Clear existing buttons
+  const toggleContainer = document.getElementById('toggle-container');
+  toggleContainer.innerHTML = "";
 
   data.forEach(game => {
     // Exclude specific entries
@@ -17,7 +19,7 @@ const createToggleButtons = async () => {
     }
 
     const button = document.createElement('button');
-    button.className = `label-${game.shorthand.toLowerCase()}`; // Add the shorthand-based class
+    button.className = `label-${game.shorthand.toLowerCase()}`;
     button.setAttribute('data-game', game.shorthand);
     toggleContainer.appendChild(button);
 
@@ -93,16 +95,13 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType,
 
 const renderCalendar = async (year) => {
   const calendar = document.getElementById('calendar');
-  calendar.innerHTML = ""; // Clear the calendar
+  calendar.innerHTML = "";
 
-  // Fetch the external JSON
   const response = await fetch('highlight-dates.json');
   const data = await response.json();
 
-  // Call createToggleButtons to dynamically generate the toggle buttons
   createToggleButtons();
 
-  // Get today's date without time
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -111,6 +110,7 @@ const renderCalendar = async (year) => {
     const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
     const totalDays = daysInMonth(month, year);
     const monthDiv = document.createElement('div');
+    const yearFooter = document.querySelector('footer');
     monthDiv.className = 'month';
 
     // Month header
@@ -119,7 +119,6 @@ const renderCalendar = async (year) => {
     header.textContent = months[month];
     monthDiv.appendChild(header);
 
-    // Weekday names
     const weekdays = document.createElement('div');
     weekdays.className = 'weekdays';
     ['M', 'T', 'W', 'T', 'F', 'S', 'S'].forEach(day => {
@@ -129,7 +128,6 @@ const renderCalendar = async (year) => {
     });
     monthDiv.appendChild(weekdays);
 
-    // Days grid
     const daysGrid = document.createElement('div');
     daysGrid.className = 'days';
 
@@ -148,12 +146,10 @@ const renderCalendar = async (year) => {
       dayDiv.setAttribute('data-date', currentDate.toISOString().split('T')[0]);
       dayDiv.textContent = day;
 
-      // Add .today class if the current date matches today's date
       if (currentDate.getTime() === today.getTime()) {
         dayDiv.classList.add('today');
       }
 
-      // Highlight logic based on JSON data
       data.forEach(game => {
         if (game.versions) {
           game.versions.forEach(version => {
@@ -164,7 +160,7 @@ const renderCalendar = async (year) => {
             version.dates.forEach(date => {
               const eventMonth = months.indexOf(date.month);
               if (eventMonth === month && date.day === day) {
-                const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version.toFixed(1)}`;
+                const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version.toFixed(2)}`;
                 const highlightClass = `highlight-${game.shorthand}-${date.type}`;
                 const isLivestream = date.type === 'livestream';
 
@@ -201,8 +197,7 @@ const renderCalendar = async (year) => {
     }
     monthDiv.appendChild(daysGrid);
     calendar.appendChild(monthDiv);
+    yearFooter.textContent = getYear;
   }
 };
-
-// Call the function to render the calendar for 2025
-renderCalendar(2025);
+renderCalendar(getYear);
