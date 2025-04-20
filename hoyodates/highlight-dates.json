@@ -581,14 +581,9 @@
                 "version": 2.3,
                 "dates": [
                     {
-                        "type": "livestream",
-                        "month": "May",
-                        "day": 2
-                    },
-                    {
                         "type": "patch",
-                        "month": "May",
-                        "day": 8
+                        "month": "April",
+                        "day": 29
                     }
                 ]
             },
@@ -596,14 +591,9 @@
                 "version": 2.4,
                 "dates": [
                     {
-                        "type": "livestream",
-                        "month": "June",
-                        "day": 13
-                    },
-                    {
                         "type": "patch",
                         "month": "June",
-                        "day": 19
+                        "day": 10
                     }
                 ]
             },
@@ -611,14 +601,9 @@
                 "version": 2.5,
                 "dates": [
                     {
-                        "type": "livestream",
-                        "month": "July",
-                        "day": 25
-                    },
-                    {
                         "type": "patch",
                         "month": "July",
-                        "day": 31
+                        "day": 22
                     }
                 ]
             },
@@ -626,14 +611,9 @@
                 "version": 2.6,
                 "dates": [
                     {
-                        "type": "livestream",
-                        "month": "September",
-                        "day": 5
-                    },
-                    {
                         "type": "patch",
                         "month": "September",
-                        "day": 11
+                        "day": 2
                     }
                 ]
             },
@@ -641,14 +621,9 @@
                 "version": 2.7,
                 "dates": [
                     {
-                        "type": "livestream",
-                        "month": "October",
-                        "day": 17
-                    },
-                    {
                         "type": "patch",
                         "month": "October",
-                        "day": 23
+                        "day": 14
                     }
                 ]
             },
@@ -656,14 +631,9 @@
                 "version": 2.8,
                 "dates": [
                     {
-                        "type": "livestream",
-                        "month": "November",
-                        "day": 28
-                    },
-                    {
                         "type": "patch",
-                        "month": "December",
-                        "day": 4
+                        "month": "November",
+                        "day": 25
                     }
                 ]
             }
