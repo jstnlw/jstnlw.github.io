@@ -35,6 +35,13 @@ const createToggleButtons = async () => {
       });
       button.classList.toggle('inactive');
     });
+
+    if (game.shorthand.toLowerCase() === 'hi3' || game.shorthand.toLowerCase() === 'gi') {
+      setTimeout(() => {
+        button.click();
+        button.classList.add('inactive');
+      }, 0); 
+    }
   });
 };
 
