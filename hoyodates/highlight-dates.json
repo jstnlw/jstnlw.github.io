@@ -551,6 +551,11 @@
                 "version": 2.1,
                 "dates": [
                     {
+                        "type": "livestream",
+                        "month": "February",
+                        "day": 7
+                    },
+                    {
                         "type": "patch",
                         "month": "February",
                         "day": 13
@@ -559,7 +564,14 @@
             },
             {
                 "version": 2.2,
+                "highlightRange": 32,
+                "bannerOne": 20,
                 "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "March",
+                        "day": 21
+                    },
                     {
                         "type": "patch",
                         "month": "March",
@@ -571,9 +583,14 @@
                 "version": 2.3,
                 "dates": [
                     {
+                        "type": "livestream",
+                        "month": "April",
+                        "day": 19
+                    },
+                    {
                         "type": "patch",
-                        "month": "May",
-                        "day": 8
+                        "month": "April",
+                        "day": 29
                     }
                 ]
             },
@@ -581,9 +598,14 @@
                 "version": 2.4,
                 "dates": [
                     {
+                        "type": "livestream",
+                        "month": "May",
+                        "day": 31
+                    },
+                    {
                         "type": "patch",
                         "month": "June",
-                        "day": 19
+                        "day": 10
                     }
                 ]
             },
@@ -591,9 +613,14 @@
                 "version": 2.5,
                 "dates": [
                     {
+                        "type": "livestream",
+                        "month": "July",
+                        "day": 12
+                    },
+                    {
                         "type": "patch",
                         "month": "July",
-                        "day": 31
+                        "day": 22
                     }
                 ]
             },
@@ -601,9 +628,14 @@
                 "version": 2.6,
                 "dates": [
                     {
+                        "type": "livestream",
+                        "month": "August",
+                        "day": 23
+                    },
+                    {
                         "type": "patch",
                         "month": "September",
-                        "day": 11
+                        "day": 2
                     }
                 ]
             },
@@ -611,9 +643,14 @@
                 "version": 2.7,
                 "dates": [
                     {
+                        "type": "livestream",
+                        "month": "October",
+                        "day": 4
+                    },
+                    {
                         "type": "patch",
                         "month": "October",
-                        "day": 23
+                        "day": 14
                     }
                 ]
             },
@@ -621,9 +658,14 @@
                 "version": 2.8,
                 "dates": [
                     {
+                        "type": "livestream",
+                        "month": "November",
+                        "day": 15
+                    },
+                    {
                         "type": "patch",
-                        "month": "December",
-                        "day": 4
+                        "month": "November",
+                        "day": 25
                     }
                 ]
             }
