@@ -551,11 +551,6 @@
                 "version": 2.1,
                 "dates": [
                     {
-                        "type": "livestream",
-                        "month": "February",
-                        "day": 7
-                    },
-                    {
                         "type": "patch",
                         "month": "February",
                         "day": 13
@@ -565,11 +560,6 @@
             {
                 "version": 2.2,
                 "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "March",
-                        "day": 21
-                    },
                     {
                         "type": "patch",
                         "month": "March",
