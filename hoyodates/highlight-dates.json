@@ -438,6 +438,102 @@
         ]
     },
     {
+        "game": "HonkaiImpact3rd",
+        "shorthand": "hi3",
+        "versions": [
+            {
+                "version": 8.0,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "January",
+                        "day": 8
+                    }
+                ]
+            },
+            {
+                "version": 8.1,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "February",
+                        "day": 19
+                    }
+                ]
+            },
+            {
+                "version": 8.2,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "April",
+                        "day": 2
+                    }
+                ]
+            },
+            {
+                "version": 8.3,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "May",
+                        "day": 14
+                    }
+                ]
+            },
+            {
+                "version": 8.4,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 25
+                    }
+                ]
+            },
+            {
+                "version": 8.5,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "August",
+                        "day": 6
+                    }
+                ]
+            },
+            {
+                "version": 8.6,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "September",
+                        "day": 17
+                    }
+                ]
+            },
+            {
+                "version": 8.7,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "October",
+                        "day": 29
+                    }
+                ]
+            },
+            {
+                "version": 8.8,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "December",
+                        "day": 10
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "game": "WutheringWaves",
         "shorthand": "ww",
         "versions": [

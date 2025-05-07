@@ -14,7 +14,7 @@ const createToggleButtons = async () => {
 
   data.forEach(game => {
     // Exclude specific entries
-    if (game.game === "Template" || game.game === "Holidays") {
+    if (game.game === "HonkaiImpact3rd" || game.game === "Template" || game.game === "Holidays") {
       return;
     }
 
@@ -36,7 +36,7 @@ const createToggleButtons = async () => {
       button.classList.toggle('inactive');
     });
 
-    if (game.shorthand.toLowerCase() === 'hi3' || game.shorthand.toLowerCase() === 'gi') {
+    if (game.game === "HonkaiImpact3rd" || game.game === "GenshinImpact") {
       setTimeout(() => {
         button.click();
         button.classList.add('inactive');
