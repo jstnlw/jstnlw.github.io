@@ -6,25 +6,21 @@ const months = [
 const getYear = new Date().getFullYear();
 
 const applyStylesFromJSON = (games) => {
-  // Create or reuse <style> element
   let styleEl = document.getElementById('game-properties');
   if (!styleEl) {
     styleEl = document.createElement('style');
-    // styleEl.id = 'game-properties';
     document.head.appendChild(styleEl);
   }
 
-  // Clear existing styles
   styleEl.innerHTML = '';
 
   games.forEach(game => {
-    if (!game.color) return; // skip if no color
+    if (!game.color) return;
 
     const shorthand = game.shorthand.toLowerCase();
     const color = game.color;
     const icon = game.icon || 'none';
 
-    // Compose CSS rules as a string
     const rules = `
       .label-${shorthand},
       .highlight-${shorthand}-livestream,
@@ -53,20 +49,14 @@ const applyStylesFromJSON = (games) => {
   });
 };
 
-
-const createToggleButtons = async () => {
-  const response = await fetch('highlight-dates.json');
-  const data = await response.json();
+const createToggleButtons = (data) => {
   applyStylesFromJSON(data);
 
   const toggleContainer = document.getElementById('toggle-container');
   toggleContainer.innerHTML = "";
 
   data.forEach(game => {
-    // Exclude specific entries
-    if (game.game === "Template" || game.game === "Holidays") {
-      return;
-    }
+    if (game.game === "Template" || game.game === "Holidays") return;
 
     const button = document.createElement('button');
     button.className = `label-${game.shorthand.toLowerCase()}`;
@@ -75,7 +65,6 @@ const createToggleButtons = async () => {
 
     button.addEventListener('click', () => {
       const highlights = document.querySelectorAll(`.highlight-${game.shorthand}-livestream, .highlight-${game.shorthand}-patch`);
-
       highlights.forEach(highlight => {
         if (highlight.classList.contains(`hidden-${game.shorthand}`)) {
           highlight.classList.remove(`hidden-${game.shorthand}`);
@@ -90,7 +79,7 @@ const createToggleButtons = async () => {
       setTimeout(() => {
         button.click();
         button.classList.add('inactive');
-      }, 0); 
+      }, 0);
     }
   });
 };
@@ -151,110 +140,115 @@ const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType,
 };
 
 const renderCalendar = async (year) => {
-  const calendar = document.getElementById('calendar');
-  calendar.innerHTML = "";
+  try {
+    const response = await fetch('highlight-dates.json');
+    if (!response.ok) throw new Error('Failed to fetch highlight-dates.json');
+    const data = await response.json();
 
-  const response = await fetch('highlight-dates.json');
-  const data = await response.json();
+    createToggleButtons(data);
 
-  createToggleButtons();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    // Loop through months
+    for (let month = 0; month < 12; month++) {
+      const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+      const totalDays = daysInMonth(month, year);
+      const monthDiv = document.createElement('div');
+      const yearFooter = document.querySelector('footer');
+      monthDiv.className = 'month';
 
-  // Loop through months
-  for (let month = 0; month < 12; month++) {
-    const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
-    const totalDays = daysInMonth(month, year);
-    const monthDiv = document.createElement('div');
-    const yearFooter = document.querySelector('footer');
-    monthDiv.className = 'month';
+      // Month header
+      const header = document.createElement('div');
+      header.className = 'month-header';
+      header.textContent = months[month];
+      monthDiv.appendChild(header);
 
-    // Month header
-    const header = document.createElement('div');
-    header.className = 'month-header';
-    header.textContent = months[month];
-    monthDiv.appendChild(header);
+      const weekdays = document.createElement('div');
+      weekdays.className = 'weekdays';
+      ['M', 'T', 'W', 'T', 'F', 'S', 'S'].forEach(day => {
+        const dayDiv = document.createElement('div');
+        dayDiv.textContent = day;
+        weekdays.appendChild(dayDiv);
+      });
+      monthDiv.appendChild(weekdays);
 
-    const weekdays = document.createElement('div');
-    weekdays.className = 'weekdays';
-    ['M', 'T', 'W', 'T', 'F', 'S', 'S'].forEach(day => {
-      const dayDiv = document.createElement('div');
-      dayDiv.textContent = day;
-      weekdays.appendChild(dayDiv);
-    });
-    monthDiv.appendChild(weekdays);
+      const daysGrid = document.createElement('div');
+      daysGrid.className = 'days';
 
-    const daysGrid = document.createElement('div');
-    daysGrid.className = 'days';
-
-    // Add empty divs for days before the first day
-    for (let i = 0; i < firstDay; i++) {
-      const emptyDiv = document.createElement('div');
-      emptyDiv.className = 'empty';
-      daysGrid.appendChild(emptyDiv);
-    }
-
-    // Add day numbers
-    for (let day = 1; day <= totalDays; day++) {
-      const dayDiv = document.createElement('div');
-      dayDiv.className = 'day';
-      const currentDate = new Date(year, month, day);
-      dayDiv.setAttribute('data-date', currentDate.toISOString().split('T')[0]);
-      dayDiv.textContent = day;
-
-      if (currentDate.getTime() === today.getTime()) {
-        dayDiv.classList.add('today');
+      // Add empty divs for days before the first day
+      for (let i = 0; i < firstDay; i++) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty';
+        daysGrid.appendChild(emptyDiv);
       }
 
-      data.forEach(game => {
-        if (game.versions) {
-          game.versions.forEach(version => {
-            const highlightRange = version.highlightRange || 41; // Default to 41 if not specified
-            const bannerOne = version.bannerOne || 20; // Default to 20 if not specified
-            const bannerTwo = version.bannerTwo || 20; // Default to 20 if not specified
+      // Add day numbers
+      for (let day = 1; day <= totalDays; day++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'day';
+        const currentDate = new Date(year, month, day);
+        dayDiv.setAttribute('data-date', currentDate.toISOString().split('T')[0]);
+        dayDiv.textContent = day;
 
-            version.dates.forEach(date => {
+        if (currentDate.getTime() === today.getTime()) {
+          dayDiv.classList.add('today');
+        }
+
+        data.forEach(game => {
+          if (game.versions) {
+            game.versions.forEach(version => {
+              const highlightRange = version.highlightRange || 41; // Default to 41 if not specified
+              const bannerOne = version.bannerOne || 20; // Default to 20 if not specified
+              const bannerTwo = version.bannerTwo || 20; // Default to 20 if not specified
+
+              version.dates.forEach(date => {
+                const eventMonth = months.indexOf(date.month);
+                if (eventMonth === month && date.day === day) {
+                  const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version % 1 === 0 ? version.version.toFixed(1) : version.version.toFixed(2).replace(/(\.\d+?)0$/, '$1')}`;
+                  const highlightClass = `highlight-${game.shorthand}-${date.type}`;
+                  const isLivestream = date.type === 'livestream';
+
+                  dayDiv.classList.add(highlightClass);
+
+                  const futureDates = [];
+                  if (!isLivestream) {
+                    for (let i = 1; i <= highlightRange; i++) {
+                      const futureDate = new Date(currentDate);
+                      futureDate.setDate(currentDate.getDate() + i);
+                      futureDates.push(futureDate);
+                    }
+                  }
+
+                  attachHoverEvents(dayDiv, versionText, currentDate, futureDates, game.shorthand, isLivestream, bannerOne, bannerTwo);
+                }
+              });
+            });
+          }
+
+          // Handle holidays
+          if (game.dates) {
+            game.dates.forEach(date => {
               const eventMonth = months.indexOf(date.month);
               if (eventMonth === month && date.day === day) {
-                const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version % 1 === 0 ? version.version.toFixed(1) : version.version.toFixed(2).replace(/(\.\d+?)0$/, '$1')}`;
-                const highlightClass = `highlight-${game.shorthand}-${date.type}`;
-                const isLivestream = date.type === 'livestream';
-
-                dayDiv.classList.add(highlightClass);
-
-                const futureDates = [];
-                if (!isLivestream) {
-                  for (let i = 1; i <= highlightRange; i++) {
-                    const futureDate = new Date(currentDate);
-                    futureDate.setDate(currentDate.getDate() + i);
-                    futureDates.push(futureDate);
-                  }
-                }
-
-                attachHoverEvents(dayDiv, versionText, currentDate, futureDates, game.shorthand, isLivestream, bannerOne, bannerTwo);
+                dayDiv.classList.add('highlight-holiday');
+                attachHoverEvents(dayDiv, date.name, currentDate, [], 'holiday', false);
               }
             });
-          });
-        }
+          }
+        });
 
-        // Handle holidays
-        if (game.dates) {
-          game.dates.forEach(date => {
-            const eventMonth = months.indexOf(date.month);
-            if (eventMonth === month && date.day === day) {
-              dayDiv.classList.add('highlight-holiday');
-              attachHoverEvents(dayDiv, date.name, currentDate, [], 'holiday', false);
-            }
-          });
-        }
-      });
-
-      daysGrid.appendChild(dayDiv);
+        daysGrid.appendChild(dayDiv);
+      }
+      monthDiv.appendChild(daysGrid);
+      calendar.appendChild(monthDiv);
+      yearFooter.textContent = getYear;
     }
-    monthDiv.appendChild(daysGrid);
-    calendar.appendChild(monthDiv);
-    yearFooter.textContent = getYear;
+  } catch (error) {
+    console.error('Error loading calendar data:', error);
   }
 };
-renderCalendar(getYear);
+
+window.onload = () => {
+  renderCalendar(getYear);
+};
