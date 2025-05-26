@@ -25,19 +25,19 @@ const applyStylesFromJSON = (games) => {
       .label-${shorthand},
       .highlight-${shorthand}-livestream,
       .highlight-${shorthand}-patch {
-        background-color: ${color};
+        background: ${color};
       }
 
       [class*="${shorthand}-banner"] {
-        background-color: ${color} !important;
+        background: ${color} !important;
       }
 
       .label-${shorthand}::before {
-        background-image: url("${icon}");
+        background: url("${icon}");
       }
 
       [class*="hidden"] {
-        background-color: transparent;
+        background: transparent;
       }
 
       .highlight-holiday {
