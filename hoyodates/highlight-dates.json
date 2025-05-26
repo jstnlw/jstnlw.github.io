@@ -26,6 +26,8 @@
     {
         "game": "HonkaiStarRail",
         "shorthand": "hsr",
+        "icon": "assets/hsr-icon.webp",
+        "color": "#32c8ff",
         "versions": [
             {
                 "version": 3.0,
@@ -162,6 +164,8 @@
     {
         "game": "ZenlessZoneZero",
         "shorthand": "zzz",
+        "icon": "assets/zzz-icon.webp",
+        "color": "#ff6464",
         "versions": [
             {
                 "version": 1.5,
@@ -304,6 +308,8 @@
     {
         "game": "GenshinImpact",
         "shorthand": "gi",
+        "icon": "assets/gi-icon.webp",
+        "color": "#64c8c8",
         "versions": [
             {
                 "version": 5.3,
@@ -440,6 +446,8 @@
     {
         "game": "HonkaiImpact3rd",
         "shorthand": "hi3",
+        "icon": "assets/hi3-icon.webp",
+        "color": "#dcc843",
         "versions": [
             {
                 "version": 8.0,
@@ -536,6 +544,8 @@
     {
         "game": "WutheringWaves",
         "shorthand": "ww",
+        "icon": "assets/ww-icon.webp",
+        "color": "#006ee6",
         "versions": [
             {
                 "version": 2.0,
@@ -674,6 +684,8 @@
     {
         "game": "GirlsFrontline2",
         "shorthand": "gfl2",
+        "icon": "assets/gfl2-icon.webp",
+        "color": "#FFA500",
         "versions": [
             {
                 "version": 1.01,
@@ -760,6 +772,8 @@
     {
         "game": "Holidays",
         "shorthand": "hol",
+        "icon": "",
+        "color": "#DC143C",
         "dates": [
             {
                 "type": "holiday",

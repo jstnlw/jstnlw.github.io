@@ -5,9 +5,59 @@ const months = [
 
 const getYear = new Date().getFullYear();
 
+const applyStylesFromJSON = (games) => {
+  // Create or reuse <style> element
+  let styleEl = document.getElementById('game-properties');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    // styleEl.id = 'game-properties';
+    document.head.appendChild(styleEl);
+  }
+
+  // Clear existing styles
+  styleEl.innerHTML = '';
+
+  games.forEach(game => {
+    if (!game.color) return; // skip if no color
+
+    const shorthand = game.shorthand.toLowerCase();
+    const color = game.color;
+    const icon = game.icon || 'none';
+
+    // Compose CSS rules as a string
+    const rules = `
+      .label-${shorthand},
+      .highlight-${shorthand}-livestream,
+      .highlight-${shorthand}-patch {
+        background-color: ${color};
+      }
+
+      [class*="${shorthand}-banner"] {
+        background-color: ${color} !important;
+      }
+
+      .label-${shorthand}::before {
+        background-image: url("${icon}");
+      }
+
+      [class*="hidden"] {
+        background-color: transparent;
+      }
+
+      .highlight-holiday {
+        color: ${color} !important;
+      }
+    `;
+
+    styleEl.innerHTML += rules;
+  });
+};
+
+
 const createToggleButtons = async () => {
   const response = await fetch('highlight-dates.json');
   const data = await response.json();
+  applyStylesFromJSON(data);
 
   const toggleContainer = document.getElementById('toggle-container');
   toggleContainer.innerHTML = "";

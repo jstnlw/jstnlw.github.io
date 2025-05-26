@@ -5,19 +5,19 @@ html {
 	--bg-color: #000000;
 	--calendar-color: #222222;
 	--font-color: #ffffff;
-	--hsr-color: #32c8ff;
+	/* --hsr-color: #32c8ff;
 	--zzz-color: #ff6464;
 	--gi-color: #64c8c8;
 	--hi3-color: #dcc843;
 	--ww-color: #006ee6;
 	--gfl2-color: #FFA500;
-	--holiday-color: #DC143C;
-	--hsr-icon: url("assets/hsr-icon.webp");
+	--holiday-color: #DC143C; */
+	/* --hsr-icon: url("assets/hsr-icon.webp");
 	--zzz-icon: url("assets/zzz-icon.webp");
 	--gi-icon: url("assets/gi-icon.webp");
 	--hi3-icon: url("assets/hi3-icon.webp");
 	--ww-icon: url("assets/ww-icon.webp");
-	--gfl2-icon: url("assets/gfl2-icon.webp");
+	--gfl2-icon: url("assets/gfl2-icon.webp"); */
 }
 
 /* ======================================================
@@ -84,7 +84,7 @@ header {
 	border-radius: 1rem;
 }
 
-.label-hsr::before {
+/* .label-hsr::before {
 	background-image: var(--hsr-icon);
 }
 
@@ -106,7 +106,7 @@ header {
 
 .label-gfl2::before {
 	background-image: var(--gfl2-icon);
-}
+} */
 
 .inactive {
 	opacity: 0.5;
@@ -184,7 +184,7 @@ Weekdays & Days Grid
 Highlighted Dates
 ====================================================== */
 
-.label-hsr,
+/* .label-hsr,
 .highlight-hsr-livestream,
 .highlight-hsr-patch {
 	background-color: var(--hsr-color);
@@ -242,7 +242,7 @@ Highlighted Dates
 
 [class*="gfl2-banner"] {
 	background-color: var(--gfl2-color) !important;
-}
+} */
 
 [class*="livestream"] {
 	border-radius: 50%;
@@ -269,7 +269,7 @@ Highlighted Dates
 }
 
 .highlight-holiday {
-	color: var(--holiday-color) !important;
+	/* color: var(--holiday-color) !important; */
 	font-weight: bold;
 }
 
