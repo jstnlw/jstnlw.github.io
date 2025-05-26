@@ -175,12 +175,6 @@ Highlighted Dates
 	font-weight: bold;
 }
 
-[class*="hidden"] {
-	background-color: transparent;
-	pointer-events: none;
-	font-weight: normal;
-}
-
 /* ======================================================
 Tooltip
 ====================================================== */
@@ -194,10 +188,7 @@ Tooltip
 	pointer-events: none;
 	z-index: 1000;
 	white-space: nowrap;
-}
-
-.custom-tooltip:last-child {
-	margin-top: 28px;
+	text-align: center;
 }
 
 /* ======================================================
