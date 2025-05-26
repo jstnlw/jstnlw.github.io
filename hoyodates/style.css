@@ -5,19 +5,6 @@ html {
 	--bg-color: #000000;
 	--calendar-color: #222222;
 	--font-color: #ffffff;
-	--hsr-color: #32c8ff;
-	--zzz-color: #ff6464;
-	--gi-color: #64c8c8;
-	--hi3-color: #dcc843;
-	--ww-color: #006ee6;
-	--gfl2-color: #FFA500;
-	--holiday-color: #DC143C;
-	--hsr-icon: url("assets/hsr-icon.webp");
-	--zzz-icon: url("assets/zzz-icon.webp");
-	--gi-icon: url("assets/gi-icon.webp");
-	--hi3-icon: url("assets/hi3-icon.webp");
-	--ww-icon: url("assets/ww-icon.webp");
-	--gfl2-icon: url("assets/gfl2-icon.webp");
 }
 
 /* ======================================================
@@ -82,30 +69,6 @@ header {
 	background-size: cover;
 	background-repeat: no-repeat;
 	border-radius: 1rem;
-}
-
-.label-hsr::before {
-	background-image: var(--hsr-icon);
-}
-
-.label-zzz::before {
-	background-image: var(--zzz-icon);
-}
-
-.label-gi::before {
-	background-image: var(--gi-icon);
-}
-
-.label-hi3::before {
-	background-image: var(--hi3-icon);
-}
-
-.label-ww::before {
-	background-image: var(--ww-icon);
-}
-
-.label-gfl2::before {
-	background-image: var(--gfl2-icon);
 }
 
 .inactive {
@@ -184,66 +147,6 @@ Weekdays & Days Grid
 Highlighted Dates
 ====================================================== */
 
-.label-hsr,
-.highlight-hsr-livestream,
-.highlight-hsr-patch {
-	background-color: var(--hsr-color);
-}
-
-[class*="hsr-banner"] {
-	background-color: var(--hsr-color) !important;
-}
-
-.label-zzz,
-.highlight-zzz-livestream,
-.highlight-zzz-patch {
-	background-color: var(--zzz-color);
-}
-
-[class*="zzz-banner"] {
-	background-color: var(--zzz-color) !important;
-}
-
-.label-gi,
-.highlight-gi-livestream,
-.highlight-gi-patch {
-	background-color: var(--gi-color);
-}
-
-[class*="gi-banner"] {
-	background-color: var(--gi-color) !important;
-}
-
-.label-hi3,
-.highlight-hi3-livestream,
-.highlight-hi3-patch {
-	background-color: var(--hi3-color);
-}
-
-[class*="hi3-banner"] {
-	background-color: var(--hi3-color) !important;
-}
-
-.label-ww,
-.highlight-ww-livestream,
-.highlight-ww-patch {
-	background-color: var(--ww-color);
-}
-
-[class*="ww-banner"] {
-	background-color: var(--ww-color) !important;
-}
-
-.label-gfl2,
-.highlight-gfl2-livestream,
-.highlight-gfl2-patch {
-	background-color: var(--gfl2-color);
-}
-
-[class*="gfl2-banner"] {
-	background-color: var(--gfl2-color) !important;
-}
-
 [class*="livestream"] {
 	border-radius: 50%;
 }
@@ -269,7 +172,6 @@ Highlighted Dates
 }
 
 .highlight-holiday {
-	color: var(--holiday-color) !important;
 	font-weight: bold;
 }
 
