@@ -531,7 +531,12 @@ async function renderCalendar(year) {
 
     calendar.appendChild(fragment);
     yearFooter.textContent = year;
-
+    document.title = `Gachaverse ${getYear}`;
+    const metaTitle = document.querySelector('meta[name="title"]');
+    if (metaTitle) {
+      metaTitle.setAttribute('content', `Gachaverse ${getYear}`);
+    }
+    
   } catch (error) {
     console.error('Error loading calendar data:', error);
     
