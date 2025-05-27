@@ -83,11 +83,19 @@ function applyStylesFromJSON(games) {
 let activeGames = new Set();
 
 function createToggleButton(game) {
-  if (game.game === "Template" || game.game === "Holidays") return null;
+  if (game.game === "Template") return null;
+  // if (game.game === "Template" || game.game === "Holidays") return null;
 
   const btn = document.createElement('button');
   btn.className = `label-${game.shorthand.toLowerCase()}`;
   btn.setAttribute('data-game', game.shorthand);
+
+  if (!Array.isArray(game.versions) || game.versions.length === 0) {
+    btn.style.display = 'none';
+  } else {
+    // Only add to activeGames if it has versions
+    activeGames.add(game.shorthand);
+  }
 
   // Initially active unless toggled off by your condition
   activeGames.add(game.shorthand);
@@ -318,7 +326,7 @@ function attachHoverEvents(dayDiv, eventTexts) {
 
   dayDiv.addEventListener('mouseenter', e => {
     const firstEvent = eventTexts[0];
-    if (!isGameActive(firstEvent.patchType)) return;
+    if (firstEvent.patchType !== 'holiday' && !isGameActive(firstEvent.patchType)) return;
 
     const rect = dayDiv.getBoundingClientRect();
 
@@ -351,7 +359,7 @@ function attachHoverEvents(dayDiv, eventTexts) {
     removeTooltip();
 
     const firstEvent = eventTexts[0];
-    if (!isGameActive(firstEvent.patchType)) return;
+    if (firstEvent.patchType !== 'holiday' && !isGameActive(firstEvent.patchType)) return;
 
     if (!firstEvent.isLivestream && firstEvent.highlightRange) {
       for (let i = 1; i <= firstEvent.highlightRange; i++) {
