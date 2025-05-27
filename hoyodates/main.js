@@ -3,378 +3,252 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-const weekdaysShort = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const getYear = new Date().getFullYear();
-let globalData = [];
 
-const calendar = document.getElementById('calendar');
-const toggleContainer = document.getElementById('toggle-container');
-const yearFooter = document.querySelector('footer');
-
-// --- Helper Functions ---
-
-function parseLocalDate(dateStr) {
-  const [year, month, day] = dateStr.split('-').map(Number);
-  return new Date(year, month - 1, day);
-}
-
-function formatLocalDate(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
-function daysInMonth(month, year) {
-  return new Date(year, month + 1, 0).getDate();
-}
-
-function getClassName(gameShorthand, type, suffix = '') {
-  return `highlight-${gameShorthand.toLowerCase()}-${type}${suffix}`;
-}
-
-// --- Styling Functions ---
-
-function applyStylesFromJSON(games) {
+const applyStylesFromJSON = (games) => {
   let styleEl = document.getElementById('game-properties');
   if (!styleEl) {
     styleEl = document.createElement('style');
-    styleEl.id = 'game-properties';
     document.head.appendChild(styleEl);
   }
 
-  styleEl.innerHTML = games
-    .filter(game => game.color)
-    .map(game => {
-      const shorthand = game.shorthand.toLowerCase();
-      const color = game.color;
-      const icon = game.icon || 'none';
-
-      return `
-        .label-${shorthand},
-        .highlight-${shorthand}-livestream,
-        .highlight-${shorthand}-patch {
-          background: ${color};
-        }
-
-        .highlight-${shorthand}-patch-banner-one,
-        .highlight-${shorthand}-patch-banner-two {
-          background: ${color} !important;
-        }
-
-        .label-${shorthand}::before {
-          background: url("${icon}");
-        }
-
-        [class*="hidden"] {
-          background: transparent;
-        }
-
-        .highlight-holiday {
-          color: ${color} !important;
-        }
-      `;
-    })
-    .join('\n');
-}
-
-// --- Toggle Buttons ---
-
-function createToggleButton(game) {
-  if (game.game === "Template" || game.game === "Holidays") return null;
-
-  const btn = document.createElement('button');
-  btn.className = `label-${game.shorthand.toLowerCase()}`;
-  btn.setAttribute('data-game', game.shorthand);
-
-  btn.addEventListener('click', () => {
-    const shorthand = game.shorthand;
-    const isInactive = btn.classList.toggle('inactive');
-
-    if (isInactive) removeHighlights(shorthand);
-    else reapplyHighlights(shorthand);
-  });
-
-  // Initially toggle off for specific games
-  if (game.game === "HonkaiImpact3rd" || game.game === "GenshinImpact") {
-    setTimeout(() => {
-      btn.click();
-      btn.classList.add('inactive');
-    }, 0);
-  }
-
-  return btn;
-}
-
-function createToggleButtons(games) {
-  applyStylesFromJSON(games);
-  toggleContainer.innerHTML = '';
+  styleEl.innerHTML = '';
 
   games.forEach(game => {
-    const btn = createToggleButton(game);
-    if (btn) toggleContainer.appendChild(btn);
+    if (!game.color) return;
+
+    const shorthand = game.shorthand.toLowerCase();
+    const color = game.color;
+    const icon = game.icon || 'none';
+
+    const rules = `
+      .label-${shorthand},
+      .highlight-${shorthand}-livestream,
+      .highlight-${shorthand}-patch {
+        background: ${color};
+      }
+
+      [class*="${shorthand}-banner"] {
+        background: ${color} !important;
+      }
+
+      .label-${shorthand}::before {
+        background: url("${icon}");
+      }
+
+      [class*="hidden"] {
+        background: transparent;
+      }
+
+      .highlight-holiday {
+        color: ${color} !important;
+      }
+    `;
+
+    styleEl.innerHTML += rules;
   });
-}
+};
 
-// --- Highlight Management ---
+const createToggleButtons = (data) => {
+  applyStylesFromJSON(data);
 
-function removeHighlights(shorthand) {
-  const selectors = [
-    `.highlight-${shorthand}-livestream`,
-    `.highlight-${shorthand}-patch`,
-    `.highlight-${shorthand}-banner-one`,
-    `.highlight-${shorthand}-banner-two`,
-  ].join(', ');
+  const toggleContainer = document.getElementById('toggle-container');
+  toggleContainer.innerHTML = "";
 
-  document.querySelectorAll(selectors).forEach(el => {
-    el.classList.remove(
-      `highlight-${shorthand}-livestream`,
-      `highlight-${shorthand}-patch`,
-      `highlight-${shorthand}-banner-one`,
-      `highlight-${shorthand}-banner-two`
-    );
-  });
-}
+  data.forEach(game => {
+    if (game.game === "Template" || game.game === "Holidays") return;
 
-function reapplyHighlights(shorthand) {
-  const dayDivs = document.querySelectorAll('.day');
+    const button = document.createElement('button');
+    button.className = `label-${game.shorthand.toLowerCase()}`;
+    button.setAttribute('data-game', game.shorthand);
+    toggleContainer.appendChild(button);
 
-  dayDivs.forEach(dayDiv => {
-    const dateStr = dayDiv.getAttribute('data-date');
-    const dateObj = parseLocalDate(dateStr);
-
-    const game = globalData.find(g => g.shorthand === shorthand);
-    if (!game || !game.versions) return;
-
-    game.versions.forEach(version => {
-      version.dates.forEach(date => {
-        const eventMonth = months.indexOf(date.month);
-        if (eventMonth === dateObj.getMonth() && date.day === dateObj.getDate()) {
-          dayDiv.classList.add(getClassName(game.shorthand, date.type));
+    button.addEventListener('click', () => {
+      const highlights = document.querySelectorAll(`.highlight-${game.shorthand}-livestream, .highlight-${game.shorthand}-patch`);
+      highlights.forEach(highlight => {
+        if (highlight.classList.contains(`hidden-${game.shorthand}`)) {
+          highlight.classList.remove(`hidden-${game.shorthand}`);
+        } else {
+          highlight.classList.add(`hidden-${game.shorthand}`);
         }
       });
+      button.classList.toggle('inactive');
     });
+
+    if (game.game === "HonkaiImpact3rd" || game.game === "GenshinImpact") {
+      setTimeout(() => {
+        button.click();
+        button.classList.add('inactive');
+      }, 0);
+    }
   });
-}
+};
 
-// --- Tooltip Functions ---
+const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
-function createTooltip(text, x, y) {
-  const tooltip = document.createElement('div');
+const createTooltip = (text, x, y) => {
+  let tooltip = document.createElement('div');
   tooltip.className = 'custom-tooltip';
-
-  text.split('\n').forEach(line => {
-    const lineDiv = document.createElement('div');
-    lineDiv.textContent = line;
-    tooltip.appendChild(lineDiv);
-  });
-
+  tooltip.textContent = text;
   tooltip.style.left = `${x}px`;
   tooltip.style.top = `${y}px`;
-
   document.body.appendChild(tooltip);
   return tooltip;
-}
+};
 
-function removeTooltip() {
-  const tooltip = document.querySelector('.custom-tooltip');
-  if (tooltip) tooltip.remove();
-}
+const removeTooltip = () => {
+  const existingTooltip = document.querySelector('.custom-tooltip');
+  if (existingTooltip) {
+    existingTooltip.remove();
+  }
+};
 
-// --- Event Attachment ---
-
-function isGameActive(shorthand) {
-  const btn = document.querySelector(`button[data-game="${shorthand}"]`);
-  return btn && !btn.classList.contains('inactive');
-}
-
-function attachHoverEvents(dayDiv, eventTexts) {
-
-  dayDiv.addEventListener('mouseenter', e => {
-    const firstEvent = eventTexts[0];
-    if (!isGameActive(firstEvent.patchType)) return;
-
+const attachHoverEvents = (dayDiv, text, currentDate, highlightDates, patchType, isLivestream, bannerOne, bannerTwo) => {
+  dayDiv.addEventListener('mouseenter', (e) => {
     const rect = dayDiv.getBoundingClientRect();
+    const tooltip = createTooltip(text, rect.left, rect.top);
 
-    const combinedText = eventTexts.map(e => e.text).join('\n');
-    const tooltip = createTooltip(combinedText, rect.left, rect.top);
-
-    if (!firstEvent.isLivestream && firstEvent.highlightRange) {
-      for (let i = 1; i <= firstEvent.highlightRange; i++) {
-        const futureDate = new Date(firstEvent.currentDate);
-        futureDate.setDate(firstEvent.currentDate.getDate() + i);
-
-        const targetDayDiv = document.querySelector(`.day[data-date='${formatLocalDate(futureDate)}']`);
+    if (!isLivestream) {
+      highlightDates.forEach((date, index) => {
+        const targetDayDiv = document.querySelector(`.day[data-date='${date.toISOString().split('T')[0]}']`);
         if (targetDayDiv) {
-          const classToAdd = i <= firstEvent.bannerOne
-            ? getClassName(firstEvent.patchType, firstEvent.dateType, '-banner-one')
-            : getClassName(firstEvent.patchType, firstEvent.dateType, '-banner-two');
-
+          const classToAdd = `highlight-${patchType}-${index < bannerOne ? 'banner-one' : 'banner-two'}`;
           targetDayDiv.classList.add(classToAdd);
         }
-      }
+      });
     }
 
-    dayDiv.addEventListener('mousemove', moveEvent => {
+    dayDiv.addEventListener('mousemove', (e) => {
       tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
-      tooltip.style.top = `${moveEvent.pageY - 48}px`;
+      tooltip.style.top = `${e.pageY - 48}px`;
     });
   });
 
   dayDiv.addEventListener('mouseleave', () => {
     removeTooltip();
 
-    const firstEvent = eventTexts[0];
-    if (!isGameActive(firstEvent.patchType)) return;
-
-    if (!firstEvent.isLivestream && firstEvent.highlightRange) {
-      for (let i = 1; i <= firstEvent.highlightRange; i++) {
-        const futureDate = new Date(firstEvent.currentDate);
-        futureDate.setDate(firstEvent.currentDate.getDate() + i);
-
-        const targetDayDiv = document.querySelector(`.day[data-date='${formatLocalDate(futureDate)}']`);
+    if (!isLivestream) {
+      highlightDates.forEach((date, index) => {
+        const targetDayDiv = document.querySelector(`.day[data-date='${date.toISOString().split('T')[0]}']`);
         if (targetDayDiv) {
-          const classToRemove = i <= firstEvent.bannerOne
-            ? getClassName(firstEvent.patchType, firstEvent.dateType, '-banner-one')
-            : getClassName(firstEvent.patchType, firstEvent.dateType, '-banner-two');
-
+          const classToRemove = `highlight-${patchType}-${index < bannerOne ? 'banner-one' : 'banner-two'}`;
           targetDayDiv.classList.remove(classToRemove);
         }
-      }
+      });
     }
   });
-}
+};
 
-// --- Render Calendar ---
-
-async function renderCalendar(year) {
+const renderCalendar = async (year) => {
   try {
     const response = await fetch('highlight-dates.json');
     if (!response.ok) throw new Error('Failed to fetch highlight-dates.json');
-
     const data = await response.json();
-    globalData = data;
 
     createToggleButtons(data);
-    calendar.innerHTML = ''; // Clear previous calendar if any
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // Loop through months
     for (let month = 0; month < 12; month++) {
+      const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+      const totalDays = daysInMonth(month, year);
       const monthDiv = document.createElement('div');
+      const yearFooter = document.querySelector('footer');
       monthDiv.className = 'month';
 
-      // Header
+      // Month header
       const header = document.createElement('div');
       header.className = 'month-header';
       header.textContent = months[month];
       monthDiv.appendChild(header);
 
-      // Weekdays
-      const weekdaysDiv = document.createElement('div');
-      weekdaysDiv.className = 'weekdays';
-      weekdaysShort.forEach(day => {
-        const d = document.createElement('div');
-        d.textContent = day;
-        weekdaysDiv.appendChild(d);
+      const weekdays = document.createElement('div');
+      weekdays.className = 'weekdays';
+      ['M', 'T', 'W', 'T', 'F', 'S', 'S'].forEach(day => {
+        const dayDiv = document.createElement('div');
+        dayDiv.textContent = day;
+        weekdays.appendChild(dayDiv);
       });
-      monthDiv.appendChild(weekdaysDiv);
+      monthDiv.appendChild(weekdays);
 
-      // Days grid
       const daysGrid = document.createElement('div');
       daysGrid.className = 'days';
 
-      // First day offset (Mon-start)
-      const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+      // Add empty divs for days before the first day
       for (let i = 0; i < firstDay; i++) {
-        const empty = document.createElement('div');
-        empty.className = 'empty';
-        daysGrid.appendChild(empty);
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty';
+        daysGrid.appendChild(emptyDiv);
       }
 
-      const totalDays = daysInMonth(month, year);
-
+      // Add day numbers
       for (let day = 1; day <= totalDays; day++) {
         const dayDiv = document.createElement('div');
         dayDiv.className = 'day';
-
         const currentDate = new Date(year, month, day);
-        dayDiv.setAttribute('data-date', formatLocalDate(currentDate));
+        dayDiv.setAttribute('data-date', currentDate.toISOString().split('T')[0]);
         dayDiv.textContent = day;
 
-        if (+currentDate === +today) dayDiv.classList.add('today');
+        if (currentDate.getTime() === today.getTime()) {
+          dayDiv.classList.add('today');
+        }
 
-        // Gather event texts for this day
-        const eventsTexts = [];
-
-        globalData.forEach(game => {
-          // Game versions with highlight dates
+        data.forEach(game => {
           if (game.versions) {
             game.versions.forEach(version => {
-              const highlightRange = version.highlightRange || 41;
-              const bannerOne = version.bannerOne || 20;
-              const bannerTwo = version.bannerTwo || 20;
+              const highlightRange = version.highlightRange || 41; // Default to 41 if not specified
+              const bannerOne = version.bannerOne || 20; // Default to 20 if not specified
+              const bannerTwo = version.bannerTwo || 20; // Default to 20 if not specified
 
               version.dates.forEach(date => {
                 const eventMonth = months.indexOf(date.month);
                 if (eventMonth === month && date.day === day) {
-                  const versionLabel = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version % 1 === 0 ? version.version.toFixed(1) : version.version.toFixed(2).replace(/(\.\d+?)0$/, '$1')}`;
+                  const versionText = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${version.version % 1 === 0 ? version.version.toFixed(1) : version.version.toFixed(2).replace(/(\.\d+?)0$/, '$1')}`;
+                  const highlightClass = `highlight-${game.shorthand}-${date.type}`;
                   const isLivestream = date.type === 'livestream';
 
-                  // Add highlight class for the day
-                  dayDiv.classList.add(getClassName(game.shorthand, date.type));
+                  dayDiv.classList.add(highlightClass);
 
-                  eventsTexts.push({
-                    text: versionLabel,
-                    currentDate,
-                    patchType: game.shorthand,
-                    isLivestream,
-                    highlightRange,
-                    bannerOne,
-                    bannerTwo,
-                    dateType: date.type
-                  });
+                  const futureDates = [];
+                  if (!isLivestream) {
+                    for (let i = 1; i <= highlightRange; i++) {
+                      const futureDate = new Date(currentDate);
+                      futureDate.setDate(currentDate.getDate() + i);
+                      futureDates.push(futureDate);
+                    }
+                  }
+
+                  attachHoverEvents(dayDiv, versionText, currentDate, futureDates, game.shorthand, isLivestream, bannerOne, bannerTwo);
                 }
               });
             });
           }
 
-          // Holidays handling
+          // Handle holidays
           if (game.dates) {
             game.dates.forEach(date => {
               const eventMonth = months.indexOf(date.month);
               if (eventMonth === month && date.day === day) {
                 dayDiv.classList.add('highlight-holiday');
-                eventsTexts.push({
-                  text: date.name,
-                  currentDate,
-                  patchType: 'holiday',
-                  isLivestream: false,
-                  highlightRange: 0,
-                  bannerOne: 0,
-                  bannerTwo: 0,
-                  dateType: 'holiday'
-                });
+                attachHoverEvents(dayDiv, date.name, currentDate, [], 'holiday', false);
               }
             });
           }
         });
 
-        if (eventsTexts.length > 0) attachHoverEvents(dayDiv, eventsTexts);
-
         daysGrid.appendChild(dayDiv);
       }
-
       monthDiv.appendChild(daysGrid);
       calendar.appendChild(monthDiv);
+      yearFooter.textContent = getYear;
     }
-
-    yearFooter.textContent = year;
-
   } catch (error) {
     console.error('Error loading calendar data:', error);
   }
-}
+};
 
-window.onload = () => renderCalendar(getYear);
+window.onload = () => {
+  renderCalendar(getYear);
+};
