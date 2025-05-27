@@ -92,6 +92,7 @@ function createToggleButton(game) {
 
   if (!Array.isArray(game.versions) || game.versions.length === 0) {
     btn.style.display = 'none';
+    btn.style.pointerEvents = 'none';
   } else {
     // Only add to activeGames if it has versions
     activeGames.add(game.shorthand);
