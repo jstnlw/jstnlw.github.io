@@ -612,7 +612,7 @@
                     {
                         "type": "livestream",
                         "month": "May",
-                        "day": 31
+                        "day": 30
                     },
                     {
                         "type": "patch",
@@ -642,7 +642,7 @@
                     {
                         "type": "livestream",
                         "month": "August",
-                        "day": 23
+                        "day": 22
                     },
                     {
                         "type": "patch",
@@ -657,7 +657,7 @@
                     {
                         "type": "livestream",
                         "month": "October",
-                        "day": 4
+                        "day": 3
                     },
                     {
                         "type": "patch",
@@ -672,7 +672,7 @@
                     {
                         "type": "livestream",
                         "month": "November",
-                        "day": 15
+                        "day": 14
                     },
                     {
                         "type": "patch",
