@@ -591,6 +591,8 @@
             },
             {
                 "version": 2.3,
+                "highlightRange": 43,
+                "bannerOne": 22,
                 "dates": [
                     {
                         "type": "livestream",
@@ -615,7 +617,7 @@
                     {
                         "type": "patch",
                         "month": "June",
-                        "day": 10
+                        "day": 12
                     }
                 ]
             },
@@ -630,7 +632,7 @@
                     {
                         "type": "patch",
                         "month": "July",
-                        "day": 22
+                        "day": 24
                     }
                 ]
             },
@@ -645,7 +647,7 @@
                     {
                         "type": "patch",
                         "month": "September",
-                        "day": 2
+                        "day": 4
                     }
                 ]
             },
@@ -660,7 +662,7 @@
                     {
                         "type": "patch",
                         "month": "October",
-                        "day": 14
+                        "day": 16
                     }
                 ]
             },
@@ -675,7 +677,7 @@
                     {
                         "type": "patch",
                         "month": "November",
-                        "day": 25
+                        "day": 27
                     }
                 ]
             }
