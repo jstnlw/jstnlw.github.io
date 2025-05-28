@@ -215,6 +215,8 @@
             },
             {
                 "version": 2.0,
+                "highlightRange": 39,
+                "bannerOne": 19,
                 "dates": [
                     {
                         "type": "livestream",
@@ -224,7 +226,7 @@
                     {
                         "type": "patch",
                         "month": "June",
-                        "day": 4
+                        "day": 6
                     }
                 ]
             },
