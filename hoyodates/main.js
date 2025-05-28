@@ -58,7 +58,6 @@ function applyStylesFromJSON(games) {
         .highlight-${shorthand}-livestream,
         .highlight-${shorthand}-patch {
           background: ${color};
-          --highlight-color: ${color};
         }
 
         .highlight-${shorthand}-patch-banner-one,
@@ -67,14 +66,7 @@ function applyStylesFromJSON(games) {
         }
 
         .label-${shorthand}::before {
-          background-image: url("${icon}");
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-position: center;
-        }
-
-        [class*="hidden"] {
-          background: transparent !important;
+          background: url("${icon}");
         }
 
         .highlight-holiday {
