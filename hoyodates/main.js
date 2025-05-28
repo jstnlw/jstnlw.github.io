@@ -92,7 +92,7 @@ function applyStylesFromJSON(games) {
 let activeGames = new Set();
 
 function createToggleButton(game) {
-  if (game.game === "Template") return null;
+  if (game.status === "inactive") return null;
 
   const btn = document.createElement('button');
   btn.className = `label-${game.shorthand.toLowerCase()}`;
@@ -133,7 +133,7 @@ function createToggleButton(game) {
   btn.addEventListener('click', handleToggle);
 
   // Initially toggle off specific games
-  if (game.game === "HonkaiImpact3rd" || game.game === "GenshinImpact") {
+  if (game.toggleload === "inactive") {
     // Use requestAnimationFrame to ensure DOM is ready
     requestAnimationFrame(() => {
       btn.click();

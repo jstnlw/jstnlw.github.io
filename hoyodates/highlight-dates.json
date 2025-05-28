@@ -2,6 +2,10 @@
     {
         "game": "Template",
         "shorthand": "temp",
+        "icon": "assets/hyv-icon.webp",
+        "color": "#333333",
+        "status": "inactive",
+        "toggleload": "inactive",
         "versions": [
             {
                 "version": 1.0,
@@ -312,6 +316,7 @@
         "shorthand": "gi",
         "icon": "assets/gi-icon.webp",
         "color": "#64c8c8",
+        "toggleload": "inactive",
         "versions": [
             {
                 "version": 5.3,
@@ -450,6 +455,7 @@
         "shorthand": "hi3",
         "icon": "assets/hi3-icon.webp",
         "color": "#dcc843",
+        "toggleload": "inactive",
         "versions": [
             {
                 "version": 8.0,
