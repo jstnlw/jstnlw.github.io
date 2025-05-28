@@ -92,7 +92,7 @@ function applyStylesFromJSON(games) {
 let activeGames = new Set();
 
 function createToggleButton(game) {
-  if (game.status === "inactive") return null;
+  if (game.status === false) return null;
 
   const btn = document.createElement('button');
   btn.className = `label-${game.shorthand.toLowerCase()}`;
@@ -133,7 +133,7 @@ function createToggleButton(game) {
   btn.addEventListener('click', handleToggle);
 
   // Initially toggle off specific games
-  if (game.toggleload === "inactive") {
+  if (game.toggleload === false) {
     // Use requestAnimationFrame to ensure DOM is ready
     requestAnimationFrame(() => {
       btn.click();
