@@ -780,6 +780,47 @@
         ]
     },
     {
+        "game": "Persona5PhantomX",
+        "shorthand": "p5x",
+        "icon": "assets/p5x-icon.webp",
+        "color": "#32c8ff",
+        "versions": [
+            {
+                "version": 1.0,
+                "dates": [
+                    {
+                        "type": "livestream",
+                        "month": "May",
+                        "day": 15
+                    },
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 3
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "game": "UmaMusumePrettyDerby",
+        "shorthand": "uma",
+        "icon": "assets/uma-icon.webp",
+        "color": "#32c8ff",
+        "versions": [
+            {
+                "version": 1.0,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 26
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "game": "Holidays",
         "shorthand": "hol",
         "icon": "",
