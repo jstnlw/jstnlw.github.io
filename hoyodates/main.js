@@ -93,7 +93,7 @@ function createToggleButton(game) {
 
   // Check if game has valid versions
   const hasVersions = Array.isArray(game.versions) && game.versions.length > 0;
-  
+
   if (!hasVersions) {
     btn.style.display = 'none';
     btn.style.pointerEvents = 'none';
@@ -114,7 +114,7 @@ function createToggleButton(game) {
       activeGames.add(shorthand);
       reapplyHighlights(shorthand);
     }
-    
+
     // Debounce the refresh to avoid multiple rapid calls
     clearTimeout(btn.refreshTimeout);
     btn.refreshTimeout = setTimeout(() => {
@@ -138,12 +138,12 @@ function createToggleButton(game) {
 // Optimized refresh function with better performance
 function refreshAllDayHoverBindings() {
   const dayDivs = document.querySelectorAll('.day');
-  
+
   // Use document fragment to batch DOM operations
   dayDivs.forEach(dayDiv => {
     const dateStr = dayDiv.getAttribute('data-date');
     if (!dateStr) return;
-    
+
     const dateObj = parseLocalDate(dateStr);
     const eventsTexts = getEventsForDate(dateObj);
 
@@ -171,10 +171,10 @@ function getEventsForDate(dateObj) {
         version.dates.forEach(date => {
           const eventMonth = months.indexOf(date.month);
           if (eventMonth === dateObj.getMonth() && date.day === dateObj.getDate()) {
-            const versionNum = version.version % 1 === 0 
-              ? version.version.toFixed(1) 
+            const versionNum = version.version % 1 === 0
+              ? version.version.toFixed(1)
               : version.version.toFixed(2).replace(/(\.\d+?)0$/, '$1');
-            
+
             const versionLabel = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${versionNum}`;
 
             eventsTexts.push({
@@ -220,12 +220,12 @@ function createToggleButtons(games) {
   toggleContainer.innerHTML = '';
 
   const fragment = document.createDocumentFragment();
-  
+
   games.forEach(game => {
     const btn = createToggleButton(game);
     if (btn) fragment.appendChild(btn);
   });
-  
+
   toggleContainer.appendChild(fragment);
 }
 
@@ -240,12 +240,12 @@ function removeHighlights(shorthand) {
   ];
 
   const selector = classesToRemove.map(c => `.${c}`).join(', ');
-  
+
   document.querySelectorAll(selector).forEach(el => {
     classesToRemove.forEach(cls => el.classList.remove(cls));
     updateSplitBackground(el);
   });
-  
+
   updateAllDaysBackgrounds();
 }
 
@@ -258,7 +258,7 @@ function reapplyHighlights(shorthand) {
   dayDivs.forEach(dayDiv => {
     const dateStr = dayDiv.getAttribute('data-date');
     if (!dateStr) return;
-    
+
     const dateObj = parseLocalDate(dateStr);
 
     game.versions.forEach(version => {
@@ -324,7 +324,7 @@ let currentTooltip = null;
 function createTooltip(text, x, y) {
   // Remove existing tooltip
   removeTooltip();
-  
+
   const tooltip = document.createElement('div');
   tooltip.className = 'custom-tooltip';
   tooltip.setAttribute('role', 'tooltip');
@@ -340,7 +340,7 @@ function createTooltip(text, x, y) {
 
   document.body.appendChild(tooltip);
   currentTooltip = tooltip;
-  
+
   return tooltip;
 }
 
@@ -394,7 +394,7 @@ function attachHoverEvents(dayDiv, eventTexts) {
 
   const handleMouseMove = (moveEvent) => {
     if (!currentTooltip) return;
-    
+
     const rect = dayDiv.getBoundingClientRect();
     currentTooltip.style.left = `${rect.left + rect.width / 2 - currentTooltip.offsetWidth / 2}px`;
     currentTooltip.style.top = `${moveEvent.pageY - 48}px`;
@@ -499,7 +499,7 @@ async function renderCalendar(year) {
 
         // Get events for this day and add highlight classes
         const eventsTexts = getEventsForDate(currentDate);
-        
+
         // Add CSS classes based on events found
         eventsTexts.forEach(event => {
           if (event.patchType === 'holiday') {
@@ -528,10 +528,10 @@ async function renderCalendar(year) {
     if (metaTitle) {
       metaTitle.setAttribute('content', `Gachaverse ${getYear}`);
     }
-    
+
   } catch (error) {
     console.error('Error loading calendar data:', error);
-    
+
     // Display user-friendly error message
     calendar.innerHTML = `
       <div class="error-message">
