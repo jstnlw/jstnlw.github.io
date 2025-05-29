@@ -799,6 +799,16 @@
                         "day": 3
                     }
                 ]
+            },
+            {
+                "version": 1.1,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "August",
+                        "day": 14
+                    }
+                ]
             }
         ]
     },
@@ -815,6 +825,16 @@
                         "type": "patch",
                         "month": "June",
                         "day": 26
+                    }
+                ]
+            },
+            {
+                "version": 1.1,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "August",
+                        "day": 7
                     }
                 ]
             }
