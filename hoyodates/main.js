@@ -84,7 +84,7 @@ function applyStylesFromJSON(games) {
 let activeGames = new Set();
 
 function createToggleButton(game) {
-  if (game.status === false) return null;
+  if (game.active === false) return null;
 
   const btn = document.createElement('button');
   btn.className = `label-${game.shorthand.toLowerCase()}`;

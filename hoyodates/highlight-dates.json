@@ -4,7 +4,7 @@
         "shorthand": "temp",
         "icon": "assets/hyv-icon.webp",
         "color": "#333333",
-        "status": false,
+        "active": false,
         "toggleload": false,
         "versions": [
             {
@@ -31,7 +31,7 @@
         "game": "HonkaiStarRail",
         "shorthand": "hsr",
         "icon": "assets/hsr-icon.webp",
-        "color": "#32c8ff",
+        "color": "#33ccff",
         "versions": [
             {
                 "version": 3.0,
@@ -454,8 +454,8 @@
         "game": "HonkaiImpact3rd",
         "shorthand": "hi3",
         "icon": "assets/hi3-icon.webp",
-        "color": "#dcc843",
-        "toggleload": false,
+        "color": "#ddcc33",
+        "active": false,
         "versions": [
             {
                 "version": 8.0,
@@ -553,7 +553,7 @@
         "game": "WutheringWaves",
         "shorthand": "ww",
         "icon": "assets/ww-icon.webp",
-        "color": "#006ee6",
+        "color": "#0066ee",
         "versions": [
             {
                 "version": 2.0,
@@ -695,7 +695,7 @@
         "game": "GirlsFrontline2",
         "shorthand": "gfl2",
         "icon": "assets/gfl2-icon.webp",
-        "color": "#FFA500",
+        "color": "#ffaa00",
         "versions": [
             {
                 "version": 1.01,
@@ -794,16 +794,6 @@
                         "day": 3
                     }
                 ]
-            },
-            {
-                "version": 1.1,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "August",
-                        "day": 14
-                    }
-                ]
             }
         ]
     },
@@ -811,7 +801,8 @@
         "game": "UmaMusumePrettyDerby",
         "shorthand": "uma",
         "icon": "assets/uma-icon.webp",
-        "color": "#5dc93a",
+        "color": "#55cc33",
+        "toggleload": false,
         "versions": [
             {
                 "version": 1.0,
@@ -822,16 +813,6 @@
                         "day": 26
                     }
                 ]
-            },
-            {
-                "version": 1.1,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "August",
-                        "day": 7
-                    }
-                ]
             }
         ]
     },
@@ -839,7 +820,7 @@
         "game": "Holidays",
         "shorthand": "hol",
         "icon": "",
-        "color": "#bb0000",
+        "color": "#aa0000",
         "dates": [
             {
                 "type": "holiday",
