@@ -219,8 +219,6 @@
             },
             {
                 "version": 2.0,
-                "highlightRange": 39,
-                "bannerOne": 19,
                 "dates": [
                     {
                         "type": "livestream",
@@ -245,7 +243,7 @@
                     {
                         "type": "patch",
                         "month": "July",
-                        "day": 16
+                        "day": 18
                     }
                 ]
             },
@@ -260,7 +258,7 @@
                     {
                         "type": "patch",
                         "month": "August",
-                        "day": 27
+                        "day": 29
                     }
                 ]
             },
@@ -275,7 +273,7 @@
                     {
                         "type": "patch",
                         "month": "October",
-                        "day": 8
+                        "day": 10
                     }
                 ]
             },
@@ -290,7 +288,7 @@
                     {
                         "type": "patch",
                         "month": "November",
-                        "day": 19
+                        "day": 21
                     }
                 ]
             },
@@ -301,11 +299,6 @@
                         "type": "livestream",
                         "month": "December",
                         "day": 19
-                    },
-                    {
-                        "type": "patch",
-                        "month": "December",
-                        "day": 31
                     }
                 ]
             }
