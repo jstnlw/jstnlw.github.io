@@ -533,12 +533,12 @@ async function renderCalendar(year) {
     console.error('Error loading calendar data:', error);
 
     // Display user-friendly error message
-    calendar.innerHTML = `
-      <div class="error-message">
+    calendar.outerHTML = `
+      <main class="error-message">
         <h3>Unable to load calendar data</h3>
         <p>Please check that the highlight-dates.json file is available and try refreshing the page.</p>
         <p>Error: ${error.message}</p>
-      </div>
+      </main>
     `;
   }
 }
