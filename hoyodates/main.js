@@ -1,5 +1,3 @@
-// Improved version with fixes and optimizations
-
 const months = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -34,6 +32,31 @@ function daysInMonth(month, year) {
 
 function getClassName(gameShorthand, type, suffix = '') {
   return `highlight-${gameShorthand.toLowerCase()}-${type}${suffix}`;
+}
+
+// --- Mobile Detection ---
+function isMobile() {
+  return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// --- Scroll to Current Month ---
+function scrollToCurrentMonth() {
+  if (!isMobile()) return;
+
+  const currentMonth = new Date().getMonth();
+  const currentMonthElement = document.querySelector(`.month:nth-child(${currentMonth + 1})`);
+
+  if (currentMonthElement) {
+    const offsetTop = currentMonthElement.offsetTop - 0;
+
+    // Use smooth scrolling with a slight delay to ensure DOM is fully rendered
+    setTimeout(() => {
+      window.scrollTo({
+        top: Math.max(0, offsetTop),
+        behavior: 'smooth'
+      });
+    }, 100);
+  }
 }
 
 // --- Styling Functions ---
@@ -528,6 +551,9 @@ async function renderCalendar(year) {
     if (metaTitle) {
       metaTitle.setAttribute('content', `Gachaverse ${getYear}`);
     }
+
+    // Scroll to current month on mobile after calendar is rendered
+    scrollToCurrentMonth();
 
   } catch (error) {
     console.error('Error loading calendar data:', error);
