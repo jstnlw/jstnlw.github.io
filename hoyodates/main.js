@@ -66,6 +66,22 @@ class CalendarManager {
     return eventsTexts;
   }
 
+  sortEventsByPriority(events) {
+    // Sort events: patches > livestreams > holidays
+    return events.sort((a, b) => {
+      // Patches always come before livestreams or holidays
+      if (a.dateType === "patch" && b.dateType !== "patch") return -1;
+      if (b.dateType === "patch" && a.dateType !== "patch") return 1;
+
+      // Livestreams come before holidays
+      if (a.dateType === "livestream" && b.dateType === "holiday") return -1;
+      if (a.dateType === "holiday" && b.dateType === "livestream") return 1;
+
+      // Otherwise maintain original order
+      return 0;
+    });
+  }
+
   processGameVersions(game, dateObj, eventsTexts) {
     game.versions.forEach(version => {
       version.dates.forEach(date => {
@@ -107,11 +123,11 @@ class CalendarManager {
       text,
       currentDate,
       patchType,
-      isLivestream: date.type === "livestream",
+      isPatch: date.type === "patch",
       highlightRange: version.highlightRange || 41,
       bannerOne: version.bannerOne || 20,
       bannerTwo: version.bannerTwo || 20,
-      dateType: date.type || "holiday"
+      dateType: date.type
     };
   }
 
@@ -266,15 +282,36 @@ class CalendarManager {
     if (!dateStr) return;
 
     const dateObj = CalendarManager.parseLocalDate(dateStr);
+    const dayEvents = [];
 
+    // Collect all events for this day from this game
     game.versions.forEach(version => {
       version.dates.forEach(date => {
         if (this.isDateMatch(date, dateObj)) {
-          dayDiv.classList.add(CalendarManager.getClassName(game.shorthand, date.type));
-          this.updateSplitBackground(dayDiv);
+          dayEvents.push({
+            type: date.type,
+            className: CalendarManager.getClassName(game.shorthand, date.type)
+          });
         }
       });
     });
+
+    // Sort events to prioritize patches over livestreams
+    const sortedEvents = dayEvents.sort((a, b) => {
+      if (a.type === "patch" && b.type === "livestream") return -1;
+      if (a.type === "livestream" && b.type === "patch") return 1;
+      return 0;
+    });
+
+    // Apply classes in the correct order
+    sortedEvents.forEach(event => {
+      dayDiv.classList.add(event.className);
+    });
+
+    // Explicitly reorder classes to ensure patches come before livestreams
+    this.reorderDayClasses(dayDiv);
+
+    this.updateSplitBackground(dayDiv);
   }
 
   updateAllDaysBackgrounds() {
@@ -283,17 +320,30 @@ class CalendarManager {
 
   updateSplitBackground(dayDiv) {
     const patchClasses = Array.from(dayDiv.classList)
-      .filter(c => c.startsWith("highlight-") && c.endsWith("-patch") || c.endsWith("-livestream"));
+      .filter(c => c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream")));
 
     if (patchClasses.length <= 1) {
       dayDiv.style.background = "";
+      dayDiv.style.borderRadius = "";
       return;
     }
+
+    // Check if we have both livestream and patch events
+    const hasLivestream = patchClasses.some(c => c.endsWith("-livestream"));
+    const hasPatch = patchClasses.some(c => c.endsWith("-patch"));
+    const hasLivestreamAndPatch = hasLivestream && hasPatch;
 
     // Multiple highlights: create gradient
     const colors = this.getColorsFromClasses(patchClasses);
     const gradient = this.createGradientString(colors);
     dayDiv.style.background = gradient;
+
+    // Apply special border radius for livestream + patch combination
+    if (hasLivestreamAndPatch) {
+      dayDiv.style.borderRadius = "50% 0.25rem 0.25rem 0.25rem";
+    } else {
+      dayDiv.style.borderRadius = "";
+    }
   }
 
   getColorsFromClasses(patchClasses) {
@@ -359,13 +409,14 @@ class CalendarManager {
 
       const dateObj = CalendarManager.parseLocalDate(dateStr);
       const eventsTexts = this.getEventsForDate(dateObj);
+      const sortedEvents = this.sortEventsByPriority(eventsTexts);
 
       // Replace element to remove old event listeners
       const newDayDiv = dayDiv.cloneNode(true);
       dayDiv.parentNode.replaceChild(newDayDiv, dayDiv);
 
-      if (eventsTexts.length > 0) {
-        this.attachHoverEvents(newDayDiv, eventsTexts);
+      if (sortedEvents.length > 0) {
+        this.attachHoverEvents(newDayDiv, sortedEvents);
       }
     });
   }
@@ -504,8 +555,11 @@ class CalendarManager {
   setupDayEvents(dayDiv, currentDate) {
     const eventsTexts = this.getEventsForDate(currentDate);
 
-    // Add CSS classes for events
-    eventsTexts.forEach(event => {
+    // Sort events to prioritize patches over livestreams for proper class ordering
+    const sortedEvents = this.sortEventsByPriority(eventsTexts);
+
+    // Add CSS classes for events in prioritized order
+    sortedEvents.forEach(event => {
       const className = event.patchType === "holiday"
         ? "highlight-holiday"
         : CalendarManager.getClassName(event.patchType, event.dateType);
@@ -513,11 +567,33 @@ class CalendarManager {
       dayDiv.classList.add(className);
     });
 
-    if (eventsTexts.length > 0) {
-      this.attachHoverEvents(dayDiv, eventsTexts);
+    // Explicitly reorder classes to ensure patches come before livestreams
+    this.reorderDayClasses(dayDiv);
+
+    if (sortedEvents.length > 0) {
+      // Use sorted events for hover events so patch events are processed first
+      this.attachHoverEvents(dayDiv, sortedEvents);
     }
 
     this.updateSplitBackground(dayDiv);
+  }
+
+  reorderDayClasses(dayDiv) {
+    const classes = Array.from(dayDiv.classList);
+    const highlightClasses = classes.filter(c => c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream")));
+
+    if (highlightClasses.length <= 1) return;
+
+    // Sort highlight classes: patches first, then livestreams
+    const sortedHighlightClasses = highlightClasses.sort((a, b) => {
+      if (a.endsWith("-patch") && b.endsWith("-livestream")) return -1;
+      if (a.endsWith("-livestream") && b.endsWith("-patch")) return 1;
+      return 0;
+    });
+
+    // Remove all highlight classes and re-add them in sorted order
+    highlightClasses.forEach(cls => dayDiv.classList.remove(cls));
+    sortedHighlightClasses.forEach(cls => dayDiv.classList.add(cls));
   }
 
   updatePageMetadata(year) {
@@ -583,7 +659,7 @@ class DayEventHandler {
   }
 
   applyHighlightRange(firstEvent) {
-    if (firstEvent.isLivestream || !firstEvent.highlightRange) return;
+    if (!firstEvent.isPatch) return;
 
     for (let i = 1; i <= firstEvent.highlightRange; i++) {
       const futureDate = new Date(firstEvent.currentDate);
@@ -625,7 +701,7 @@ class DayEventHandler {
   }
 
   removeHighlightRange(firstEvent) {
-    if (firstEvent.isLivestream || !firstEvent.highlightRange) return;
+    if (!firstEvent.isPatch) return;
 
     for (let i = 1; i <= firstEvent.highlightRange; i++) {
       const futureDate = new Date(firstEvent.currentDate);
