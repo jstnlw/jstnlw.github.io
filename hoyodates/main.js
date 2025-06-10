@@ -3,563 +3,612 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-const weekdaysShort = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const getYear = new Date().getFullYear();
-let globalData = [];
+const weekdaysShort = ["M", "T", "W", "T", "F", "S", "S"];
+const currentYear = new Date().getFullYear();
 
-// Cache DOM elements
-const calendar = document.getElementById('calendar');
-const toggleContainer = document.getElementById('toggle-container');
-const yearFooter = document.querySelector('footer');
+class CalendarManager {
+  constructor() {
+    this.globalData = [];
+    this.activeGames = new Set();
+    this.currentTooltip = null;
 
-// --- Helper Functions ---
+    // Cache DOM elements
+    this.calendar = document.getElementById("calendar");
+    this.toggleContainer = document.getElementById("toggle-container");
+    this.yearFooter = document.querySelector("footer");
 
-function parseLocalDate(dateStr) {
-  const [year, month, day] = dateStr.split('-').map(Number);
-  return new Date(year, month - 1, day);
-}
+    // Bind methods to preserve context
+    this.refreshAllDayHoverBindings = this.refreshAllDayHoverBindings.bind(this);
+  }
 
-function formatLocalDate(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
+  // --- Utility Functions ---
+  static parseLocalDate(dateStr) {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
 
-function daysInMonth(month, year) {
-  return new Date(year, month + 1, 0).getDate();
-}
+  static formatLocalDate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
 
-function getClassName(gameShorthand, type, suffix = '') {
-  return `highlight-${gameShorthand.toLowerCase()}-${type}${suffix}`;
-}
+  static daysInMonth(month, year) {
+    return new Date(year, month + 1, 0).getDate();
+  }
 
-// --- Mobile Detection ---
-function isMobile() {
-  return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
+  static getClassName(gameShorthand, type, suffix = "") {
+    return `highlight-${gameShorthand.toLowerCase()}-${type}${suffix}`;
+  }
 
-// --- Scroll to Current Month ---
-function scrollToCurrentMonth() {
-  if (!isMobile()) return;
+  static isMobile() {
+    return window.innerWidth <= 768 ||
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
 
-  const currentMonth = new Date().getMonth();
-  const currentMonthElement = document.querySelector(`.month:nth-child(${currentMonth + 1})`);
+  // --- Event Processing ---
+  getEventsForDate(dateObj) {
+    const eventsTexts = [];
 
-  if (currentMonthElement) {
-    const offsetTop = currentMonthElement.offsetTop - 0;
+    this.globalData.forEach(game => {
+      // Process game versions (check if active)
+      if (game.versions && this.activeGames.has(game.shorthand)) {
+        this.processGameVersions(game, dateObj, eventsTexts);
+      }
 
-    // Use smooth scrolling with a slight delay to ensure DOM is fully rendered
-    setTimeout(() => {
-      window.scrollTo({
-        top: Math.max(0, offsetTop),
-        behavior: 'smooth'
+      // Process holidays (always active)
+      if (game.dates) {
+        this.processHolidays(game, dateObj, eventsTexts);
+      }
+    });
+
+    return eventsTexts;
+  }
+
+  sortEventsByPriority(events) {
+    // Sort events: patches > livestreams > holidays
+    return events.sort((a, b) => {
+      // Patches always come before livestreams or holidays
+      if (a.dateType === "patch" && b.dateType !== "patch") return -1;
+      if (b.dateType === "patch" && a.dateType !== "patch") return 1;
+
+      // Livestreams come before holidays
+      if (a.dateType === "livestream" && b.dateType === "holiday") return -1;
+      if (a.dateType === "holiday" && b.dateType === "livestream") return 1;
+
+      // Otherwise maintain original order
+      return 0;
+    });
+  }
+
+  processGameVersions(game, dateObj, eventsTexts) {
+    game.versions.forEach(version => {
+      version.dates.forEach(date => {
+        if (this.isDateMatch(date, dateObj)) {
+          const versionNum = this.formatVersionNumber(version.version);
+          const versionLabel = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} ${versionNum}`;
+
+          eventsTexts.push(this.createEventData(versionLabel, dateObj, game.shorthand, date, version));
+        }
       });
-    }, 100);
-  }
-}
-
-// --- Styling Functions ---
-
-function applyStylesFromJSON(games) {
-  let styleEl = document.getElementById('game-properties');
-  if (!styleEl) {
-    styleEl = document.createElement('style');
-    styleEl.id = 'game-properties';
-    document.head.appendChild(styleEl);
+    });
   }
 
-  const styles = games
-    .filter(game => game.color)
-    .map(game => {
-      const shorthand = game.shorthand.toLowerCase();
-      const color = game.color;
-      const icon = game.icon || 'none';
+  processHolidays(game, dateObj, eventsTexts) {
+    game.dates.forEach(date => {
+      if (this.isDateMatch(date, dateObj)) {
+        eventsTexts.push(this.createEventData(date.name, dateObj, "holiday", date, {}));
+      }
+    });
+  }
 
-      return `
-        .label-${shorthand},
-        .highlight-${shorthand}-livestream,
-        .highlight-${shorthand}-patch {
-          background: ${color};
-        }
+  isDateMatch(date, dateObj) {
+    const eventMonth = months.indexOf(date.month);
+    return eventMonth === dateObj.getMonth() && date.day === dateObj.getDate();
+  }
 
-        .highlight-${shorthand}-patch-banner-one,
-        .highlight-${shorthand}-patch-banner-two {
-          background: ${color} !important;
-        }
+  formatVersionNumber(version) {
+    return version % 1 === 0
+      ? version.toFixed(1)
+      : version.toFixed(2).replace(/(\.\d+?)0$/, "$1");
+  }
 
-        .label-${shorthand}::before {
-          background: url("${icon}");
-        }
+  capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-        .highlight-holiday {
-          color: ${color} !important;
-        }
-      `;
-    })
-    .join('\n');
+  createEventData(text, currentDate, patchType, date, version) {
+    return {
+      text,
+      currentDate,
+      patchType,
+      isPatch: date.type === "patch",
+      highlightRange: version.highlightRange || 41,
+      bannerOne: version.bannerOne || 20,
+      bannerTwo: version.bannerTwo || 20,
+      dateType: date.type
+    };
+  }
 
-  styleEl.textContent = styles;
-}
+  // --- Styling ---
+  applyStylesFromJSON(games) {
+    let styleEl = document.getElementById("game-properties");
+    if (!styleEl) {
+      styleEl = document.createElement("style");
+      styleEl.id = "game-properties";
+      document.head.appendChild(styleEl);
+    }
 
-// --- Toggle Buttons ---
+    const styles = games
+      .filter(game => game.color)
+      .map(game => this.generateGameStyles(game))
+      .join("\n");
 
-let activeGames = new Set();
+    styleEl.textContent = styles;
+  }
 
-function createToggleButton(game) {
-  if (game.active === false) return null;
+  generateGameStyles(game) {
+    const shorthand = game.shorthand.toLowerCase();
+    const { color, icon = "none" } = game;
 
-  const btn = document.createElement('button');
-  btn.className = `label-${game.shorthand.toLowerCase()}`;
-  btn.setAttribute('data-game', game.shorthand);
-  btn.setAttribute('aria-label', `Toggle ${game.game} events`);
+    return `
+      .label-${shorthand},
+      .highlight-${shorthand}-livestream,
+      .highlight-${shorthand}-patch {
+        background: ${color};
+      }
+      .highlight-${shorthand}-patch-banner-one,
+      .highlight-${shorthand}-patch-banner-two {
+        background: ${color} !important;
+      }
+      .label-${shorthand}::before {
+        background: url("${icon}");
+      }
+      .highlight-holiday {
+        color: ${color} !important;
+      }
+    `;
+  }
 
-  // Check if game has valid versions
-  const hasVersions = Array.isArray(game.versions) && game.versions.length > 0;
+  // --- Toggle Management ---
+  createToggleButtons(games) {
+    this.applyStylesFromJSON(games);
+    this.toggleContainer.innerHTML = "";
 
-  if (!hasVersions) {
-    btn.style.display = 'none';
-    btn.style.pointerEvents = 'none';
+    const fragment = document.createDocumentFragment();
+    games.forEach(game => {
+      const btn = this.createToggleButton(game);
+      if (btn) fragment.appendChild(btn);
+    });
+
+    this.toggleContainer.appendChild(fragment);
+  }
+
+  createToggleButton(game) {
+    if (game.active === false || !this.hasValidVersions(game)) {
+      return this.createInactiveButton(game);
+    }
+
+    const btn = this.createActiveButton(game);
+    this.setupToggleHandler(btn, game);
+
+    // Handle initial toggle state
+    if (game.toggleload === false) {
+      requestAnimationFrame(() => btn.click());
+    }
+
     return btn;
   }
 
-  // Initially add to active games
-  activeGames.add(game.shorthand);
+  hasValidVersions(game) {
+    return Array.isArray(game.versions) && game.versions.length > 0;
+  }
 
-  const handleToggle = () => {
-    const shorthand = game.shorthand;
-    const isInactive = btn.classList.toggle('inactive');
+  createInactiveButton(game) {
+    const btn = document.createElement("button");
+    btn.className = `label-${game.shorthand.toLowerCase()}`;
+    btn.style.display = "none";
+    btn.style.pointerEvents = "none";
+    return btn;
+  }
 
-    if (isInactive) {
-      activeGames.delete(shorthand);
-      removeHighlights(shorthand);
-    } else {
-      activeGames.add(shorthand);
-      reapplyHighlights(shorthand);
-    }
+  createActiveButton(game) {
+    const btn = document.createElement("button");
+    btn.className = `label-${game.shorthand.toLowerCase()}`;
+    btn.setAttribute("data-game", game.shorthand);
+    btn.setAttribute("aria-label", `Toggle ${game.game} events`);
 
-    // Debounce the refresh to avoid multiple rapid calls
-    clearTimeout(btn.refreshTimeout);
-    btn.refreshTimeout = setTimeout(() => {
-      refreshAllDayHoverBindings();
-    }, 50);
-  };
+    // Initially add to active games
+    this.activeGames.add(game.shorthand);
+    return btn;
+  }
 
-  btn.addEventListener('click', handleToggle);
+  setupToggleHandler(btn, game) {
+    const handleToggle = () => {
+      const shorthand = game.shorthand;
+      const isInactive = btn.classList.toggle("inactive");
 
-  // Initially toggle off specific games
-  if (game.toggleload === false) {
-    // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(() => {
-      btn.click();
+      if (isInactive) {
+        this.activeGames.delete(shorthand);
+        this.removeHighlights(shorthand);
+      } else {
+        this.activeGames.add(shorthand);
+        this.reapplyHighlights(shorthand);
+      }
+
+      // Debounce the refresh
+      clearTimeout(btn.refreshTimeout);
+      btn.refreshTimeout = setTimeout(this.refreshAllDayHoverBindings, 50);
+    };
+
+    btn.addEventListener("click", handleToggle);
+  }
+
+  // --- Highlight Management ---
+  removeHighlights(shorthand) {
+    const classesToRemove = [
+      `highlight-${shorthand}-livestream`,
+      `highlight-${shorthand}-patch`,
+      `highlight-${shorthand}-banner-one`,
+      `highlight-${shorthand}-banner-two`,
+    ];
+
+    this.removeClassesFromElements(classesToRemove);
+    this.updateAllDaysBackgrounds();
+  }
+
+  removeClassesFromElements(classesToRemove) {
+    const selector = classesToRemove.map(c => `.${c}`).join(", ");
+    document.querySelectorAll(selector).forEach(el => {
+      classesToRemove.forEach(cls => el.classList.remove(cls));
+      this.updateSplitBackground(el);
     });
   }
 
-  return btn;
-}
+  reapplyHighlights(shorthand) {
+    const game = this.globalData.find(g => g.shorthand === shorthand);
+    if (!game?.versions) return;
 
-// Optimized refresh function with better performance
-function refreshAllDayHoverBindings() {
-  const dayDivs = document.querySelectorAll('.day');
+    document.querySelectorAll(".day").forEach(dayDiv => {
+      this.applyHighlightsToDay(dayDiv, game);
+    });
 
-  // Use document fragment to batch DOM operations
-  dayDivs.forEach(dayDiv => {
-    const dateStr = dayDiv.getAttribute('data-date');
+    this.updateAllDaysBackgrounds();
+  }
+
+  applyHighlightsToDay(dayDiv, game) {
+    const dateStr = dayDiv.getAttribute("data-date");
     if (!dateStr) return;
 
-    const dateObj = parseLocalDate(dateStr);
-    const eventsTexts = getEventsForDate(dateObj);
+    const dateObj = CalendarManager.parseLocalDate(dateStr);
+    const dayEvents = [];
 
-    // Remove old event listeners by cloning
-    const newDayDiv = dayDiv.cloneNode(true);
-    dayDiv.parentNode.replaceChild(newDayDiv, dayDiv);
-
-    if (eventsTexts.length > 0) {
-      attachHoverEvents(newDayDiv, eventsTexts);
-    }
-  });
-}
-
-// Extract events logic into separate function for reusability
-function getEventsForDate(dateObj) {
-  const eventsTexts = [];
-
-  globalData.forEach(game => {
-    // Skip inactive games
-    if (game.versions && !activeGames.has(game.shorthand)) return;
-
-    // Process game versions
-    if (game.versions) {
-      game.versions.forEach(version => {
-        version.dates.forEach(date => {
-          const eventMonth = months.indexOf(date.month);
-          if (eventMonth === dateObj.getMonth() && date.day === dateObj.getDate()) {
-            const versionNum = version.version % 1 === 0
-              ? version.version.toFixed(1)
-              : version.version.toFixed(2).replace(/(\.\d+?)0$/, '$1');
-
-            const versionLabel = `${game.shorthand.toUpperCase()} ${date.type.charAt(0).toUpperCase() + date.type.slice(1)} ${versionNum}`;
-
-            eventsTexts.push({
-              text: versionLabel,
-              currentDate: dateObj,
-              patchType: game.shorthand,
-              isLivestream: date.type === 'livestream',
-              highlightRange: version.highlightRange || 41,
-              bannerOne: version.bannerOne || 20,
-              bannerTwo: version.bannerTwo || 20,
-              dateType: date.type
-            });
-          }
-        });
-      });
-    }
-
-    // Process holidays (always active)
-    if (game.dates) {
-      game.dates.forEach(date => {
-        const eventMonth = months.indexOf(date.month);
-        if (eventMonth === dateObj.getMonth() && date.day === dateObj.getDate()) {
-          eventsTexts.push({
-            text: date.name,
-            currentDate: dateObj,
-            patchType: 'holiday',
-            isLivestream: false,
-            highlightRange: 0,
-            bannerOne: 0,
-            bannerTwo: 0,
-            dateType: 'holiday'
+    // Collect all events for this day from this game
+    game.versions.forEach(version => {
+      version.dates.forEach(date => {
+        if (this.isDateMatch(date, dateObj)) {
+          dayEvents.push({
+            type: date.type,
+            className: CalendarManager.getClassName(game.shorthand, date.type)
           });
         }
       });
-    }
-  });
-
-  return eventsTexts;
-}
-
-function createToggleButtons(games) {
-  applyStylesFromJSON(games);
-  toggleContainer.innerHTML = '';
-
-  const fragment = document.createDocumentFragment();
-
-  games.forEach(game => {
-    const btn = createToggleButton(game);
-    if (btn) fragment.appendChild(btn);
-  });
-
-  toggleContainer.appendChild(fragment);
-}
-
-// --- Highlight Management ---
-
-function removeHighlights(shorthand) {
-  const classesToRemove = [
-    `highlight-${shorthand}-livestream`,
-    `highlight-${shorthand}-patch`,
-    `highlight-${shorthand}-banner-one`,
-    `highlight-${shorthand}-banner-two`,
-  ];
-
-  const selector = classesToRemove.map(c => `.${c}`).join(', ');
-
-  document.querySelectorAll(selector).forEach(el => {
-    classesToRemove.forEach(cls => el.classList.remove(cls));
-    updateSplitBackground(el);
-  });
-
-  updateAllDaysBackgrounds();
-}
-
-function reapplyHighlights(shorthand) {
-  const game = globalData.find(g => g.shorthand === shorthand);
-  if (!game?.versions) return;
-
-  const dayDivs = document.querySelectorAll('.day');
-
-  dayDivs.forEach(dayDiv => {
-    const dateStr = dayDiv.getAttribute('data-date');
-    if (!dateStr) return;
-
-    const dateObj = parseLocalDate(dateStr);
-
-    game.versions.forEach(version => {
-      version.dates.forEach(date => {
-        const eventMonth = months.indexOf(date.month);
-        if (eventMonth === dateObj.getMonth() && date.day === dateObj.getDate()) {
-          dayDiv.classList.add(getClassName(game.shorthand, date.type));
-          updateSplitBackground(dayDiv);
-        }
-      });
     });
-  });
 
-  updateAllDaysBackgrounds();
-}
+    // Sort events to prioritize patches over livestreams
+    const sortedEvents = dayEvents.sort((a, b) => {
+      if (a.type === "patch" && b.type === "livestream") return -1;
+      if (a.type === "livestream" && b.type === "patch") return 1;
+      return 0;
+    });
 
-function updateAllDaysBackgrounds() {
-  document.querySelectorAll('.day').forEach(dayDiv => updateSplitBackground(dayDiv));
-}
+    // Apply classes in the correct order
+    sortedEvents.forEach(event => {
+      dayDiv.classList.add(event.className);
+    });
 
-// --- Background splitting function ---
-function updateSplitBackground(dayDiv) {
-  // Find all patch highlight classes currently on this dayDiv
-  const patchClasses = Array.from(dayDiv.classList).filter(c => c.startsWith('highlight-') && c.endsWith('-patch'));
+    // Explicitly reorder classes to ensure patches come before livestreams
+    this.reorderDayClasses(dayDiv);
 
-  if (patchClasses.length === 0) {
-    // No highlight patches: clear inline background
-    dayDiv.style.background = '';
-    return;
+    this.updateSplitBackground(dayDiv);
   }
 
-  if (patchClasses.length === 1) {
-    // Single highlight: remove inline background to fallback on CSS background
-    dayDiv.style.background = '';
-    return;
+  updateAllDaysBackgrounds() {
+    document.querySelectorAll(".day").forEach(dayDiv => this.updateSplitBackground(dayDiv));
   }
 
-  // Multiple highlights: get colors from CSS by creating temporary elements
-  const colors = patchClasses.map(c => {
-    const temp = document.createElement('div');
-    temp.classList.add(c);
-    document.body.appendChild(temp);
-    const style = getComputedStyle(temp);
-    const color = style.backgroundColor;
-    document.body.removeChild(temp);
-    return color || 'transparent';
-  });
+  updateSplitBackground(dayDiv) {
+    const patchClasses = Array.from(dayDiv.classList)
+      .filter(c => c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream")));
 
-  const sizePercent = 100 / colors.length;
-  const stops = colors.map((color, i) => {
-    const start = i * sizePercent;
-    const end = (i + 1) * sizePercent;
-    return `${color} ${start}%, ${color} ${end}%`;
-  }).join(', ');
-
-  dayDiv.style.background = `linear-gradient(-45deg, ${stops})`;
-}
-
-// --- Tooltip Functions ---
-
-let currentTooltip = null;
-
-function createTooltip(text, x, y) {
-  // Remove existing tooltip
-  removeTooltip();
-
-  const tooltip = document.createElement('div');
-  tooltip.className = 'custom-tooltip';
-  tooltip.setAttribute('role', 'tooltip');
-
-  text.split('\n').forEach(line => {
-    const lineDiv = document.createElement('div');
-    lineDiv.textContent = line;
-    tooltip.appendChild(lineDiv);
-  });
-
-  tooltip.style.left = `${x}px`;
-  tooltip.style.top = `${y}px`;
-
-  document.body.appendChild(tooltip);
-  currentTooltip = tooltip;
-
-  return tooltip;
-}
-
-function removeTooltip() {
-  if (currentTooltip) {
-    currentTooltip.remove();
-    currentTooltip = null;
-  }
-}
-
-// --- Event Attachment ---
-
-function isGameActive(shorthand) {
-  return activeGames.has(shorthand);
-}
-
-function attachHoverEvents(dayDiv, eventTexts) {
-  let isHovering = false;
-
-  const handleMouseEnter = (e) => {
-    if (isHovering) return;
-    isHovering = true;
-
-    const firstEvent = eventTexts[0];
-    if (firstEvent.patchType !== 'holiday' && !isGameActive(firstEvent.patchType)) {
-      isHovering = false;
+    if (patchClasses.length <= 1) {
+      dayDiv.style.background = "";
+      dayDiv.style.borderRadius = "";
       return;
     }
 
-    const rect = dayDiv.getBoundingClientRect();
-    const combinedText = eventTexts.map(e => e.text).join('\n');
-    createTooltip(combinedText, rect.left, rect.top);
+    // Check if we have both livestream and patch events
+    const hasLivestream = patchClasses.some(c => c.endsWith("-livestream"));
+    const hasPatch = patchClasses.some(c => c.endsWith("-patch"));
+    const hasLivestreamAndPatch = hasLivestream && hasPatch;
 
-    // Handle highlight range
-    if (!firstEvent.isLivestream && firstEvent.highlightRange) {
-      for (let i = 1; i <= firstEvent.highlightRange; i++) {
-        const futureDate = new Date(firstEvent.currentDate);
-        futureDate.setDate(firstEvent.currentDate.getDate() + i);
+    // Multiple highlights: create gradient
+    const colors = this.getColorsFromClasses(patchClasses);
+    const gradient = this.createGradientString(colors);
+    dayDiv.style.background = gradient;
 
-        const targetDayDiv = document.querySelector(`.day[data-date='${formatLocalDate(futureDate)}']`);
-        if (targetDayDiv) {
-          const classToAdd = i <= firstEvent.bannerOne
-            ? getClassName(firstEvent.patchType, firstEvent.dateType, '-banner-one')
-            : getClassName(firstEvent.patchType, firstEvent.dateType, '-banner-two');
-
-          targetDayDiv.classList.add(classToAdd);
-        }
-      }
+    // Apply special border radius for livestream + patch combination
+    if (hasLivestreamAndPatch) {
+      dayDiv.style.borderRadius = "50% 0.25rem 0.25rem 0.25rem";
+    } else {
+      dayDiv.style.borderRadius = "";
     }
-  };
+  }
 
-  const handleMouseMove = (moveEvent) => {
-    if (!currentTooltip) return;
+  getColorsFromClasses(patchClasses) {
+    return patchClasses.map(className => {
+      const temp = document.createElement("div");
+      temp.classList.add(className);
+      document.body.appendChild(temp);
+      const color = getComputedStyle(temp).backgroundColor || "transparent";
+      document.body.removeChild(temp);
+      return color;
+    });
+  }
 
-    const rect = dayDiv.getBoundingClientRect();
-    currentTooltip.style.left = `${rect.left + rect.width / 2 - currentTooltip.offsetWidth / 2}px`;
-    currentTooltip.style.top = `${moveEvent.pageY - 48}px`;
-  };
+  createGradientString(colors) {
+    const sizePercent = 100 / colors.length;
+    const stops = colors.map((color, i) => {
+      const start = i * sizePercent;
+      const end = (i + 1) * sizePercent;
+      return `${color} ${start}%, ${color} ${end}%`;
+    }).join(", ");
 
-  const handleMouseLeave = () => {
-    isHovering = false;
-    removeTooltip();
+    return `linear-gradient(-45deg, ${stops})`;
+  }
 
-    const firstEvent = eventTexts[0];
-    if (firstEvent.patchType !== 'holiday' && !isGameActive(firstEvent.patchType)) return;
+  // --- Tooltip Management ---
+  createTooltip(text, x, y) {
+    this.removeTooltip();
 
-    // Remove highlight range classes
-    if (!firstEvent.isLivestream && firstEvent.highlightRange) {
-      for (let i = 1; i <= firstEvent.highlightRange; i++) {
-        const futureDate = new Date(firstEvent.currentDate);
-        futureDate.setDate(firstEvent.currentDate.getDate() + i);
+    const tooltip = document.createElement("div");
+    tooltip.className = "custom-tooltip";
+    tooltip.setAttribute("role", "tooltip");
 
-        const targetDayDiv = document.querySelector(`.day[data-date='${formatLocalDate(futureDate)}']`);
-        if (targetDayDiv) {
-          const classToRemove = i <= firstEvent.bannerOne
-            ? getClassName(firstEvent.patchType, firstEvent.dateType, '-banner-one')
-            : getClassName(firstEvent.patchType, firstEvent.dateType, '-banner-two');
+    text.split("\n").forEach(line => {
+      const lineDiv = document.createElement("div");
+      lineDiv.textContent = line;
+      tooltip.appendChild(lineDiv);
+    });
 
-          targetDayDiv.classList.remove(classToRemove);
-        }
-      }
+    tooltip.style.left = `${x}px`;
+    tooltip.style.top = `${y}px`;
+
+    document.body.appendChild(tooltip);
+    this.currentTooltip = tooltip;
+  }
+
+  removeTooltip() {
+    if (this.currentTooltip) {
+      this.currentTooltip.remove();
+      this.currentTooltip = null;
     }
-  };
+  }
 
-  dayDiv.addEventListener('mouseenter', handleMouseEnter);
-  dayDiv.addEventListener('mousemove', handleMouseMove);
-  dayDiv.addEventListener('mouseleave', handleMouseLeave);
-}
+  // --- Event Handlers ---
+  attachHoverEvents(dayDiv, eventTexts) {
+    const eventHandler = new DayEventHandler(this, dayDiv, eventTexts);
+    eventHandler.attach();
+  }
 
-// --- Render Calendar ---
+  refreshAllDayHoverBindings() {
+    document.querySelectorAll(".day").forEach(dayDiv => {
+      const dateStr = dayDiv.getAttribute("data-date");
+      if (!dateStr) return;
 
-async function renderCalendar(year) {
-  try {
-    const response = await fetch('highlight-dates.json');
+      const dateObj = CalendarManager.parseLocalDate(dateStr);
+      const eventsTexts = this.getEventsForDate(dateObj);
+      const sortedEvents = this.sortEventsByPriority(eventsTexts);
+
+      // Replace element to remove old event listeners
+      const newDayDiv = dayDiv.cloneNode(true);
+      dayDiv.parentNode.replaceChild(newDayDiv, dayDiv);
+
+      if (sortedEvents.length > 0) {
+        this.attachHoverEvents(newDayDiv, sortedEvents);
+      }
+    });
+  }
+
+  // --- Mobile Utilities ---
+  scrollToCurrentMonth() {
+    if (!CalendarManager.isMobile()) return;
+
+    const currentMonth = new Date().getMonth();
+    const currentMonthElement = document.querySelector(`.month:nth-child(${currentMonth + 1})`);
+
+    if (currentMonthElement) {
+      setTimeout(() => {
+        window.scrollTo({
+          top: Math.max(0, currentMonthElement.offsetTop),
+          behavior: "smooth"
+        });
+      }, 100);
+    }
+  }
+
+  // --- Calendar Rendering ---
+  async renderCalendar(year) {
+    try {
+      const data = await this.fetchCalendarData();
+      this.globalData = data;
+
+      this.createToggleButtons(data);
+      this.renderCalendarGrid(year);
+      this.updatePageMetadata(year);
+      this.scrollToCurrentMonth();
+
+    } catch (error) {
+      this.displayError(error);
+    }
+  }
+
+  async fetchCalendarData() {
+    const response = await fetch("highlight-dates.json");
     if (!response.ok) {
       throw new Error(`Failed to fetch highlight-dates.json: ${response.status} ${response.statusText}`);
     }
+    return response.json();
+  }
 
-    const data = await response.json();
-    globalData = data;
-
-    createToggleButtons(data);
-    calendar.innerHTML = '';
-
+  renderCalendarGrid(year) {
+    this.calendar.innerHTML = "";
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const fragment = document.createDocumentFragment();
 
     for (let month = 0; month < 12; month++) {
-      const monthDiv = document.createElement('div');
-      monthDiv.className = 'month';
-
-      // Header
-      const header = document.createElement('div');
-      header.className = 'month-header';
-      header.textContent = months[month];
-      monthDiv.appendChild(header);
-
-      // Weekdays
-      const weekdaysDiv = document.createElement('div');
-      weekdaysDiv.className = 'weekdays';
-      weekdaysShort.forEach(day => {
-        const d = document.createElement('div');
-        d.textContent = day;
-        weekdaysDiv.appendChild(d);
-      });
-      monthDiv.appendChild(weekdaysDiv);
-
-      // Days grid
-      const daysGrid = document.createElement('div');
-      daysGrid.className = 'days';
-
-      // First day offset (Monday start)
-      const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
-      for (let i = 0; i < firstDay; i++) {
-        const empty = document.createElement('div');
-        empty.className = 'empty';
-        daysGrid.appendChild(empty);
-      }
-
-      const totalDays = daysInMonth(month, year);
-
-      for (let day = 1; day <= totalDays; day++) {
-        const dayDiv = document.createElement('div');
-        dayDiv.className = 'day';
-
-        const currentDate = new Date(year, month, day);
-        const dateStr = formatLocalDate(currentDate);
-        dayDiv.setAttribute('data-date', dateStr);
-        dayDiv.textContent = day;
-
-        if (+currentDate === +today) {
-          dayDiv.classList.add('today');
-        }
-
-        // Get events for this day and add highlight classes
-        const eventsTexts = getEventsForDate(currentDate);
-
-        // Add CSS classes based on events found
-        eventsTexts.forEach(event => {
-          if (event.patchType === 'holiday') {
-            dayDiv.classList.add('highlight-holiday');
-          } else {
-            dayDiv.classList.add(getClassName(event.patchType, event.dateType));
-          }
-        });
-
-        if (eventsTexts.length > 0) {
-          attachHoverEvents(dayDiv, eventsTexts);
-        }
-
-        updateSplitBackground(dayDiv);
-        daysGrid.appendChild(dayDiv);
-      }
-
-      monthDiv.appendChild(daysGrid);
+      const monthDiv = this.createMonthElement(month, year, today);
       fragment.appendChild(monthDiv);
     }
 
-    calendar.appendChild(fragment);
-    yearFooter.textContent = year;
-    document.title = `Gachaverse ${getYear}`;
-    const metaTitle = document.querySelector('meta[name="title"]');
-    if (metaTitle) {
-      metaTitle.setAttribute('content', `Gachaverse ${getYear}`);
+    this.calendar.appendChild(fragment);
+  }
+
+  createMonthElement(month, year, today) {
+    const monthDiv = document.createElement("div");
+    monthDiv.className = "month";
+
+    // Add header and weekdays
+    monthDiv.appendChild(this.createMonthHeader(month));
+    monthDiv.appendChild(this.createWeekdaysHeader());
+    monthDiv.appendChild(this.createDaysGrid(month, year, today));
+
+    return monthDiv;
+  }
+
+  createMonthHeader(month) {
+    const header = document.createElement("div");
+    header.className = "month-header";
+    header.textContent = months[month];
+    return header;
+  }
+
+  createWeekdaysHeader() {
+    const weekdaysDiv = document.createElement("div");
+    weekdaysDiv.className = "weekdays";
+
+    weekdaysShort.forEach(day => {
+      const d = document.createElement("div");
+      d.textContent = day;
+      weekdaysDiv.appendChild(d);
+    });
+
+    return weekdaysDiv;
+  }
+
+  createDaysGrid(month, year, today) {
+    const daysGrid = document.createElement("div");
+    daysGrid.className = "days";
+
+    // Add empty cells for first week offset
+    this.addEmptyDays(daysGrid, month, year);
+
+    // Add actual days
+    const totalDays = CalendarManager.daysInMonth(month, year);
+    for (let day = 1; day <= totalDays; day++) {
+      const dayDiv = this.createDayElement(day, month, year, today);
+      daysGrid.appendChild(dayDiv);
     }
 
-    // Scroll to current month on mobile after calendar is rendered
-    scrollToCurrentMonth();
+    return daysGrid;
+  }
 
-  } catch (error) {
-    console.error('Error loading calendar data:', error);
+  addEmptyDays(daysGrid, month, year) {
+    const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+    for (let i = 0; i < firstDay; i++) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      daysGrid.appendChild(empty);
+    }
+  }
 
-    // Display user-friendly error message
-    calendar.outerHTML = `
+  createDayElement(day, month, year, today) {
+    const dayDiv = document.createElement("div");
+    dayDiv.className = "day";
+    dayDiv.textContent = day;
+
+    const currentDate = new Date(year, month, day);
+    const dateStr = CalendarManager.formatLocalDate(currentDate);
+    dayDiv.setAttribute("data-date", dateStr);
+
+    if (+currentDate === +today) {
+      dayDiv.classList.add("today");
+    }
+
+    this.setupDayEvents(dayDiv, currentDate);
+    return dayDiv;
+  }
+
+  setupDayEvents(dayDiv, currentDate) {
+    const eventsTexts = this.getEventsForDate(currentDate);
+
+    // Sort events to prioritize patches over livestreams for proper class ordering
+    const sortedEvents = this.sortEventsByPriority(eventsTexts);
+
+    // Add CSS classes for events in prioritized order
+    sortedEvents.forEach(event => {
+      const className = event.patchType === "holiday"
+        ? "highlight-holiday"
+        : CalendarManager.getClassName(event.patchType, event.dateType);
+
+      dayDiv.classList.add(className);
+    });
+
+    // Explicitly reorder classes to ensure patches come before livestreams
+    this.reorderDayClasses(dayDiv);
+
+    if (sortedEvents.length > 0) {
+      // Use sorted events for hover events so patch events are processed first
+      this.attachHoverEvents(dayDiv, sortedEvents);
+    }
+
+    this.updateSplitBackground(dayDiv);
+  }
+
+  reorderDayClasses(dayDiv) {
+    const classes = Array.from(dayDiv.classList);
+    const highlightClasses = classes.filter(c => c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream")));
+
+    if (highlightClasses.length <= 1) return;
+
+    // Sort highlight classes: patches first, then livestreams
+    const sortedHighlightClasses = highlightClasses.sort((a, b) => {
+      if (a.endsWith("-patch") && b.endsWith("-livestream")) return -1;
+      if (a.endsWith("-livestream") && b.endsWith("-patch")) return 1;
+      return 0;
+    });
+
+    // Remove all highlight classes and re-add them in sorted order
+    highlightClasses.forEach(cls => dayDiv.classList.remove(cls));
+    sortedHighlightClasses.forEach(cls => dayDiv.classList.add(cls));
+  }
+
+  updatePageMetadata(year) {
+    this.yearFooter.textContent = year;
+    document.title = `Gachaverse ${year}`;
+
+    const metaTitle = document.querySelector(`meta[name="title"]`);
+    if (metaTitle) {
+      metaTitle.setAttribute("content", `Gachaverse ${year}`);
+    }
+  }
+
+  displayError(error) {
+    console.error("Error loading calendar data:", error);
+    this.calendar.outerHTML = `
       <main class="error-message">
         <h3>Unable to load calendar data</h3>
         <p>Please check that the highlight-dates.json file is available and try refreshing the page.</p>
@@ -569,9 +618,112 @@ async function renderCalendar(year) {
   }
 }
 
-// Initialize calendar when DOM is loaded
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => renderCalendar(getYear));
+// Separate class for handling day-specific events
+class DayEventHandler {
+  constructor(calendarManager, dayDiv, eventTexts) {
+    this.calendar = calendarManager;
+    this.dayDiv = dayDiv;
+    this.eventTexts = eventTexts;
+    this.isHovering = false;
+  }
+
+  attach() {
+    this.dayDiv.addEventListener("mouseenter", this.handleMouseEnter.bind(this));
+    this.dayDiv.addEventListener("mousemove", this.handleMouseMove.bind(this));
+    this.dayDiv.addEventListener("mouseleave", this.handleMouseLeave.bind(this));
+  }
+
+  handleMouseEnter(e) {
+    if (this.isHovering) return;
+    this.isHovering = true;
+
+    const firstEvent = this.eventTexts[0];
+    if (!this.shouldShowTooltip(firstEvent)) {
+      this.isHovering = false;
+      return;
+    }
+
+    this.showTooltip();
+    this.applyHighlightRange(firstEvent);
+  }
+
+  shouldShowTooltip(firstEvent) {
+    return firstEvent.patchType === "holiday" ||
+      this.calendar.activeGames.has(firstEvent.patchType);
+  }
+
+  showTooltip() {
+    const rect = this.dayDiv.getBoundingClientRect();
+    const combinedText = this.eventTexts.map(e => e.text).join("\n");
+    this.calendar.createTooltip(combinedText, rect.left, rect.top);
+  }
+
+  applyHighlightRange(firstEvent) {
+    if (!firstEvent.isPatch) return;
+
+    for (let i = 1; i <= firstEvent.highlightRange; i++) {
+      const futureDate = new Date(firstEvent.currentDate);
+      futureDate.setDate(firstEvent.currentDate.getDate() + i);
+
+      const targetDayDiv = document.querySelector(
+        `.day[data-date="${CalendarManager.formatLocalDate(futureDate)}"]`
+      );
+
+      if (targetDayDiv) {
+        const className = this.getHighlightClassName(firstEvent, i);
+        targetDayDiv.classList.add(className);
+      }
+    }
+  }
+
+  getHighlightClassName(firstEvent, dayOffset) {
+    const suffix = dayOffset <= firstEvent.bannerOne ? "-banner-one" : "-banner-two";
+    return CalendarManager.getClassName(firstEvent.patchType, firstEvent.dateType, suffix);
+  }
+
+  handleMouseMove(moveEvent) {
+    if (!this.calendar.currentTooltip) return;
+
+    const rect = this.dayDiv.getBoundingClientRect();
+    this.calendar.currentTooltip.style.left =
+      `${rect.left + rect.width / 2 - this.calendar.currentTooltip.offsetWidth / 2}px`;
+    this.calendar.currentTooltip.style.top = `${moveEvent.pageY - 48}px`;
+  }
+
+  handleMouseLeave() {
+    this.isHovering = false;
+    this.calendar.removeTooltip();
+
+    const firstEvent = this.eventTexts[0];
+    if (!this.shouldShowTooltip(firstEvent)) return;
+
+    this.removeHighlightRange(firstEvent);
+  }
+
+  removeHighlightRange(firstEvent) {
+    if (!firstEvent.isPatch) return;
+
+    for (let i = 1; i <= firstEvent.highlightRange; i++) {
+      const futureDate = new Date(firstEvent.currentDate);
+      futureDate.setDate(firstEvent.currentDate.getDate() + i);
+
+      const targetDayDiv = document.querySelector(
+        `.day[data-date="${CalendarManager.formatLocalDate(futureDate)}"]`
+      );
+
+      if (targetDayDiv) {
+        const className = this.getHighlightClassName(firstEvent, i);
+        targetDayDiv.classList.remove(className);
+      }
+    }
+  }
+}
+
+// Initialize calendar
+const calendarManager = new CalendarManager();
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => calendarManager.renderCalendar(currentYear));
 } else {
-  renderCalendar(getYear);
+  calendarManager.renderCalendar(currentYear);
 }
