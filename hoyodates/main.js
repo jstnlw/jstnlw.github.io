@@ -66,20 +66,26 @@ class CalendarManager {
     return eventsTexts;
   }
 
-  sortEventsByPriority(events) {
-    // Sort events: patches > livestreams > holidays
-    return events.sort((a, b) => {
-      // Patches always come before livestreams or holidays
-      if (a.dateType === "patch" && b.dateType !== "patch") return -1;
-      if (b.dateType === "patch" && a.dateType !== "patch") return 1;
+  sortByTypePriority(items, getTypeCallback) {
+    return items.sort((a, b) => {
+      const typeA = getTypeCallback(a);
+      const typeB = getTypeCallback(b);
+
+      // Patches always come first
+      if (typeA === "patch" && typeB !== "patch") return -1;
+      if (typeB === "patch" && typeA !== "patch") return 1;
 
       // Livestreams come before holidays
-      if (a.dateType === "livestream" && b.dateType === "holiday") return -1;
-      if (a.dateType === "holiday" && b.dateType === "livestream") return 1;
+      if (typeA === "livestream" && typeB === "holiday") return -1;
+      if (typeA === "holiday" && typeB === "livestream") return 1;
 
       // Otherwise maintain original order
       return 0;
     });
+  }
+
+  sortEventsByPriority(events) {
+    return this.sortByTypePriority(events, event => event.dateType);
   }
 
   processGameVersions(game, dateObj, eventsTexts) {
@@ -194,7 +200,7 @@ class CalendarManager {
     this.setupToggleHandler(btn, game);
 
     // Handle initial toggle state
-    if (game.toggleload === false) {
+    if (game.toggle === false) {
       requestAnimationFrame(() => btn.click());
     }
 
@@ -296,12 +302,8 @@ class CalendarManager {
       });
     });
 
-    // Sort events to prioritize patches over livestreams
-    const sortedEvents = dayEvents.sort((a, b) => {
-      if (a.type === "patch" && b.type === "livestream") return -1;
-      if (a.type === "livestream" && b.type === "patch") return 1;
-      return 0;
-    });
+    // Sort events using the generic sorter
+    const sortedEvents = this.sortByTypePriority(dayEvents, event => event.type);
 
     // Apply classes in the correct order
     sortedEvents.forEach(event => {
@@ -318,9 +320,14 @@ class CalendarManager {
     document.querySelectorAll(".day").forEach(dayDiv => this.updateSplitBackground(dayDiv));
   }
 
+  getHighlightClasses(classList) {
+    return Array.from(classList).filter(c =>
+      c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream"))
+    );
+  }
+
   updateSplitBackground(dayDiv) {
-    const patchClasses = Array.from(dayDiv.classList)
-      .filter(c => c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream")));
+    const patchClasses = this.getHighlightClasses(dayDiv.classList);
 
     if (patchClasses.length <= 1) {
       dayDiv.style.background = "";
@@ -579,15 +586,14 @@ class CalendarManager {
   }
 
   reorderDayClasses(dayDiv) {
-    const classes = Array.from(dayDiv.classList);
-    const highlightClasses = classes.filter(c => c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream")));
+    const highlightClasses = this.getHighlightClasses(dayDiv.classList);
 
     if (highlightClasses.length <= 1) return;
 
-    // Sort highlight classes: patches first, then livestreams
-    const sortedHighlightClasses = highlightClasses.sort((a, b) => {
-      if (a.endsWith("-patch") && b.endsWith("-livestream")) return -1;
-      if (a.endsWith("-livestream") && b.endsWith("-patch")) return 1;
+    // Sort highlight classes using the generic sorter
+    const sortedHighlightClasses = this.sortByTypePriority(highlightClasses, className => {
+      if (className.endsWith("-patch")) return "patch";
+      if (className.endsWith("-livestream")) return "livestream";
       return 0;
     });
 
