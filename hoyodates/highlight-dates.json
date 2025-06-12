@@ -5,7 +5,7 @@
         "icon": "assets/hyv-icon.webp",
         "color": "#333333",
         "active": false,
-        "toggleload": false,
+        "toggle": false,
         "versions": [
             {
                 "version": 1.0,
@@ -309,7 +309,7 @@
         "shorthand": "gi",
         "icon": "assets/gi-icon.webp",
         "color": "#64c8c8",
-        "toggleload": false,
+        "toggle": false,
         "versions": [
             {
                 "version": 5.3,
@@ -795,7 +795,7 @@
         "shorthand": "uma",
         "icon": "assets/uma-icon.webp",
         "color": "#55cc33",
-        "toggleload": false,
+        "toggle": false,
         "versions": [
             {
                 "version": 1.0,
