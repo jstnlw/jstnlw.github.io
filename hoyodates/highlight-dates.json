@@ -309,7 +309,6 @@
         "shorthand": "gi",
         "icon": "assets/gi-icon.webp",
         "color": "#64c8c8",
-        "toggle": false,
         "versions": [
             {
                 "version": 5.3,
@@ -449,6 +448,7 @@
         "icon": "assets/hi3-icon.webp",
         "color": "#ddcc33",
         "active": false,
+        "toggle": false,
         "versions": [
             {
                 "version": 8.0,
@@ -795,7 +795,6 @@
         "shorthand": "uma",
         "icon": "assets/uma-icon.webp",
         "color": "#55cc33",
-        "toggle": false,
         "versions": [
             {
                 "version": 1.0,
