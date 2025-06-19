@@ -309,6 +309,8 @@
         "shorthand": "gi",
         "icon": "assets/gi-icon.webp",
         "color": "#64c8c8",
+        "active": false,
+        "toggle": false,
         "versions": [
             {
                 "version": 5.3,
