@@ -840,24 +840,6 @@
         ]
     },
     {
-        "game": "UmaMusumePrettyDerby",
-        "shorthand": "uma",
-        "icon": "assets/uma-icon.webp",
-        "color": "#55cc33",
-        "versions": [
-            {
-                "version": 1.0,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 26
-                    }
-                ]
-            }
-        ]
-    },
-    {
         "game": "Holidays",
         "shorthand": "hol",
         "icon": "",
