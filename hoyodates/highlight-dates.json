@@ -658,8 +658,6 @@
         "shorthand": "gfl2",
         "icon": "assets/gfl2-icon.webp",
         "color": "#ffaa00",
-        "active": false,
-        "toggle": false,
         "versions": [
             {
                 "version": 1.01,
