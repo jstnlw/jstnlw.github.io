@@ -219,6 +219,8 @@
             },
             {
                 "version": 2.0,
+                "highlightRange": 39,
+                "bannerOne": 18,
                 "dates": [
                     {
                         "type": "livestream",
@@ -243,7 +245,7 @@
                     {
                         "type": "patch",
                         "month": "July",
-                        "day": 18
+                        "day": 16
                     }
                 ]
             },
@@ -258,7 +260,7 @@
                     {
                         "type": "patch",
                         "month": "August",
-                        "day": 29
+                        "day": 27
                     }
                 ]
             },
@@ -273,7 +275,7 @@
                     {
                         "type": "patch",
                         "month": "October",
-                        "day": 10
+                        "day": 8
                     }
                 ]
             },
@@ -288,7 +290,7 @@
                     {
                         "type": "patch",
                         "month": "November",
-                        "day": 21
+                        "day": 19
                     }
                 ]
             },
@@ -299,6 +301,11 @@
                         "type": "livestream",
                         "month": "December",
                         "day": 19
+                    },
+                    {
+                        "type": "patch",
+                        "month": "December",
+                        "day": 31
                     }
                 ]
             }
@@ -827,24 +834,6 @@
                         "type": "patch",
                         "month": "December",
                         "day": 18
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "game": "UmaMusumePrettyDerby",
-        "shorthand": "uma",
-        "icon": "assets/uma-icon.webp",
-        "color": "#55cc33",
-        "versions": [
-            {
-                "version": 1.0,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 26
                     }
                 ]
             }
