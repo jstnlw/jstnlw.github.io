@@ -906,6 +906,12 @@
             {
                 "type": "holiday",
                 "month": "September",
+                "day": 15,
+                "name": "Pre Malaysia Day"
+            },
+            {
+                "type": "holiday",
+                "month": "September",
                 "day": 16,
                 "name": "Malaysia Day"
             },
