@@ -312,246 +312,6 @@
         ]
     },
     {
-        "game": "GenshinImpact",
-        "shorthand": "gi",
-        "icon": "assets/gi-icon.webp",
-        "color": "#64c8c8",
-        "active": false,
-        "toggle": false,
-        "versions": [
-            {
-                "version": 5.3,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "January",
-                        "day": 1
-                    }
-                ]
-            },
-            {
-                "version": 5.4,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "January",
-                        "day": 24
-                    },
-                    {
-                        "type": "patch",
-                        "month": "February",
-                        "day": 12
-                    }
-                ]
-            },
-            {
-                "version": 5.5,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "March",
-                        "day": 14
-                    },
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 26
-                    }
-                ]
-            },
-            {
-                "version": 5.6,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "April",
-                        "day": 25
-                    },
-                    {
-                        "type": "patch",
-                        "month": "May",
-                        "day": 7
-                    }
-                ]
-            },
-            {
-                "version": 5.7,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "June",
-                        "day": 6
-                    },
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 18
-                    }
-                ]
-            },
-            {
-                "version": 5.8,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "July",
-                        "day": 18
-                    },
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 30
-                    }
-                ]
-            },
-            {
-                "version": 5.9,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "August",
-                        "day": 29
-                    },
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 10
-                    }
-                ]
-            },
-            {
-                "version": 6.0,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "October",
-                        "day": 10
-                    },
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 22
-                    }
-                ]
-            },
-            {
-                "version": 6.1,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "November",
-                        "day": 21
-                    },
-                    {
-                        "type": "patch",
-                        "month": "December",
-                        "day": 3
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "game": "HonkaiImpact3rd",
-        "shorthand": "hi3",
-        "icon": "assets/hi3-icon.webp",
-        "color": "#ddcc33",
-        "active": false,
-        "toggle": false,
-        "versions": [
-            {
-                "version": 8.0,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "January",
-                        "day": 8
-                    }
-                ]
-            },
-            {
-                "version": 8.1,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "February",
-                        "day": 19
-                    }
-                ]
-            },
-            {
-                "version": 8.2,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "April",
-                        "day": 2
-                    }
-                ]
-            },
-            {
-                "version": 8.3,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "May",
-                        "day": 14
-                    }
-                ]
-            },
-            {
-                "version": 8.4,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 25
-                    }
-                ]
-            },
-            {
-                "version": 8.5,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "August",
-                        "day": 6
-                    }
-                ]
-            },
-            {
-                "version": 8.6,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 17
-                    }
-                ]
-            },
-            {
-                "version": 8.7,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 29
-                    }
-                ]
-            },
-            {
-                "version": 8.8,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "December",
-                        "day": 10
-                    }
-                ]
-            }
-        ]
-    },
-    {
         "game": "WutheringWaves",
         "shorthand": "ww",
         "icon": "assets/ww-icon.webp",
@@ -613,6 +373,7 @@
             },
             {
                 "version": 2.5,
+                "highlightRange": 34,
                 "dates": [
                     {
                         "type": "patch",
@@ -626,8 +387,8 @@
                 "dates": [
                     {
                         "type": "patch",
-                        "month": "September",
-                        "day": 4
+                        "month": "August",
+                        "day": 28
                     }
                 ]
             },
@@ -637,7 +398,7 @@
                     {
                         "type": "patch",
                         "month": "October",
-                        "day": 16
+                        "day": 9
                     }
                 ]
             },
@@ -647,7 +408,7 @@
                     {
                         "type": "patch",
                         "month": "November",
-                        "day": 27
+                        "day": 20
                     }
                 ]
             }
@@ -736,66 +497,6 @@
                         "type": "patch",
                         "month": "November",
                         "day": 27
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "game": "Persona5PhantomX",
-        "shorthand": "p5x",
-        "icon": "assets/p5x-icon.webp",
-        "color": "#ff0000",
-        "active": false,
-        "toggle": false,
-        "versions": [
-            {
-                "version": 1.0,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 3
-                    }
-                ]
-            },
-            {
-                "version": 1.1,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "August",
-                        "day": 14
-                    }
-                ]
-            },
-            {
-                "version": 1.2,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 25
-                    }
-                ]
-            },
-            {
-                "version": 1.3,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "November",
-                        "day": 6
-                    }
-                ]
-            },
-            {
-                "version": 1.4,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "December",
-                        "day": 18
                     }
                 ]
             }
