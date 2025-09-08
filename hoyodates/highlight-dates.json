@@ -252,6 +252,7 @@
             },
             {
                 "version": 2.2,
+                "highlightRange": 40,
                 "dates": [
                     {
                         "type": "livestream",
@@ -261,7 +262,7 @@
                     {
                         "type": "patch",
                         "month": "September",
-                        "day": 3
+                        "day": 4
                     }
                 ]
             },
