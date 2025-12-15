@@ -315,101 +315,15 @@
         "color": "#0066ee",
         "versions": [
             {
-                "version": 2.0,
+                "version": 3.0,
                 "dates": [
                     {
                         "type": "patch",
-                        "month": "January",
-                        "day": 2
-                    }
-                ]
-            },
-            {
-                "version": 2.1,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "February",
-                        "day": 13
-                    }
-                ]
-            },
-            {
-                "version": 2.2,
-                "highlightRange": 32,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 27
-                    }
-                ]
-            },
-            {
-                "version": 2.3,
-                "highlightRange": 43,
-                "bannerOne": 22,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "April",
-                        "day": 29
-                    }
-                ]
-            },
-            {
-                "version": 2.4,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 12
-                    }
-                ]
-            },
-            {
-                "version": 2.5,
-                "highlightRange": 34,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 24
-                    }
-                ]
-            },
-            {
-                "version": 2.6,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "August",
-                        "day": 28
-                    }
-                ]
-            },
-            {
-                "version": 2.7,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 9
-                    }
-                ]
-            },
-            {
-                "version": 2.8,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "November",
-                        "day": 20
+                        "month": "December",
+                        "day": 25
                     }
                 ]
             }
-        ]
     },
     {
         "game": "GirlsFrontline2",
