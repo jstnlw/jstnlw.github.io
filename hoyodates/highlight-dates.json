@@ -34,132 +34,12 @@
         "color": "#33ccff",
         "versions": [
             {
-                "version": 3.0,
+                "version": 4.0,
                 "dates": [
-                    {
-                        "type": "patch",
-                        "month": "January",
-                        "day": 15
-                    }
-                ]
-            },
-            {
-                "version": 3.1,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "February",
-                        "day": 14
-                    },
                     {
                         "type": "patch",
                         "month": "February",
-                        "day": 26
-                    }
-                ]
-            },
-            {
-                "version": 3.2,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "March",
-                        "day": 28
-                    },
-                    {
-                        "type": "patch",
-                        "month": "April",
-                        "day": 9
-                    }
-                ]
-            },
-            {
-                "version": 3.3,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "May",
-                        "day": 9
-                    },
-                    {
-                        "type": "patch",
-                        "month": "May",
-                        "day": 21
-                    }
-                ]
-            },
-            {
-                "version": 3.4,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "June",
-                        "day": 20
-                    },
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 2
-                    }
-                ]
-            },
-            {
-                "version": 3.5,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "August",
                         "day": 1
-                    },
-                    {
-                        "type": "patch",
-                        "month": "August",
-                        "day": 13
-                    }
-                ]
-            },
-            {
-                "version": 3.6,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "September",
-                        "day": 12
-                    },
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 24
-                    }
-                ]
-            },
-            {
-                "version": 3.7,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "October",
-                        "day": 24
-                    },
-                    {
-                        "type": "patch",
-                        "month": "November",
-                        "day": 5
-                    }
-                ]
-            },
-            {
-                "version": 3.8,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "December",
-                        "day": 5
-                    },
-                    {
-                        "type": "patch",
-                        "month": "December",
-                        "day": 17
                     }
                 ]
             }
@@ -172,12 +52,12 @@
         "color": "#ff6464",
         "versions": [
             {
-                "version": 2.5,
+                "version": 2.6,
                 "dates": [
                     {
                         "type": "patch",
-                        "month": "December",
-                        "day": 30
+                        "month": "February",
+                        "day": 6
                     }
                 ]
             }
@@ -190,100 +70,12 @@
         "color": "#0066ee",
         "versions": [
             {
-                "version": 3.0,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "December",
-                        "day": 25
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "game": "GirlsFrontline2",
-        "shorthand": "gfl2",
-        "icon": "assets/gfl2-icon.webp",
-        "color": "#ffaa00",
-        "versions": [
-            {
-                "version": 1.01,
+                "version": 3.1,
                 "dates": [
                     {
                         "type": "patch",
                         "month": "February",
-                        "day": 6
-                    }
-                ]
-            },
-            {
-                "version": 1.02,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 20
-                    }
-                ]
-            },
-            {
-                "version": 1.03,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "May",
-                        "day": 1
-                    }
-                ]
-            },
-            {
-                "version": 1.04,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 12
-                    }
-                ]
-            },
-            {
-                "version": 1.05,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 24
-                    }
-                ]
-            },
-            {
-                "version": 1.06,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 4
-                    }
-                ]
-            },
-            {
-                "version": 1.07,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 16
-                    }
-                ]
-            },
-            {
-                "version": 1.08,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "November",
-                        "day": 27
+                        "day": 5
                     }
                 ]
             }
@@ -303,15 +95,9 @@
             },
             {
                 "type": "holiday",
-                "month": "January",
-                "day": 29,
-                "name": "Chinese New Year"
-            },
-            {
-                "type": "holiday",
-                "month": "January",
-                "day": 30,
-                "name": "Chinese New Year"
+                "month": "February",
+                "day": 1,
+                "name": "Thaipusam"
             },
             {
                 "type": "holiday",
@@ -322,26 +108,38 @@
             {
                 "type": "holiday",
                 "month": "February",
-                "day": 11,
-                "name": "Thaipusam"
+                "day": 2,
+                "name": "Federal Territory Day (Observed)"
+            },
+            {
+                "type": "holiday",
+                "month": "February",
+                "day": 17,
+                "name": "Chinese New Year"
+            },
+            {
+                "type": "holiday",
+                "month": "February",
+                "day": 18,
+                "name": "Chinese New Year Holiday"
             },
             {
                 "type": "holiday",
                 "month": "March",
-                "day": 18,
+                "day": 7,
                 "name": "Nuzul Al-Quran"
             },
             {
                 "type": "holiday",
                 "month": "March",
-                "day": 31,
+                "day": 21,
                 "name": "Hari Raya Aidilfitri"
             },
             {
                 "type": "holiday",
-                "month": "April",
-                "day": 1,
-                "name": "Hari Raya Aidilfitri"
+                "month": "March",
+                "day": 22,
+                "name": "Hari Raya Aidilfitri Holiday"
             },
             {
                 "type": "holiday",
@@ -352,50 +150,38 @@
             {
                 "type": "holiday",
                 "month": "May",
-                "day": 12,
+                "day": 27,
+                "name": "Hari Raya Haji"
+            },
+            {
+                "type": "holiday",
+                "month": "May",
+                "day": 31,
                 "name": "Wesak Day"
             },
             {
                 "type": "holiday",
                 "month": "June",
-                "day": 2,
-                "name": "Agong's Birthday"
+                "day": 1,
+                "name": "Birthday of SPB Yang di-Pertuan Agong"
             },
             {
                 "type": "holiday",
                 "month": "June",
-                "day": 7,
-                "name": "Hari Raya Haji"
-            },
-            {
-                "type": "holiday",
-                "month": "June",
-                "day": 27,
+                "day": 17,
                 "name": "Awal Muharram"
             },
             {
                 "type": "holiday",
                 "month": "August",
+                "day": 25,
+                "name": "Maulidur Rasul"
+            },
+            {
+                "type": "holiday",
+                "month": "August",
                 "day": 31,
-                "name": "Merdeka Day"
-            },
-            {
-                "type": "holiday",
-                "month": "September",
-                "day": 1,
-                "name": "Merdeka Day Holiday"
-            },
-            {
-                "type": "holiday",
-                "month": "September",
-                "day": 5,
-                "name": "Prophet Muhammad's Birthday"
-            },
-            {
-                "type": "holiday",
-                "month": "September",
-                "day": 15,
-                "name": "Pre Malaysia Day"
+                "name": "National Day"
             },
             {
                 "type": "holiday",
@@ -405,9 +191,15 @@
             },
             {
                 "type": "holiday",
-                "month": "October",
-                "day": 20,
+                "month": "November",
+                "day": 8,
                 "name": "Deepavali"
+            },
+            {
+                "type": "holiday",
+                "month": "November",
+                "day": 9,
+                "name": "Deepavali (Observed)"
             },
             {
                 "type": "holiday",
