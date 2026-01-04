@@ -39,7 +39,7 @@
                     {
                         "type": "patch",
                         "month": "February",
-                        "day": 1
+                        "day": 18
                     }
                 ]
             }
@@ -102,13 +102,13 @@
             {
                 "type": "holiday",
                 "month": "February",
-                "day": 1,
+                "day": 2,
                 "name": "Federal Territory Day"
             },
             {
                 "type": "holiday",
                 "month": "February",
-                "day": 2,
+                "day": 3,
                 "name": "Federal Territory Day (Observed)"
             },
             {
@@ -141,6 +141,12 @@
                 "day": 22,
                 "name": "Hari Raya Aidilfitri Holiday"
             },
+             {
+                "type": "holiday",
+                "month": "March",
+                "day": 23,
+                "name": "Hari Raya Aidilfitri Holiday"
+            },
             {
                 "type": "holiday",
                 "month": "May",
@@ -163,7 +169,7 @@
                 "type": "holiday",
                 "month": "June",
                 "day": 1,
-                "name": "Birthday of SPB Yang di-Pertuan Agong"
+                "name": "Agong's Birthday"
             },
             {
                 "type": "holiday",
@@ -175,7 +181,7 @@
                 "type": "holiday",
                 "month": "August",
                 "day": 25,
-                "name": "Maulidur Rasul"
+                "name": "Prophet Muhammad's Birthday"
             },
             {
                 "type": "holiday",
