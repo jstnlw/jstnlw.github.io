@@ -60,6 +60,76 @@
                         "day": 6
                     }
                 ]
+            },
+            {
+                "version": 2.7,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "March",
+                        "day": 20
+                    }
+                ]
+            },
+            {
+                "version": 2.8,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "May",
+                        "day": 1
+                    }
+                ]
+            },
+            {
+                "version": 2.9,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 12
+                    }
+                ]
+            },
+            {
+                "version": 3.0,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 24
+                    }
+                ]
+            },
+            {
+                "version": 3.1,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "September",
+                        "day": 4
+                    }
+                ]
+            },
+            {
+                "version": 3.2,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "October",
+                        "day": 16
+                    }
+                ]
+            },
+            {
+                "version": 3.3,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "November",
+                        "day": 27
+                    }
+                ]
             }
         ]
     },
@@ -76,6 +146,76 @@
                         "type": "patch",
                         "month": "February",
                         "day": 5
+                    }
+                ]
+            },
+            {
+                "version": 3.2,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "March",
+                        "day": 19
+                    }
+                ]
+            },
+            {
+                "version": 3.3,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "April",
+                        "day": 30
+                    }
+                ]
+            },
+            {
+                "version": 3.4,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 11
+                    }
+                ]
+            },
+            {
+                "version": 3.5,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 23
+                    }
+                ]
+            },
+            {
+                "version": 3.6,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "September",
+                        "day": 3
+                    }
+                ]
+            },
+            {
+                "version": 3.7,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "October",
+                        "day": 15
+                    }
+                ]
+            },
+            {
+                "version": 3.8,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "November",
+                        "day": 26
                     }
                 ]
             }
@@ -141,7 +281,7 @@
                 "day": 22,
                 "name": "Hari Raya Aidilfitri Holiday"
             },
-             {
+            {
                 "type": "holiday",
                 "month": "March",
                 "day": 23,
