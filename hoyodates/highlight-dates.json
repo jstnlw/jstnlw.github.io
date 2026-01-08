@@ -57,77 +57,7 @@
                     {
                         "type": "patch",
                         "month": "February",
-                        "day": 6
-                    }
-                ]
-            },
-            {
-                "version": 2.7,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 20
-                    }
-                ]
-            },
-            {
-                "version": 2.8,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "May",
-                        "day": 1
-                    }
-                ]
-            },
-            {
-                "version": 2.9,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 12
-                    }
-                ]
-            },
-            {
-                "version": 3.0,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 24
-                    }
-                ]
-            },
-            {
-                "version": 3.1,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 4
-                    }
-                ]
-            },
-            {
-                "version": 3.2,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 16
-                    }
-                ]
-            },
-            {
-                "version": 3.3,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "November",
-                        "day": 27
+                        "day": 10
                     }
                 ]
             }
