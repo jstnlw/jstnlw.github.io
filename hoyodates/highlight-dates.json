@@ -57,7 +57,7 @@
                     {
                         "type": "patch",
                         "month": "February",
-                        "day": 10
+                        "day": 6
                     }
                 ]
             }
@@ -146,6 +146,26 @@
                         "type": "patch",
                         "month": "November",
                         "day": 26
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "game": "ArknightsEndfield",
+        "shorthand": "ark",
+        "icon": "assets/ark-icon.webp",
+        "color": "#ff6464",
+        "active": false,
+        "toggle": false,
+        "versions": [
+            {
+                "version": 1.0,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "January",
+                        "day": 22
                     }
                 ]
             }
