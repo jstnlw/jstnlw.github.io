@@ -11,6 +11,7 @@ class CalendarManager {
     this.globalData = [];
     this.activeGames = new Set();
     this.currentTooltip = null;
+    this.colorCache = new Map();
 
     // Cache DOM elements
     this.calendar = document.getElementById("calendar");
@@ -67,19 +68,17 @@ class CalendarManager {
   }
 
   sortByTypePriority(items, getTypeCallback) {
-    return items.sort((a, b) => {
+    // Do not mutate the original array
+    return [...items].sort((a, b) => {
       const typeA = getTypeCallback(a);
       const typeB = getTypeCallback(b);
 
-      // Patches always come first
       if (typeA === "patch" && typeB !== "patch") return -1;
       if (typeB === "patch" && typeA !== "patch") return 1;
 
-      // Livestreams come before holidays
       if (typeA === "livestream" && typeB === "holiday") return -1;
       if (typeA === "holiday" && typeB === "livestream") return 1;
 
-      // Otherwise maintain original order
       return 0;
     });
   }
@@ -355,11 +354,19 @@ class CalendarManager {
 
   getColorsFromClasses(patchClasses) {
     return patchClasses.map(className => {
+      if (this.colorCache.has(className)) return this.colorCache.get(className);
+
       const temp = document.createElement("div");
+      temp.style.position = "absolute";
+      temp.style.left = "-9999px";
+      temp.style.width = "1px";
+      temp.style.height = "1px";
       temp.classList.add(className);
       document.body.appendChild(temp);
       const color = getComputedStyle(temp).backgroundColor || "transparent";
       document.body.removeChild(temp);
+
+      this.colorCache.set(className, color);
       return color;
     });
   }
@@ -389,10 +396,16 @@ class CalendarManager {
       tooltip.appendChild(lineDiv);
     });
 
-    tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y}px`;
-
     document.body.appendChild(tooltip);
+    // Position and clamp inside viewport
+    const pad = 8;
+    const left = Math.min(Math.max(pad, x), window.innerWidth - tooltip.offsetWidth - pad);
+    const topCandidate = y - tooltip.offsetHeight - 12;
+    const top = topCandidate > pad ? topCandidate : Math.min(y + pad, window.innerHeight - tooltip.offsetHeight - pad);
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+
     this.currentTooltip = tooltip;
   }
 
@@ -631,12 +644,16 @@ class DayEventHandler {
     this.dayDiv = dayDiv;
     this.eventTexts = eventTexts;
     this.isHovering = false;
+    // Bind handlers once so they can be removed if needed and not recreated repeatedly
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
   }
 
   attach() {
-    this.dayDiv.addEventListener("mouseenter", this.handleMouseEnter.bind(this));
-    this.dayDiv.addEventListener("mousemove", this.handleMouseMove.bind(this));
-    this.dayDiv.addEventListener("mouseleave", this.handleMouseLeave.bind(this));
+    this.dayDiv.addEventListener("mouseenter", this.handleMouseEnter);
+    this.dayDiv.addEventListener("mousemove", this.handleMouseMove);
+    this.dayDiv.addEventListener("mouseleave", this.handleMouseLeave);
   }
 
   handleMouseEnter(e) {
@@ -666,19 +683,17 @@ class DayEventHandler {
 
   applyHighlightRange(firstEvent) {
     if (!firstEvent.isPatch) return;
-
+    const baseDate = new Date(firstEvent.currentDate);
     for (let i = 1; i <= firstEvent.highlightRange; i++) {
-      const futureDate = new Date(firstEvent.currentDate);
-      futureDate.setDate(firstEvent.currentDate.getDate() + i);
+      const futureDate = new Date(baseDate);
+      futureDate.setDate(baseDate.getDate() + i);
+      const dateKey = CalendarManager.formatLocalDate(futureDate);
 
-      const targetDayDiv = document.querySelector(
-        `.day[data-date="${CalendarManager.formatLocalDate(futureDate)}"]`
-      );
+      const targetDayDiv = document.querySelector(`.day[data-date="${dateKey}"]`);
+      if (!targetDayDiv) continue;
 
-      if (targetDayDiv) {
-        const className = this.getHighlightClassName(firstEvent, i);
-        targetDayDiv.classList.add(className);
-      }
+      const className = this.getHighlightClassName(firstEvent, i);
+      targetDayDiv.classList.add(className);
     }
   }
 
@@ -708,19 +723,17 @@ class DayEventHandler {
 
   removeHighlightRange(firstEvent) {
     if (!firstEvent.isPatch) return;
-
+    const baseDate = new Date(firstEvent.currentDate);
     for (let i = 1; i <= firstEvent.highlightRange; i++) {
-      const futureDate = new Date(firstEvent.currentDate);
-      futureDate.setDate(firstEvent.currentDate.getDate() + i);
+      const futureDate = new Date(baseDate);
+      futureDate.setDate(baseDate.getDate() + i);
+      const dateKey = CalendarManager.formatLocalDate(futureDate);
 
-      const targetDayDiv = document.querySelector(
-        `.day[data-date="${CalendarManager.formatLocalDate(futureDate)}"]`
-      );
+      const targetDayDiv = document.querySelector(`.day[data-date="${dateKey}"]`);
+      if (!targetDayDiv) continue;
 
-      if (targetDayDiv) {
-        const className = this.getHighlightClassName(firstEvent, i);
-        targetDayDiv.classList.remove(className);
-      }
+      const className = this.getHighlightClassName(firstEvent, i);
+      targetDayDiv.classList.remove(className);
     }
   }
 }
