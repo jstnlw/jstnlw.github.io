@@ -49,7 +49,7 @@
         "game": "ZenlessZoneZero",
         "shorthand": "zzz",
         "icon": "assets/zzz-icon.webp",
-        "color": "#ff6464",
+        "color": "#EF780C",
         "versions": [
             {
                 "version": 2.6,
@@ -155,9 +155,9 @@
         "game": "ArknightsEndfield",
         "shorthand": "ark",
         "icon": "assets/ark-icon.webp",
-        "color": "#ff6464",
-        "active": false,
-        "toggle": false,
+        "color": "#E3DD07",
+        "active": true,
+        "toggle": true,
         "versions": [
             {
                 "version": 1.0,
