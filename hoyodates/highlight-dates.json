@@ -325,6 +325,28 @@
         ]
     },
     {
+        "game": "GirlsFrontline2",
+        "shorthand": "gfl2",
+        "icon": "assets/gfl2-icon.webp",
+        "color": "#bbbbbb",
+        "active": true,
+        "toggle": true,
+        "versions": [
+            {
+                "version": 10.0,
+                "highlightRange": 21,
+                "bannerOne": 21,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "March",
+                        "day": 12
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "game": "Holidays",
         "shorthand": "hol",
         "icon": "",
