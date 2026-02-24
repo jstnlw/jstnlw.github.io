@@ -334,13 +334,11 @@
         "versions": [
             {
                 "version": 10.0,
-                "highlightRange": 21,
-                "bannerOne": 21,
                 "dates": [
                     {
                         "type": "patch",
-                        "month": "March",
-                        "day": 12
+                        "month": "February",
+                        "day": 19
                     }
                 ]
             }
