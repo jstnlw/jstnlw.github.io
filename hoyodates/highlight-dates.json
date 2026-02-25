@@ -11,7 +11,6 @@
                 "version": 1.0,
                 "highlightRange": 41,
                 "bannerOne": 20,
-                "bannerTwo": 20,
                 "dates": [
                     {
                         "type": "livestream",
@@ -123,6 +122,8 @@
         "versions": [
             {
                 "version": 2.6,
+                "highlightRange": 45,
+                "bannerOne": 27,
                 "dates": [
                     {
                         "type": "patch",
@@ -137,7 +138,7 @@
                     {
                         "type": "patch",
                         "month": "March",
-                        "day": 20
+                        "day": 24
                     }
                 ]
             },
