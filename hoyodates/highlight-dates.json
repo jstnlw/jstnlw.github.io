@@ -208,6 +208,26 @@
         ]
     },
     {
+        "game": "NevernessToEverness",
+        "shorthand": "nte",
+        "icon": "assets/nte-icon.webp",
+        "color": "#FF69B4",
+        "active": true,
+        "toggle": true,
+        "versions": [
+            {
+                "version": 1.0,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "April",
+                        "day": 29
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "game": "GirlsFrontline2",
         "shorthand": "gfl2",
         "icon": "assets/gfl2-icon.webp",
