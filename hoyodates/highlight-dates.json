@@ -34,6 +34,8 @@
         "versions": [
             {
                 "version": 4.0,
+                "highlightRange": 39,
+                "bannerOne": 17,
                 "dates": [
                     {
                         "type": "patch",
@@ -48,67 +50,7 @@
                     {
                         "type": "patch",
                         "month": "March",
-                        "day": 27
-                    }
-                ]
-            },
-            {
-                "version": 4.2,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "May",
-                        "day": 8
-                    }
-                ]
-            },
-            {
-                "version": 4.3,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 19
-                    }
-                ]
-            },
-            {
-                "version": 4.4,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 31
-                    }
-                ]
-            },
-            {
-                "version": 4.5,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 11
-                    }
-                ]
-            },
-            {
-                "version": 4.6,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 23
-                    }
-                ]
-            },
-            {
-                "version": 4.7,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "December",
-                        "day": 4
+                        "day": 25
                     }
                 ]
             }
@@ -122,7 +64,7 @@
         "versions": [
             {
                 "version": 2.6,
-                "highlightRange": 45,
+                "highlightRange": 46,
                 "bannerOne": 25,
                 "dates": [
                     {
@@ -138,7 +80,7 @@
                     {
                         "type": "patch",
                         "month": "March",
-                        "day": 24
+                        "day": 25
                     }
                 ]
             }
