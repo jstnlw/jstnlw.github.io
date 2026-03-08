@@ -80,7 +80,7 @@
                     {
                         "type": "patch",
                         "month": "March",
-                        "day": 25
+                        "day": 24
                     }
                 ]
             }
@@ -179,8 +179,6 @@
         "shorthand": "end",
         "icon": "assets/end-icon.webp",
         "color": "#E3DD07",
-        "active": true,
-        "toggle": true,
         "versions": [
             {
                 "version": 1.0,
@@ -196,7 +194,6 @@
             },
             {
                 "version": 1.1,
-                "highlightRange": 41,
                 "dates": [
                     {
                         "type": "patch",
@@ -212,8 +209,6 @@
         "shorthand": "nte",
         "icon": "assets/nte-icon.webp",
         "color": "#FF69B4",
-        "active": true,
-        "toggle": true,
         "versions": [
             {
                 "version": 1.0,
@@ -232,8 +227,6 @@
         "shorthand": "gfl2",
         "icon": "assets/gfl2-icon.webp",
         "color": "#bbbbbb",
-        "active": true,
-        "toggle": true,
         "versions": [
             {
                 "version": 10.0,
