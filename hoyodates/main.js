@@ -478,7 +478,98 @@ class CalendarManager {
 		if (!response.ok) {
 			throw new Error(`Failed to fetch highlight-dates.json: ${response.status} ${response.statusText}`);
 		}
-		return response.json();
+		// return response.json();
+		// Start Experinemtal Auto-Populate Patches Logic
+		const data = await response.json();
+		this.autoPopulatePatchesForYear(data, currentYear);
+		return data;
+	}
+
+	autoPopulatePatchesForYear(games, year) {
+		games.forEach(game => {
+			if (!game.versions || game.versions.length === 0) return;
+
+			// Get the latest patch version
+			const lastVersion = game.versions[game.versions.length - 1];
+			const lastPatchDate = this.getLastPatchDate(lastVersion);
+
+			if (!lastPatchDate) return;
+
+			// Calculate when the last patch's highlight range ends
+			const highlightRange = lastVersion.highlightRange || 41;
+			let currentDate = new Date(lastPatchDate);
+			currentDate.setDate(currentDate.getDate() + highlightRange);
+
+			let nextVersion = lastVersion.version + 0.1;
+			nextVersion = Math.round(nextVersion * 10) / 10; // Handle floating point precision
+
+			while (currentDate.getFullYear() === year) {
+				// Move to the next day (start of next patch)
+				currentDate.setDate(currentDate.getDate() + 1);
+
+				// Stop if we've gone past the year
+				if (currentDate.getFullYear() > year) break;
+
+				// Create new version entry
+				const newVersion = {
+					version: nextVersion,
+					dates: [
+						{
+							type: "patch",
+							month: months[currentDate.getMonth()],
+							day: currentDate.getDate()
+						}
+					]
+				};
+
+				// Preserve other properties from last version if they exist
+				if (lastVersion.highlightRange) newVersion.highlightRange = lastVersion.highlightRange;
+				if (lastVersion.bannerOne) newVersion.bannerOne = lastVersion.bannerOne;
+
+				game.versions.push(newVersion);
+
+				// Update currentDate to account for the new patch's highlight range for the next iteration
+				currentDate.setDate(currentDate.getDate() + highlightRange);
+
+				nextVersion += 0.1;
+				nextVersion = Math.round(nextVersion * 10) / 10;
+			}
+		});
+	}
+
+	getLastPatchDate(version) {
+		if (!version.dates || version.dates.length === 0) return null;
+
+		// Find the last patch date entry
+		const patchDate = version.dates.find(d => d.type === "patch");
+		if (!patchDate) return null;
+
+		const monthIndex = months.indexOf(patchDate.month);
+		return new Date(currentYear, monthIndex, patchDate.day);
+	}
+
+	calculateAveragePatchInterval(versions) {
+		if (versions.length < 2) {
+			// Default to 6 weeks (~42 days) if only one version
+			return 42;
+		}
+
+		// Calculate intervals between consecutive patches
+		const intervals = [];
+		for (let i = 1; i < versions.length; i++) {
+			const prevDate = this.getLastPatchDate(versions[i - 1]);
+			const currDate = this.getLastPatchDate(versions[i]);
+
+			if (prevDate && currDate) {
+				const daysDiff = Math.round((currDate - prevDate) / (1000 * 60 * 60 * 24));
+				intervals.push(daysDiff);
+			}
+		}
+
+		// Return average interval, or default to 42 days
+		if (intervals.length === 0) return 42;
+		return Math.round(intervals.reduce((a, b) => a + b, 0) / intervals.length);
+		// End Experinemtal Auto-Populate Patches Logic
 	}
 
 	renderCalendarGrid(year) {
