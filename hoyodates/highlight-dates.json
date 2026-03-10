@@ -111,66 +111,6 @@
                         "day": 19
                     }
                 ]
-            },
-            {
-                "version": 3.3,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "April",
-                        "day": 30
-                    }
-                ]
-            },
-            {
-                "version": 3.4,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 11
-                    }
-                ]
-            },
-            {
-                "version": 3.5,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 23
-                    }
-                ]
-            },
-            {
-                "version": 3.6,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 3
-                    }
-                ]
-            },
-            {
-                "version": 3.7,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 15
-                    }
-                ]
-            },
-            {
-                "version": 3.8,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "November",
-                        "day": 26
-                    }
-                ]
             }
         ]
     },
