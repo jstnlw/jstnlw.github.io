@@ -31,7 +31,7 @@ header {
 	position: sticky;
 	top: 0;
 	z-index: 99;
-	background: linear-gradient(to bottom, #000000, rgba(51,51,51,0));
+	background: linear-gradient(to bottom, #000000, rgba(51, 51, 51, 0));
 }
 
 .label {
@@ -72,8 +72,9 @@ header {
 }
 
 .inactive {
-	opacity: 0.5;
+	opacity: 0.75;
 	transition: opacity 0.2s ease;
+	filter: grayscale(100%);
 }
 
 /* ======================================================
@@ -207,6 +208,7 @@ Responsive Layout
 	.calendar {
 		grid-template-columns: repeat(3, 1fr);
 	}
+
 	.month-header,
 	.days div {
 		font-size: 1rem;
@@ -218,20 +220,25 @@ Responsive Layout
 		gap: 0.5rem;
 		grid-template-columns: repeat(2, 1fr);
 	}
+
 	.month-header {
 		margin: 0.25rem 0 0.5rem;
 	}
+
 	.weekdays div,
 	.days div {
 		font-size: 0.75rem;
 	}
+
 	.month {
 		padding: 0.5rem;
 	}
+
 	.label {
 		width: 100%;
 		max-width: unset;
 	}
+
 	.label button {
 		padding: 0.2rem;
 	}
