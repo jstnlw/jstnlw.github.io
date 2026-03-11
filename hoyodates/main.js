@@ -474,7 +474,7 @@ class CalendarManager {
 	}
 
 	async fetchCalendarData() {
-		const response = await fetch("highlight-dates.json");
+		const response = await fetch("highlight-dates.json", { priority: "high" });
 		if (!response.ok) {
 			throw new Error(`Failed to fetch highlight-dates.json: ${response.status} ${response.statusText}`);
 		}
