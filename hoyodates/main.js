@@ -188,6 +188,26 @@ class CalendarManager {
 	}
 
 	// --- Toggle Management ---
+	loadToggleState(shorthand) {
+		try {
+			const states = JSON.parse(localStorage.getItem("gachaverse_toggles")) || {};
+			return states[shorthand] !== undefined ? states[shorthand] : null;
+		} catch (e) {
+			console.error("Could not load toggle state", e);
+			return null;
+		}
+	}
+
+	saveToggleState(shorthand, isActive) {
+		try {
+			const states = JSON.parse(localStorage.getItem("gachaverse_toggles")) || {};
+			states[shorthand] = isActive;
+			localStorage.setItem("gachaverse_toggles", JSON.stringify(states));
+		} catch (e) {
+			console.error("Could not save toggle state", e);
+		}
+	}
+
 	createToggleButtons(games) {
 		this.applyStylesFromJSON(games);
 		this.toggleContainer.innerHTML = "";
@@ -206,13 +226,12 @@ class CalendarManager {
 			return this.createInactiveButton(game);
 		}
 
-		const btn = this.createActiveButton(game);
-		this.setupToggleHandler(btn, game);
-
 		// Handle initial toggle state
-		if (game.toggle === false) {
-			requestAnimationFrame(() => btn.click());
-		}
+		const savedState = this.loadToggleState(game.shorthand);
+		const initialToggleState = savedState !== null ? savedState : game.toggle !== false;
+
+		const btn = this.createActiveButton(game, initialToggleState);
+		this.setupToggleHandler(btn, game);
 
 		return btn;
 	}
@@ -229,14 +248,19 @@ class CalendarManager {
 		return btn;
 	}
 
-	createActiveButton(game) {
+	createActiveButton(game, initialToggleState) {
 		const btn = document.createElement("button");
 		btn.className = `label-${game.shorthand.toLowerCase()}`;
 		btn.setAttribute("data-game", game.shorthand);
 		btn.setAttribute("aria-label", `Toggle ${game.game} events`);
 
-		// Initially add to active games
-		this.activeGames.add(game.shorthand);
+		if (!initialToggleState) {
+			btn.classList.add("inactive");
+		} else {
+			// Initially add to active games only if it's supposed to be active
+			this.activeGames.add(game.shorthand);
+		}
+		
 		return btn;
 	}
 
@@ -252,6 +276,8 @@ class CalendarManager {
 				this.activeGames.add(shorthand);
 				this.reapplyHighlights(shorthand);
 			}
+
+			this.saveToggleState(shorthand, !isInactive);
 
 			// Debounce the refresh
 			clearTimeout(btn.refreshTimeout);
