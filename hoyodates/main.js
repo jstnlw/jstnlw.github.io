@@ -144,6 +144,18 @@ class CalendarManager {
 			document.head.appendChild(styleEl);
 		}
 
+		games.forEach(game => {
+			if (game.icon && game.icon !== "none" && game.icon !== "") {
+				const link = document.createElement("link");
+				link.rel = "preload";
+				link.as = "image";
+				link.href = game.icon;
+				link.type = "image/webp";
+				link.fetchPriority = "high";
+				document.head.appendChild(link);
+			}
+		});
+
 		const styles = games
 			.filter(game => game.color)
 			.map(game => this.generateGameStyles(game))
