@@ -166,7 +166,7 @@
         "game": "GirlsFrontline2",
         "shorthand": "gfl2",
         "icon": "assets/gfl2-icon.webp",
-        "color": "#bbbbbb",
+        "color": "#e2b892",
         "versions": [
             {
                 "version": 10.0,
