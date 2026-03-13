@@ -4,6 +4,7 @@
         "shorthand": "temp",
         "icon": "assets/hyv-icon.webp",
         "color": "#333333",
+        "autoduration": 41,
         "active": false,
         "toggle": false,
         "versions": [
@@ -119,26 +120,17 @@
         "shorthand": "end",
         "icon": "assets/end-icon.webp",
         "color": "#E3DD07",
+        "autoduration": 48,
         "versions": [
             {
                 "version": 1.0,
-                "highlightRange": 49,
-                "bannerOne": 49,
+                "highlightRange": 48,
+                "bannerOne": 48,
                 "dates": [
                     {
                         "type": "patch",
                         "month": "January",
                         "day": 22
-                    }
-                ]
-            },
-            {
-                "version": 1.1,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 12
                     }
                 ]
             }

@@ -260,7 +260,7 @@ class CalendarManager {
 			// Initially add to active games only if it's supposed to be active
 			this.activeGames.add(game.shorthand);
 		}
-		
+
 		return btn;
 	}
 
@@ -535,6 +535,9 @@ class CalendarManager {
 
 			// Calculate when the last patch's highlight range ends
 			const highlightRange = lastVersion.highlightRange || 41;
+			// If autoduration is set on the game, use it as the day-step between auto-populated patches;
+			// the initial offset always uses highlightRange to respect the existing patch's duration
+			const autoDuration = game.autoduration ?? highlightRange;
 			let currentDate = new Date(lastPatchDate);
 			currentDate.setDate(currentDate.getDate() + highlightRange);
 
@@ -561,13 +564,15 @@ class CalendarManager {
 				};
 
 				// Preserve other properties from last version if they exist
-				if (lastVersion.highlightRange) newVersion.highlightRange = lastVersion.highlightRange;
+				// When autoduration is set, use it as the highlightRange for auto-generated patches
+				// so their highlight window matches the step between patches — not the original range
+				newVersion.highlightRange = game.autoduration != null ? autoDuration : (lastVersion.highlightRange || 41);
 				if (lastVersion.bannerOne) newVersion.bannerOne = lastVersion.bannerOne;
 
 				game.versions.push(newVersion);
 
-				// Update currentDate to account for the new patch's highlight range for the next iteration
-				currentDate.setDate(currentDate.getDate() + highlightRange);
+				// Advance by autoDuration days to the next patch slot
+				currentDate.setDate(currentDate.getDate() + autoDuration);
 
 				nextVersion += 0.1;
 				nextVersion = Math.round(nextVersion * 10) / 10;
