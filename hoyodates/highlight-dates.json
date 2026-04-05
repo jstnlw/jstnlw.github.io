@@ -145,6 +145,17 @@
                         "day": 22
                     }
                 ]
+            },
+            {
+                "version": 1.1,
+                "highlightRange": 35,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "March",
+                        "day": 12
+                    }
+                ]
             }
         ]
     },
