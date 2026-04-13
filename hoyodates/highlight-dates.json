@@ -89,6 +89,8 @@
             },
             {
                 "version": 2.7,
+                "highlightRange": 42,
+                "bannerOne": 21,
                 "dates": [
                     {
                         "type": "patch",
@@ -154,6 +156,17 @@
                         "type": "patch",
                         "month": "March",
                         "day": 12
+                    }
+                ]
+            },
+            {
+                "version": 1.2,
+                "bannerOne": 41,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "April",
+                        "day": 17
                     }
                 ]
             }
