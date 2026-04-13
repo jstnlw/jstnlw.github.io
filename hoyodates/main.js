@@ -130,7 +130,7 @@ class CalendarManager {
 			patchType,
 			isPatch: date.type === "patch",
 			highlightRange: version.highlightRange || 41,
-			bannerOne: version.bannerOne || 20,
+			bannerOne: version.bannerOne || ((version.highlightRange || 41) - 1) / 2,
 			dateType: date.type
 		};
 	}
