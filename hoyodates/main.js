@@ -1,10 +1,22 @@
-const months = [
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+const MONTHS = [
 	"January", "February", "March", "April", "May", "June",
 	"July", "August", "September", "October", "November", "December"
 ];
 
-const weekdaysShort = ["M", "T", "W", "T", "F", "S", "S"];
-const currentYear = new Date().getFullYear();
+// Mon-start weekday labels, matching the CSS grid of 7 columns in .weekdays
+const WEEKDAYS_SHORT = ["M", "T", "W", "T", "F", "S", "S"];
+
+const CURRENT_YEAR = new Date().getFullYear();
+const DEFAULT_RANGE = 41;       // fallback highlightRange per patch cycle
+const DEFAULT_INTERVAL = 42;       // fallback days between patches
+const STORAGE_KEY = "gachaverse_toggles";
+const DATA_URL = "highlight-dates.json"; // matches <link rel="preload"> in <head>
+const SITE_TITLE_PREFIX = "Gachaverse";           // matches <title> and <meta name="title">
+const MOBILE_BREAKPOINT = 480;      // matches @media (max-width: 480px) in CSS
+
+// ─── CalendarManager ─────────────────────────────────────────────────────────
 
 class CalendarManager {
 	constructor() {
@@ -13,19 +25,19 @@ class CalendarManager {
 		this.currentTooltip = null;
 		this.colorCache = new Map();
 
-		// Cache DOM elements
-		this.calendar = document.getElementById("calendar");
-		this.toggleContainer = document.getElementById("toggle-container");
-		this.yearFooter = document.querySelector("footer");
+		// IDs/selectors match index.html exactly
+		this.calendarEl = document.getElementById("calendar");        // <main id="calendar">
+		this.toggleContainer = document.getElementById("toggle-container"); // <div id="toggle-container">
+		this.footerEl = document.querySelector("footer");            // <footer>
 
-		// Bind methods to preserve context
 		this.refreshAllDayHoverBindings = this.refreshAllDayHoverBindings.bind(this);
 	}
 
-	// --- Utility Functions ---
+	// ─── Static Utilities ──────────────────────────────────────────────────────
+
 	static parseLocalDate(dateStr) {
-		const [year, month, day] = dateStr.split("-").map(Number);
-		return new Date(year, month - 1, day);
+		const [y, m, d] = dateStr.split("-").map(Number);
+		return new Date(y, m - 1, d);
 	}
 
 	static formatLocalDate(date) {
@@ -39,78 +51,82 @@ class CalendarManager {
 		return new Date(year, month + 1, 0).getDate();
 	}
 
-	static getClassName(gameShorthand, type, suffix = "") {
-		return `highlight-${gameShorthand.toLowerCase()}-${type}${suffix}`;
+	/**
+	 * Builds CSS class names used by index.html:
+	 *   highlight-{shorthand}-patch
+	 *   highlight-{shorthand}-livestream
+	 *   highlight-{shorthand}-patch-banner-one
+	 *   highlight-{shorthand}-patch-banner-two
+	 */
+	static getClassName(shorthand, type, suffix = "") {
+		return `highlight-${shorthand.toLowerCase()}-${type}${suffix}`;
 	}
 
 	static isMobile() {
-		return window.innerWidth <= 768 ||
-			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+		return window.innerWidth <= MOBILE_BREAKPOINT;
 	}
 
-	// --- Event Processing ---
+	// ─── Event Processing ──────────────────────────────────────────────────────
+
 	getEventsForDate(dateObj) {
-		const eventsTexts = [];
-
-		this.globalData.forEach(game => {
-			// Process game versions (check if active)
+		const events = [];
+		for (const game of this.globalData) {
+			// game.versions → patch/livestream events; only shown when toggled on
 			if (game.versions && this.activeGames.has(game.shorthand)) {
-				this.processGameVersions(game, dateObj, eventsTexts);
+				this.collectVersionEvents(game, dateObj, events);
 			}
-
-			// Process holidays (always active)
+			// game.dates → holiday entries (Holidays game); always visible
 			if (game.dates) {
-				this.processHolidays(game, dateObj, eventsTexts);
+				this.collectHolidayEvents(game, dateObj, events);
 			}
-		});
-
-		return eventsTexts;
+		}
+		return events;
 	}
 
-	sortByTypePriority(items, getTypeCallback) {
-		// Do not mutate the original array
+	/**
+	 * Sort priority: patch → livestream → holiday
+	 * Drives class ordering on .day divs (patch border-radius wins over livestream)
+	 */
+	sortByTypePriority(items, getType) {
 		return [...items].sort((a, b) => {
-			const typeA = getTypeCallback(a);
-			const typeB = getTypeCallback(b);
-
-			if (typeA === "patch" && typeB !== "patch") return -1;
-			if (typeB === "patch" && typeA !== "patch") return 1;
-
-			if (typeA === "livestream" && typeB === "holiday") return -1;
-			if (typeA === "holiday" && typeB === "livestream") return 1;
-
-			return 0;
+			const ta = getType(a), tb = getType(b);
+			if (ta === tb) return 0;
+			if (ta === "patch") return -1;
+			if (tb === "patch") return 1;
+			if (ta === "livestream") return -1;
+			return 1;
 		});
 	}
 
 	sortEventsByPriority(events) {
-		return this.sortByTypePriority(events, event => event.dateType);
+		return this.sortByTypePriority(events, e => e.dateType);
 	}
 
-	processGameVersions(game, dateObj, eventsTexts) {
-		game.versions.forEach(version => {
-			version.dates.forEach(date => {
-				if (this.isDateMatch(date, dateObj)) {
-					const versionNum = this.formatVersionNumber(version.version);
-					const versionLabel = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} ${versionNum}`;
-
-					eventsTexts.push(this.createEventData(versionLabel, dateObj, game.shorthand, date, version));
-				}
-			});
-		});
-	}
-
-	processHolidays(game, dateObj, eventsTexts) {
-		game.dates.forEach(date => {
-			if (this.isDateMatch(date, dateObj)) {
-				eventsTexts.push(this.createEventData(date.name, dateObj, "holiday", date, {}));
+	collectVersionEvents(game, dateObj, events) {
+		for (const version of game.versions) {
+			for (const date of version.dates) {
+				if (!this.isDateMatch(date, dateObj)) continue;
+				const vNum = this.formatVersionNumber(version.version);
+				const label = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} ${vNum}`;
+				events.push(this.buildEvent(label, dateObj, game.shorthand, date, version));
 			}
-		});
+		}
+	}
+
+	collectHolidayEvents(game, dateObj, events) {
+		for (const date of game.dates) {
+			if (this.isDateMatch(date, dateObj)) {
+				// patchType "holiday" → CSS class "highlight-holiday" (defined in index.html)
+				events.push(this.buildEvent(date.name, dateObj, "holiday", date, {}));
+			}
+		}
 	}
 
 	isDateMatch(date, dateObj) {
-		const eventMonth = months.indexOf(date.month);
-		return eventMonth === dateObj.getMonth() && date.day === dateObj.getDate();
+		return (
+			MONTHS.indexOf(date.month) === dateObj.getMonth() &&
+			date.day === dateObj.getDate()
+		);
 	}
 
 	formatVersionNumber(version) {
@@ -123,20 +139,24 @@ class CalendarManager {
 		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 
-	createEventData(text, currentDate, patchType, date, version) {
+	buildEvent(text, currentDate, patchType, date, version) {
+		const highlightRange = version.highlightRange ?? DEFAULT_RANGE;
 		return {
 			text,
 			currentDate,
 			patchType,
 			isPatch: date.type === "patch",
-			highlightRange: version.highlightRange || 41,
-			bannerOne: version.bannerOne || ((version.highlightRange || 41) - 1) / 2,
+			highlightRange,
+			// bannerOne threshold — splits banner-one / banner-two CSS classes
+			bannerOne: version.bannerOne ?? (highlightRange - 1) / 2,
 			dateType: date.type
 		};
 	}
 
-	// --- Styling ---
+	// ─── Styling ───────────────────────────────────────────────────────────────
+
 	applyStylesFromJSON(games) {
+		// Inject into a single <style id="game-properties"> to avoid duplicate sheets
 		let styleEl = document.getElementById("game-properties");
 		if (!styleEl) {
 			styleEl = document.createElement("style");
@@ -144,7 +164,8 @@ class CalendarManager {
 			document.head.appendChild(styleEl);
 		}
 
-		games.forEach(game => {
+		// Preload game icons declared in highlight-dates.json
+		for (const game of games) {
 			if (game.icon && game.icon !== "none" && game.icon !== "") {
 				const link = document.createElement("link");
 				link.rel = "preload";
@@ -154,85 +175,92 @@ class CalendarManager {
 				link.fetchPriority = "high";
 				document.head.appendChild(link);
 			}
-		});
+		}
 
-		const styles = games
-			.filter(game => game.color)
-			.map(game => this.generateGameStyles(game))
+		styleEl.textContent = games
+			.filter(g => g.color)
+			.map(g => this.generateGameStyles(g))
 			.join("\n");
-
-		styleEl.textContent = styles;
 	}
 
-	generateGameStyles(game) {
-		const shorthand = game.shorthand.toLowerCase();
-		const { color, icon = "none" } = game;
+	/**
+	 * Generates CSS for each game using class names that match index.html selectors:
+	 *   .label-{s}                        → toggle button background
+	 *   .highlight-{s}-livestream         → border-radius: 50%  (from CSS [class*="livestream"])
+	 *   .highlight-{s}-patch              → border-radius: 0.25rem (from CSS [class*="patch"])
+	 *   .highlight-{s}-patch-banner-one/two → from CSS [class*="banner-one/two"]
+	 *   .label-{s}::before                → icon background image
+	 *   .highlight-holiday                → colored text for holiday dates
+	 */
+	generateGameStyles({ shorthand, color, icon = "none", dates }) {
+		const s = shorthand.toLowerCase();
+		// Only emit .highlight-holiday rule for the Holidays entry (has flat dates[], no versions)
+		const holidayRule = dates
+			? `.highlight-holiday { color: ${color} !important; }`
+			: "";
 
 		return `
-			.label-${shorthand},
-			.highlight-${shorthand}-livestream,
-			.highlight-${shorthand}-patch {
-				background: ${color};
-			}
-			.highlight-${shorthand}-patch-banner-one,
-			.highlight-${shorthand}-patch-banner-two {
-				background: ${color} !important;
-			}
-			.label-${shorthand}::before {
-				background: url("${icon}");
-			}
-			.highlight-holiday {
-				color: ${color} !important;
-			}
-		`;
+      .label-${s},
+      .highlight-${s}-livestream,
+      .highlight-${s}-patch {
+        background: ${color};
+      }
+      .highlight-${s}-patch-banner-one,
+      .highlight-${s}-patch-banner-two {
+        background: ${color} !important;
+      }
+      .label-${s}::before {
+        background: url("${icon}");
+      }
+      ${holidayRule}
+    `;
 	}
 
-	// --- Toggle Management ---
-	loadToggleState(shorthand) {
+	// ─── Toggle Management ─────────────────────────────────────────────────────
+
+	_getToggleStates() {
 		try {
-			const states = JSON.parse(localStorage.getItem("gachaverse_toggles")) || {};
-			return states[shorthand] !== undefined ? states[shorthand] : null;
-		} catch (e) {
-			console.error("Could not load toggle state", e);
-			return null;
+			return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? {};
+		} catch {
+			return {};
 		}
+	}
+
+	loadToggleState(shorthand) {
+		const states = this._getToggleStates();
+		return states[shorthand] !== undefined ? states[shorthand] : null;
 	}
 
 	saveToggleState(shorthand, isActive) {
 		try {
-			const states = JSON.parse(localStorage.getItem("gachaverse_toggles")) || {};
+			const states = this._getToggleStates();
 			states[shorthand] = isActive;
-			localStorage.setItem("gachaverse_toggles", JSON.stringify(states));
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(states));
 		} catch (e) {
-			console.error("Could not save toggle state", e);
+			console.error("Could not save toggle state:", e);
 		}
 	}
 
 	createToggleButtons(games) {
 		this.applyStylesFromJSON(games);
 		this.toggleContainer.innerHTML = "";
-
 		const fragment = document.createDocumentFragment();
-		games.forEach(game => {
+		for (const game of games) {
 			const btn = this.createToggleButton(game);
 			if (btn) fragment.appendChild(btn);
-		});
-
+		}
 		this.toggleContainer.appendChild(fragment);
 	}
 
 	createToggleButton(game) {
+		// Games with active:false or no versions are hidden (e.g. Template entry in JSON)
 		if (game.active === false || !this.hasValidVersions(game)) {
 			return this.createInactiveButton(game);
 		}
-
-		// Handle initial toggle state
-		const savedState = this.loadToggleState(game.shorthand);
-		const initialToggleState = savedState !== null ? savedState : game.toggle !== false;
-
-		const btn = this.createActiveButton(game, initialToggleState);
+		const saved = this.loadToggleState(game.shorthand);
+		const isActive = saved !== null ? saved : game.toggle !== false;
+		const btn = this.buildToggleButton(game, isActive);
 		this.setupToggleHandler(btn, game);
-
 		return btn;
 	}
 
@@ -240,451 +268,343 @@ class CalendarManager {
 		return Array.isArray(game.versions) && game.versions.length > 0;
 	}
 
-	createInactiveButton(game) {
+	// Hidden placeholder — keeps DOM order stable for CSS nth-child selectors
+	createInactiveButton({ shorthand }) {
 		const btn = document.createElement("button");
-		btn.className = `label-${game.shorthand.toLowerCase()}`;
+		btn.className = `label-${shorthand.toLowerCase()}`;
 		btn.style.display = "none";
 		btn.style.pointerEvents = "none";
 		return btn;
 	}
 
-	createActiveButton(game, initialToggleState) {
+	buildToggleButton(game, isActive) {
 		const btn = document.createElement("button");
-		btn.className = `label-${game.shorthand.toLowerCase()}`;
-		btn.setAttribute("data-game", game.shorthand);
+		btn.className = `label-${game.shorthand.toLowerCase()}`;  // matches .label button in CSS
+		btn.dataset.game = game.shorthand;
 		btn.setAttribute("aria-label", `Toggle ${game.game} events`);
-
-		if (!initialToggleState) {
-			btn.classList.add("inactive");
+		if (!isActive) {
+			btn.classList.add("inactive"); // .inactive → grayscale + opacity in CSS
 		} else {
-			// Initially add to active games only if it's supposed to be active
 			this.activeGames.add(game.shorthand);
 		}
-
 		return btn;
 	}
 
-	setupToggleHandler(btn, game) {
-		const handleToggle = () => {
-			const shorthand = game.shorthand;
-			const isInactive = btn.classList.toggle("inactive");
-
-			if (isInactive) {
+	setupToggleHandler(btn, { shorthand }) {
+		btn.addEventListener("click", () => {
+			const isNowInactive = btn.classList.toggle("inactive");
+			if (isNowInactive) {
 				this.activeGames.delete(shorthand);
 				this.removeHighlights(shorthand);
 			} else {
 				this.activeGames.add(shorthand);
 				this.reapplyHighlights(shorthand);
 			}
-
-			this.saveToggleState(shorthand, !isInactive);
-
-			// Debounce the refresh
-			clearTimeout(btn.refreshTimeout);
-			btn.refreshTimeout = setTimeout(this.refreshAllDayHoverBindings, 50);
-		};
-
-		btn.addEventListener("click", handleToggle);
+			this.saveToggleState(shorthand, !isNowInactive);
+			// Debounce hover rebind so rapid clicks don't thrash the DOM
+			clearTimeout(btn._refreshTimeout);
+			btn._refreshTimeout = setTimeout(this.refreshAllDayHoverBindings, 50);
+		});
 	}
 
-	// --- Highlight Management ---
+	// ─── Highlight Management ──────────────────────────────────────────────────
+
 	removeHighlights(shorthand) {
-		const classesToRemove = [
+		const classes = [
 			`highlight-${shorthand}-livestream`,
 			`highlight-${shorthand}-patch`,
 			`highlight-${shorthand}-banner-one`,
-			`highlight-${shorthand}-banner-two`,
+			`highlight-${shorthand}-banner-two`
 		];
-
-		this.removeClassesFromElements(classesToRemove);
-		this.updateAllDaysBackgrounds();
-	}
-
-	removeClassesFromElements(classesToRemove) {
-		const selector = classesToRemove.map(c => `.${c}`).join(", ");
+		const selector = classes.map(c => `.${c}`).join(", ");
 		document.querySelectorAll(selector).forEach(el => {
-			classesToRemove.forEach(cls => el.classList.remove(cls));
+			classes.forEach(cls => el.classList.remove(cls));
 			this.updateSplitBackground(el);
 		});
+		this.updateAllDaysBackgrounds();
 	}
 
 	reapplyHighlights(shorthand) {
 		const game = this.globalData.find(g => g.shorthand === shorthand);
 		if (!game?.versions) return;
-
 		document.querySelectorAll(".day").forEach(dayDiv => {
 			this.applyHighlightsToDay(dayDiv, game);
 		});
-
 		this.updateAllDaysBackgrounds();
 	}
 
 	applyHighlightsToDay(dayDiv, game) {
 		const dateStr = dayDiv.getAttribute("data-date");
 		if (!dateStr) return;
-
 		const dateObj = CalendarManager.parseLocalDate(dateStr);
-		const dayEvents = [];
 
-		// Collect all events for this day from this game
-		game.versions.forEach(version => {
-			version.dates.forEach(date => {
-				if (this.isDateMatch(date, dateObj)) {
-					dayEvents.push({
-						type: date.type,
-						className: CalendarManager.getClassName(game.shorthand, date.type)
-					});
-				}
-			});
-		});
+		const dayEvents = game.versions.flatMap(version =>
+			version.dates
+				.filter(date => this.isDateMatch(date, dateObj))
+				.map(date => ({
+					type: date.type,
+					className: CalendarManager.getClassName(game.shorthand, date.type)
+				}))
+		);
 
-		// Sort events using the generic sorter
-		const sortedEvents = this.sortByTypePriority(dayEvents, event => event.type);
+		this.sortByTypePriority(dayEvents, e => e.type)
+			.forEach(e => dayDiv.classList.add(e.className));
 
-		// Apply classes in the correct order
-		sortedEvents.forEach(event => {
-			dayDiv.classList.add(event.className);
-		});
-
-		// Explicitly reorder classes to ensure patches come before livestreams
 		this.reorderDayClasses(dayDiv);
-
 		this.updateSplitBackground(dayDiv);
 	}
 
 	updateAllDaysBackgrounds() {
-		document.querySelectorAll(".day").forEach(dayDiv => this.updateSplitBackground(dayDiv));
+		document.querySelectorAll(".day").forEach(d => this.updateSplitBackground(d));
 	}
 
+	/**
+	 * Returns only the primary highlight classes (patch/livestream),
+	 * excluding banner-one/two — those are transient hover-only classes.
+	 */
 	getHighlightClasses(classList) {
-		return Array.from(classList).filter(c =>
-			c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream"))
+		return Array.from(classList).filter(
+			c => c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream"))
 		);
 	}
 
+	/**
+	 * When a .day has multiple highlights, build a CSS gradient so both colors show.
+	 * Special case: livestream (circle) + patch (rounded square) → asymmetric border-radius
+	 * matching the CSS rule combo in index.html.
+	 */
 	updateSplitBackground(dayDiv) {
-		const patchClasses = this.getHighlightClasses(dayDiv.classList);
-
-		if (patchClasses.length <= 1) {
+		const classes = this.getHighlightClasses(dayDiv.classList);
+		if (classes.length <= 1) {
 			dayDiv.style.background = "";
 			dayDiv.style.borderRadius = "";
 			return;
 		}
-
-		// Check if we have both livestream and patch events
-		const hasLivestream = patchClasses.some(c => c.endsWith("-livestream"));
-		const hasPatch = patchClasses.some(c => c.endsWith("-patch"));
-		const hasLivestreamAndPatch = hasLivestream && hasPatch;
-
-		// Multiple highlights: create gradient
-		const colors = this.getColorsFromClasses(patchClasses);
-		const gradient = this.createGradientString(colors);
-		dayDiv.style.background = gradient;
-
-		// Apply special border radius for livestream + patch combination
-		if (hasLivestreamAndPatch) {
-			dayDiv.style.borderRadius = "50% 0.25rem 0.25rem 0.25rem";
-		} else {
-			dayDiv.style.borderRadius = "";
-		}
+		const hasLivestream = classes.some(c => c.endsWith("-livestream"));
+		const hasPatch = classes.some(c => c.endsWith("-patch"));
+		dayDiv.style.background = this.createGradientString(this.getColorsFromClasses(classes));
+		// 50% top-left → circle side for livestream; 0.25rem for patch corners
+		dayDiv.style.borderRadius = (hasLivestream && hasPatch) ? "50% 0.25rem 0.25rem 0.25rem" : "";
 	}
 
-	getColorsFromClasses(patchClasses) {
-		return patchClasses.map(className => {
-			if (this.colorCache.has(className)) return this.colorCache.get(className);
-
+	getColorsFromClasses(classes) {
+		return classes.map(cls => {
+			if (this.colorCache.has(cls)) return this.colorCache.get(cls);
+			// Measure computed background-color via a temporary off-screen element
 			const temp = document.createElement("div");
-			temp.style.position = "absolute";
-			temp.style.left = "-9999px";
-			temp.style.width = "1px";
-			temp.style.height = "1px";
-			temp.classList.add(className);
+			temp.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;";
+			temp.classList.add(cls);
 			document.body.appendChild(temp);
 			const color = getComputedStyle(temp).backgroundColor || "transparent";
 			document.body.removeChild(temp);
-
-			this.colorCache.set(className, color);
+			this.colorCache.set(cls, color);
 			return color;
 		});
 	}
 
 	createGradientString(colors) {
-		const sizePercent = 100 / colors.length;
-		const stops = colors.map((color, i) => {
-			const start = i * sizePercent;
-			const end = (i + 1) * sizePercent;
-			return `${color} ${start}%, ${color} ${end}%`;
-		}).join(", ");
-
+		const pct = 100 / colors.length;
+		const stops = colors.map((c, i) =>
+			`${c} ${i * pct}%, ${c} ${(i + 1) * pct}%`
+		).join(", ");
 		return `linear-gradient(-45deg, ${stops})`;
 	}
 
-	// --- Tooltip Management ---
+	// ─── Tooltip ───────────────────────────────────────────────────────────────
+
 	createTooltip(text, x, y) {
 		this.removeTooltip();
-
+		// Matches .custom-tooltip in index.html CSS
 		const tooltip = document.createElement("div");
 		tooltip.className = "custom-tooltip";
 		tooltip.setAttribute("role", "tooltip");
-
 		text.split("\n").forEach(line => {
-			const lineDiv = document.createElement("div");
-			lineDiv.textContent = line;
-			tooltip.appendChild(lineDiv);
+			const div = document.createElement("div");
+			div.textContent = line;
+			tooltip.appendChild(div);
 		});
-
 		document.body.appendChild(tooltip);
-		// Position and clamp inside viewport
+
 		const pad = 8;
 		const left = Math.min(Math.max(pad, x), window.innerWidth - tooltip.offsetWidth - pad);
-		const topCandidate = y - tooltip.offsetHeight - 12;
-		const top = topCandidate > pad ? topCandidate : Math.min(y + pad, window.innerHeight - tooltip.offsetHeight - pad);
+		const topAbove = y - tooltip.offsetHeight - 12;
+		const top = topAbove > pad
+			? topAbove
+			: Math.min(y + pad, window.innerHeight - tooltip.offsetHeight - pad);
 
 		tooltip.style.left = `${left}px`;
 		tooltip.style.top = `${top}px`;
-
 		this.currentTooltip = tooltip;
 	}
 
 	removeTooltip() {
-		if (this.currentTooltip) {
-			this.currentTooltip.remove();
-			this.currentTooltip = null;
-		}
+		this.currentTooltip?.remove();
+		this.currentTooltip = null;
 	}
 
-	// --- Event Handlers ---
+	// ─── Hover Bindings ────────────────────────────────────────────────────────
+
 	attachHoverEvents(dayDiv, eventTexts) {
-		const eventHandler = new DayEventHandler(this, dayDiv, eventTexts);
-		eventHandler.attach();
+		new DayEventHandler(this, dayDiv, eventTexts).attach();
 	}
 
 	refreshAllDayHoverBindings() {
 		document.querySelectorAll(".day").forEach(dayDiv => {
 			const dateStr = dayDiv.getAttribute("data-date");
 			if (!dateStr) return;
-
 			const dateObj = CalendarManager.parseLocalDate(dateStr);
-			const eventsTexts = this.getEventsForDate(dateObj);
-			const sortedEvents = this.sortEventsByPriority(eventsTexts);
-
-			// Replace element to remove old event listeners
-			const newDayDiv = dayDiv.cloneNode(true);
-			dayDiv.parentNode.replaceChild(newDayDiv, dayDiv);
-
-			if (sortedEvents.length > 0) {
-				this.attachHoverEvents(newDayDiv, sortedEvents);
-			}
+			const sortedEvents = this.sortEventsByPriority(this.getEventsForDate(dateObj));
+			// Clone node to drop all old event listeners cleanly
+			const newDay = dayDiv.cloneNode(true);
+			dayDiv.parentNode.replaceChild(newDay, dayDiv);
+			if (sortedEvents.length > 0) this.attachHoverEvents(newDay, sortedEvents);
 		});
 	}
 
-	// --- Mobile Utilities ---
+	// ─── Mobile ────────────────────────────────────────────────────────────────
+
 	scrollToCurrentMonth() {
 		if (!CalendarManager.isMobile()) return;
-
-		const currentMonth = new Date().getMonth();
-		const currentMonthElement = document.querySelector(`.month:nth-child(${currentMonth + 1})`);
-
-		if (currentMonthElement) {
-			setTimeout(() => {
-				window.scrollTo({
-					top: Math.max(0, currentMonthElement.offsetTop),
-					behavior: "smooth"
-				});
-			}, 100);
+		// .month:nth-child(n) matches the CSS grid in index.html
+		const el = document.querySelector(`.month:nth-child(${new Date().getMonth() + 1})`);
+		if (el) {
+			setTimeout(() =>
+				window.scrollTo({ top: Math.max(0, el.offsetTop), behavior: "smooth" }), 100
+			);
 		}
 	}
 
-	// --- Calendar Rendering ---
+	// ─── Rendering ─────────────────────────────────────────────────────────────
+
 	async renderCalendar(year) {
 		try {
-			const data = await this.fetchCalendarData();
-			this.globalData = data;
-
-			this.createToggleButtons(data);
+			this.globalData = await this.fetchCalendarData();
+			this.createToggleButtons(this.globalData);
 			this.renderCalendarGrid(year);
 			this.updatePageMetadata(year);
 			this.scrollToCurrentMonth();
-
-		} catch (error) {
-			this.displayError(error);
+		} catch (err) {
+			this.displayError(err);
 		}
 	}
 
 	async fetchCalendarData() {
-		const response = await fetch("highlight-dates.json", { priority: "high" });
-		if (!response.ok) {
-			throw new Error(`Failed to fetch highlight-dates.json: ${response.status} ${response.statusText}`);
+		// DATA_URL matches the <link rel="preload" href="highlight-dates.json"> in <head>
+		const res = await fetch(DATA_URL, { priority: "high" });
+		if (!res.ok) {
+			throw new Error(`Failed to fetch ${DATA_URL}: ${res.status} ${res.statusText}`);
 		}
-		// return response.json();
-		// Start Experinemtal Auto-Populate Patches Logic
-		const data = await response.json();
-		this.autoPopulatePatchesForYear(data, currentYear);
+		const data = await res.json();
+		this.autoPopulatePatchesForYear(data, CURRENT_YEAR);
 		return data;
 	}
 
+	// Experimental: forward-fills patch versions for the rest of the current year
 	autoPopulatePatchesForYear(games, year) {
-		games.forEach(game => {
-			if (!game.versions || game.versions.length === 0) return;
+		for (const game of games) {
+			if (!game.versions?.length) continue;
 
-			// Get the latest patch version
 			const lastVersion = game.versions[game.versions.length - 1];
 			const lastPatchDate = this.getLastPatchDate(lastVersion);
+			if (!lastPatchDate) continue;
 
-			if (!lastPatchDate) return;
-
-			// Calculate when the last patch's highlight range ends
-			const highlightRange = lastVersion.highlightRange || 41;
-			// If autoduration is set on the game, use it as the day-step between auto-populated patches;
-			// the initial offset always uses highlightRange to respect the existing patch's duration
+			const highlightRange = lastVersion.highlightRange ?? DEFAULT_RANGE;
 			const autoDuration = game.autoduration ?? highlightRange;
-			let currentDate = new Date(lastPatchDate);
-			currentDate.setDate(currentDate.getDate() + highlightRange);
 
-			let nextVersion = lastVersion.version + 0.1;
-			nextVersion = Math.round(nextVersion * 10) / 10; // Handle floating point precision
+			// Start from the day after the last patch's highlight window closes
+			const cursor = new Date(lastPatchDate);
+			cursor.setDate(cursor.getDate() + highlightRange);
 
-			while (currentDate.getFullYear() === year) {
-				// Move to the next day (start of next patch)
-				currentDate.setDate(currentDate.getDate() + 1);
+			let vNum = Math.round((lastVersion.version + 0.1) * 10) / 10;
 
-				// Stop if we've gone past the year
-				if (currentDate.getFullYear() > year) break;
+			while (cursor.getFullYear() === year) {
+				cursor.setDate(cursor.getDate() + 1);
+				if (cursor.getFullYear() > year) break;
 
-				// Create new version entry
 				const newVersion = {
-					version: nextVersion,
-					dates: [
-						{
-							type: "patch",
-							month: months[currentDate.getMonth()],
-							day: currentDate.getDate()
-						}
-					]
+					version: vNum,
+					highlightRange: game.autoduration != null ? autoDuration : highlightRange,
+					dates: [{
+						type: "patch",
+						month: MONTHS[cursor.getMonth()],
+						day: cursor.getDate()
+					}]
 				};
-
-				// Preserve other properties from last version if they exist
-				// When autoduration is set, use it as the highlightRange for auto-generated patches
-				// so their highlight window matches the step between patches — not the original range
-				newVersion.highlightRange = game.autoduration != null ? autoDuration : (lastVersion.highlightRange || 41);
-				if (lastVersion.bannerOne) newVersion.bannerOne = lastVersion.bannerOne;
+				if (lastVersion.bannerOne != null) newVersion.bannerOne = lastVersion.bannerOne;
 
 				game.versions.push(newVersion);
-
-				// Advance by autoDuration days to the next patch slot
-				currentDate.setDate(currentDate.getDate() + autoDuration);
-
-				nextVersion += 0.1;
-				nextVersion = Math.round(nextVersion * 10) / 10;
+				cursor.setDate(cursor.getDate() + autoDuration);
+				vNum = Math.round((vNum + 0.1) * 10) / 10;
 			}
-		});
+		}
 	}
 
 	getLastPatchDate(version) {
-		if (!version.dates || version.dates.length === 0) return null;
-
-		// Find the last patch date entry
-		const patchDate = version.dates.find(d => d.type === "patch");
-		if (!patchDate) return null;
-
-		const monthIndex = months.indexOf(patchDate.month);
-		return new Date(currentYear, monthIndex, patchDate.day);
-	}
-
-	calculateAveragePatchInterval(versions) {
-		if (versions.length < 2) {
-			// Default to 6 weeks (~42 days) if only one version
-			return 42;
-		}
-
-		// Calculate intervals between consecutive patches
-		const intervals = [];
-		for (let i = 1; i < versions.length; i++) {
-			const prevDate = this.getLastPatchDate(versions[i - 1]);
-			const currDate = this.getLastPatchDate(versions[i]);
-
-			if (prevDate && currDate) {
-				const daysDiff = Math.round((currDate - prevDate) / (1000 * 60 * 60 * 24));
-				intervals.push(daysDiff);
-			}
-		}
-
-		// Return average interval, or default to 42 days
-		if (intervals.length === 0) return 42;
-		return Math.round(intervals.reduce((a, b) => a + b, 0) / intervals.length);
-		// End Experinemtal Auto-Populate Patches Logic
+		if (!version.dates?.length) return null;
+		const patch = version.dates.find(d => d.type === "patch");
+		if (!patch) return null;
+		return new Date(CURRENT_YEAR, MONTHS.indexOf(patch.month), patch.day);
 	}
 
 	renderCalendarGrid(year) {
-		this.calendar.innerHTML = "";
+		this.calendarEl.innerHTML = "";
 		const today = new Date();
 		today.setHours(0, 0, 0, 0);
-
 		const fragment = document.createDocumentFragment();
-
 		for (let month = 0; month < 12; month++) {
-			const monthDiv = this.createMonthElement(month, year, today);
-			fragment.appendChild(monthDiv);
+			fragment.appendChild(this.createMonthElement(month, year, today));
 		}
-
-		this.calendar.appendChild(fragment);
+		this.calendarEl.appendChild(fragment);
 	}
 
 	createMonthElement(month, year, today) {
 		const monthDiv = document.createElement("div");
-		monthDiv.className = "month";
-
-		// Add header and weekdays
+		monthDiv.className = "month"; // matches .month in CSS
 		monthDiv.appendChild(this.createMonthHeader(month));
-		monthDiv.appendChild(this.createWeekdaysHeader());
+		monthDiv.appendChild(this.createWeekdaysRow());
 		monthDiv.appendChild(this.createDaysGrid(month, year, today));
-
 		return monthDiv;
 	}
 
 	createMonthHeader(month) {
 		const header = document.createElement("div");
-		header.className = "month-header";
-		header.textContent = months[month];
+		header.className = "month-header"; // matches .month-header in CSS
+		header.textContent = MONTHS[month];
 		return header;
 	}
 
-	createWeekdaysHeader() {
-		const weekdaysDiv = document.createElement("div");
-		weekdaysDiv.className = "weekdays";
-
-		weekdaysShort.forEach(day => {
-			const d = document.createElement("div");
-			d.textContent = day;
-			weekdaysDiv.appendChild(d);
+	createWeekdaysRow() {
+		const row = document.createElement("div");
+		row.className = "weekdays"; // matches .weekdays grid in CSS
+		WEEKDAYS_SHORT.forEach(label => {
+			const cell = document.createElement("div");
+			cell.textContent = label;
+			row.appendChild(cell);
 		});
-
-		return weekdaysDiv;
+		return row;
 	}
 
 	createDaysGrid(month, year, today) {
-		const daysGrid = document.createElement("div");
-		daysGrid.className = "days";
+		const grid = document.createElement("div");
+		grid.className = "days"; // matches .days grid in CSS
 
-		// Add empty cells for first week offset
-		this.addEmptyDays(daysGrid, month, year);
+		// Offset empty cells so day 1 lands on the correct weekday column
+		this.addEmptyDays(grid, month, year);
 
-		// Add actual days
-		const totalDays = CalendarManager.daysInMonth(month, year);
-		for (let day = 1; day <= totalDays; day++) {
-			const dayDiv = this.createDayElement(day, month, year, today);
-			daysGrid.appendChild(dayDiv);
+		const total = CalendarManager.daysInMonth(month, year);
+		for (let day = 1; day <= total; day++) {
+			grid.appendChild(this.createDayElement(day, month, year, today));
 		}
-
-		return daysGrid;
+		return grid;
 	}
 
-	addEmptyDays(daysGrid, month, year) {
-		const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
-		for (let i = 0; i < firstDay; i++) {
+	addEmptyDays(grid, month, year) {
+		// (getDay() + 6) % 7 converts Sun-start (0) to Mon-start (0) to match WEEKDAYS_SHORT
+		const offset = (new Date(year, month, 1).getDay() + 6) % 7;
+		for (let i = 0; i < offset; i++) {
 			const empty = document.createElement("div");
-			empty.className = "empty";
-			daysGrid.appendChild(empty);
+			empty.className = "empty"; // .empty { background: none } in CSS
+			grid.appendChild(empty);
 		}
 	}
 
@@ -693,91 +613,78 @@ class CalendarManager {
 		dayDiv.className = "day";
 		dayDiv.textContent = day;
 
-		const currentDate = new Date(year, month, day);
-		const dateStr = CalendarManager.formatLocalDate(currentDate);
-		dayDiv.setAttribute("data-date", dateStr);
+		const date = new Date(year, month, day);
+		const dateStr = CalendarManager.formatLocalDate(date);
+		dayDiv.setAttribute("data-date", dateStr); // queried as .day[data-date="..."]
 
-		if (+currentDate === +today) {
-			dayDiv.classList.add("today");
-		}
+		if (+date === +today) dayDiv.classList.add("today"); // .today border in CSS
 
-		this.setupDayEvents(dayDiv, currentDate);
+		this.setupDayEvents(dayDiv, date);
 		return dayDiv;
 	}
 
-	setupDayEvents(dayDiv, currentDate) {
-		const eventsTexts = this.getEventsForDate(currentDate);
-
-		// Sort events to prioritize patches over livestreams for proper class ordering
-		const sortedEvents = this.sortEventsByPriority(eventsTexts);
-
-		// Add CSS classes for events in prioritized order
-		sortedEvents.forEach(event => {
-			const className = event.patchType === "holiday"
+	setupDayEvents(dayDiv, date) {
+		const sorted = this.sortEventsByPriority(this.getEventsForDate(date));
+		for (const event of sorted) {
+			// holiday → .highlight-holiday (flat CSS class)
+			// others  → .highlight-{shorthand}-{type} (generated by generateGameStyles)
+			const cls = event.patchType === "holiday"
 				? "highlight-holiday"
 				: CalendarManager.getClassName(event.patchType, event.dateType);
-
-			dayDiv.classList.add(className);
-		});
-
-		// Explicitly reorder classes to ensure patches come before livestreams
-		this.reorderDayClasses(dayDiv);
-
-		if (sortedEvents.length > 0) {
-			// Use sorted events for hover events so patch events are processed first
-			this.attachHoverEvents(dayDiv, sortedEvents);
+			dayDiv.classList.add(cls);
 		}
-
+		this.reorderDayClasses(dayDiv);
+		if (sorted.length > 0) this.attachHoverEvents(dayDiv, sorted);
 		this.updateSplitBackground(dayDiv);
 	}
 
+	/**
+	 * Re-orders highlight classes so patch always precedes livestream in classList.
+	 * This matters because CSS [class*="patch"] and [class*="livestream"] both set
+	 * border-radius — the last one in the class list wins for specificity ties.
+	 */
 	reorderDayClasses(dayDiv) {
-		const highlightClasses = this.getHighlightClasses(dayDiv.classList);
-
-		if (highlightClasses.length <= 1) return;
-
-		// Sort highlight classes using the generic sorter
-		const sortedHighlightClasses = this.sortByTypePriority(highlightClasses, className => {
-			if (className.endsWith("-patch")) return "patch";
-			if (className.endsWith("-livestream")) return "livestream";
-			return 0;
+		const highlights = this.getHighlightClasses(dayDiv.classList);
+		if (highlights.length <= 1) return;
+		const sorted = this.sortByTypePriority(highlights, cls => {
+			if (cls.endsWith("-patch")) return "patch";
+			if (cls.endsWith("-livestream")) return "livestream";
+			return "other";
 		});
-
-		// Remove all highlight classes and re-add them in sorted order
-		highlightClasses.forEach(cls => dayDiv.classList.remove(cls));
-		sortedHighlightClasses.forEach(cls => dayDiv.classList.add(cls));
+		highlights.forEach(cls => dayDiv.classList.remove(cls));
+		sorted.forEach(cls => dayDiv.classList.add(cls));
 	}
 
 	updatePageMetadata(year) {
-		this.yearFooter.textContent = year;
-		document.title = `Gachaverse ${year}`;
-
-		const metaTitle = document.querySelector(`meta[name="title"]`);
-		if (metaTitle) {
-			metaTitle.setAttribute("content", `Gachaverse ${year}`);
-		}
+		// Matches <title>, <meta name="title">, and <footer> in index.html
+		this.footerEl.textContent = year;
+		document.title = `${SITE_TITLE_PREFIX} ${year}`;
+		document.querySelector(`meta[name="title"]`)
+			?.setAttribute("content", `${SITE_TITLE_PREFIX} ${year}`);
 	}
 
-	displayError(error) {
-		console.error("Error loading calendar data:", error);
-		this.calendar.outerHTML = `
-			<main class="error-message">
-				<h3>Unable to load calendar data</h3>
-				<p>Please check that the highlight-dates.json file is available and try refreshing the page.</p>
-				<p>Error: ${error.message}</p>
-			</main>
-		`;
+	displayError(err) {
+		console.error("Error loading calendar data:", err);
+		// Replace <main id="calendar"> with a user-friendly error panel
+		this.calendarEl.outerHTML = `
+      <main class="error-message">
+        <h3>Unable to load calendar data</h3>
+        <p>Please check that ${DATA_URL} is available and try refreshing the page.</p>
+        <p>Error: ${err.message}</p>
+      </main>
+    `;
 	}
 }
 
-// Separate class for handling day-specific events
+// ─── DayEventHandler ─────────────────────────────────────────────────────────
+
 class DayEventHandler {
-	constructor(calendarManager, dayDiv, eventTexts) {
-		this.calendar = calendarManager;
+	constructor(calendar, dayDiv, eventTexts) {
+		this.calendar = calendar;
 		this.dayDiv = dayDiv;
 		this.eventTexts = eventTexts;
 		this.isHovering = false;
-		// Bind handlers once so they can be removed if needed and not recreated repeatedly
+
 		this.handleMouseEnter = this.handleMouseEnter.bind(this);
 		this.handleMouseMove = this.handleMouseMove.bind(this);
 		this.handleMouseLeave = this.handleMouseLeave.bind(this);
@@ -789,93 +696,69 @@ class DayEventHandler {
 		this.dayDiv.addEventListener("mouseleave", this.handleMouseLeave);
 	}
 
-	handleMouseEnter(e) {
+	_isVisible(event) {
+		// Holiday events are always visible; game events depend on active toggle state
+		return event.patchType === "holiday" || this.calendar.activeGames.has(event.patchType);
+	}
+
+	/**
+	 * Single method to add or remove banner-one/two classes over the highlight range.
+	 * Replaces the previous duplicate applyHighlightRange / removeHighlightRange pair.
+	 * Banner classes match [class*="banner-one"] and [class*="banner-two"] in CSS.
+	 */
+	_mutateHighlightRange(event, add) {
+		if (!event.isPatch) return;
+		const base = new Date(event.currentDate);
+		for (let i = 1; i <= event.highlightRange; i++) {
+			const future = new Date(base);
+			future.setDate(base.getDate() + i);
+			const dateKey = CalendarManager.formatLocalDate(future);
+			const target = document.querySelector(`.day[data-date="${dateKey}"]`);
+			if (!target) continue;
+			// banner-one for first half of patch cycle, banner-two for second half
+			const suffix = i <= event.bannerOne ? "-banner-one" : "-banner-two";
+			const cls = CalendarManager.getClassName(event.patchType, event.dateType, suffix);
+			target.classList[add ? "add" : "remove"](cls);
+		}
+	}
+
+	handleMouseEnter() {
 		if (this.isHovering) return;
+		const first = this.eventTexts[0];
+		if (!this._isVisible(first)) return;
 		this.isHovering = true;
 
-		const firstEvent = this.eventTexts[0];
-		if (!this.shouldShowTooltip(firstEvent)) {
-			this.isHovering = false;
-			return;
-		}
-
-		this.showTooltip();
-		this.applyHighlightRange(firstEvent);
-	}
-
-	shouldShowTooltip(firstEvent) {
-		return firstEvent.patchType === "holiday" ||
-			this.calendar.activeGames.has(firstEvent.patchType);
-	}
-
-	showTooltip() {
+		// Show .custom-tooltip with all event names for this day
 		const rect = this.dayDiv.getBoundingClientRect();
-		const combinedText = this.eventTexts.map(e => e.text).join("\n");
-		this.calendar.createTooltip(combinedText, rect.left, rect.top);
+		this.calendar.createTooltip(
+			this.eventTexts.map(e => e.text).join("\n"),
+			rect.left,
+			rect.top
+		);
+		this._mutateHighlightRange(first, true);
 	}
 
-	applyHighlightRange(firstEvent) {
-		if (!firstEvent.isPatch) return;
-		const baseDate = new Date(firstEvent.currentDate);
-		for (let i = 1; i <= firstEvent.highlightRange; i++) {
-			const futureDate = new Date(baseDate);
-			futureDate.setDate(baseDate.getDate() + i);
-			const dateKey = CalendarManager.formatLocalDate(futureDate);
-
-			const targetDayDiv = document.querySelector(`.day[data-date="${dateKey}"]`);
-			if (!targetDayDiv) continue;
-
-			const className = this.getHighlightClassName(firstEvent, i);
-			targetDayDiv.classList.add(className);
-		}
-	}
-
-	getHighlightClassName(firstEvent, dayOffset) {
-		const suffix = dayOffset <= firstEvent.bannerOne ? "-banner-one" : "-banner-two";
-		return CalendarManager.getClassName(firstEvent.patchType, firstEvent.dateType, suffix);
-	}
-
-	handleMouseMove(moveEvent) {
-		if (!this.calendar.currentTooltip) return;
-
+	handleMouseMove(e) {
+		const tooltip = this.calendar.currentTooltip;
+		if (!tooltip) return;
 		const rect = this.dayDiv.getBoundingClientRect();
-		this.calendar.currentTooltip.style.left =
-			`${rect.left + rect.width / 2 - this.calendar.currentTooltip.offsetWidth / 2}px`;
-		this.calendar.currentTooltip.style.top = `${moveEvent.pageY - 48}px`;
+		tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+		tooltip.style.top = `${e.pageY - 48}px`;
 	}
 
 	handleMouseLeave() {
 		this.isHovering = false;
 		this.calendar.removeTooltip();
-
-		const firstEvent = this.eventTexts[0];
-		if (!this.shouldShowTooltip(firstEvent)) return;
-
-		this.removeHighlightRange(firstEvent);
-	}
-
-	removeHighlightRange(firstEvent) {
-		if (!firstEvent.isPatch) return;
-		const baseDate = new Date(firstEvent.currentDate);
-		for (let i = 1; i <= firstEvent.highlightRange; i++) {
-			const futureDate = new Date(baseDate);
-			futureDate.setDate(baseDate.getDate() + i);
-			const dateKey = CalendarManager.formatLocalDate(futureDate);
-
-			const targetDayDiv = document.querySelector(`.day[data-date="${dateKey}"]`);
-			if (!targetDayDiv) continue;
-
-			const className = this.getHighlightClassName(firstEvent, i);
-			targetDayDiv.classList.remove(className);
-		}
+		const first = this.eventTexts[0];
+		if (this._isVisible(first)) this._mutateHighlightRange(first, false);
 	}
 }
 
-// Initialize calendar
-const calendarManager = new CalendarManager();
+// ─── Init ─────────────────────────────────────────────────────────────────────
 
+const calendarManager = new CalendarManager();
 if (document.readyState === "loading") {
-	document.addEventListener("DOMContentLoaded", () => calendarManager.renderCalendar(currentYear));
+	document.addEventListener("DOMContentLoaded", () => calendarManager.renderCalendar(CURRENT_YEAR));
 } else {
-	calendarManager.renderCalendar(currentYear);
+	calendarManager.renderCalendar(CURRENT_YEAR);
 }
