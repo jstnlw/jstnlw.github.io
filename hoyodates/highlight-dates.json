@@ -4,7 +4,7 @@
         "shorthand": "temp",
         "icon": "assets/hyv-icon.webp",
         "color": "#333333",
-        "autoduration": 41,
+        "autoInterval": 41,
         "active": false,
         "toggle": false,
         "versions": [
@@ -90,7 +90,6 @@
             {
                 "version": 2.7,
                 "highlightRange": 42,
-                "bannerOne": 21,
                 "dates": [
                     {
                         "type": "patch",
@@ -134,7 +133,7 @@
         "shorthand": "end",
         "icon": "assets/end-icon.webp",
         "color": "#E3DD07",
-        "autoduration": 34,
+        "autoInterval": 34,
         "versions": [
             {
                 "version": 1.0,
