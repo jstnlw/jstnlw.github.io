@@ -180,6 +180,8 @@
         "versions": [
             {
                 "version": 1.0,
+                "highlightRange": 34,
+                "bannerOne": 13,
                 "dates": [
                     {
                         "type": "patch",
