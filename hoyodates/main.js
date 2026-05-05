@@ -631,7 +631,7 @@ class CalendarManager {
 		const date = new Date(year, month, day);
 		const dateStr = CalendarManager.formatLocalDate(date);
 		dayDiv.setAttribute("data-date", dateStr);
-		if (+date === +this.today) dayDiv.classList.add("today");
+		if (dateStr === this.todayStr) dayDiv.classList.add("today");
 		this.setupDayEvents(dayDiv, date);
 		return dayDiv;
 	}
