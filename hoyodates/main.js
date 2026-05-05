@@ -5,6 +5,8 @@ const MONTHS = [
 	"July", "August", "September", "October", "November", "December"
 ];
 
+const MONTH_INDEX = Object.fromEntries(MONTHS.map((m, i) => [m, i]));
+
 // Mon-start weekday labels, matching the CSS grid of 7 columns in .weekdays
 const WEEKDAYS_SHORT = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -27,6 +29,10 @@ class CalendarManager {
 		this.activeGames = new Set();
 		this.currentTooltip = null;
 		this.colorCache = new Map();
+
+		// Cache today once to avoid repeated Date constructions
+		this.today = new Date();
+		this.todayStr = CalendarManager.formatLocalDate(this.today);
 
 		// IDs/selectors match index.html exactly
 		this.calendarEl = document.getElementById("calendar");
@@ -91,7 +97,7 @@ class CalendarManager {
 	 * Drives class ordering on .day divs (patch border-radius wins over livestream)
 	 */
 	sortByTypePriority(items, getType) {
-		return [...items].sort((a, b) => {
+		items.sort((a, b) => {
 			const ta = getType(a), tb = getType(b);
 			if (ta === tb) return 0;
 			if (ta === "patch") return -1;
@@ -99,6 +105,7 @@ class CalendarManager {
 			if (ta === "livestream") return -1;
 			return 1;
 		});
+		return items;
 	}
 
 	sortEventsByPriority(events) {
@@ -106,9 +113,11 @@ class CalendarManager {
 	}
 
 	collectVersionEvents(game, dateObj, events) {
+		const month = dateObj.getMonth();
+		const day = dateObj.getDate();
 		for (const version of game.versions) {
 			for (const date of version.dates) {
-				if (!this.isDateMatch(date, dateObj)) continue;
+				if (!this.isDateMatch(date, month, day)) continue;
 				const vNum = this.formatVersionNumber(version.version);
 				const label = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} ${vNum}`;
 				events.push(this.buildEvent(label, dateObj, game.shorthand, date, version));
@@ -117,25 +126,26 @@ class CalendarManager {
 	}
 
 	collectHolidayEvents(game, dateObj, events) {
+		const month = dateObj.getMonth();
+		const day = dateObj.getDate();
 		for (const date of game.dates) {
-			if (this.isDateMatch(date, dateObj)) {
+			if (this.isDateMatch(date, month, day)) {
 				// patchType "holiday" → CSS class "highlight-holiday" (defined in index.html)
 				events.push(this.buildEvent(date.name, dateObj, "holiday", date, {}));
 			}
 		}
 	}
 
-	isDateMatch(date, dateObj) {
-		return (
-			MONTHS.indexOf(date.month) === dateObj.getMonth() &&
-			date.day === dateObj.getDate()
-		);
+
+	isDateMatch(date, month, day) {
+		return MONTH_INDEX[date.month] === month && date.day === day;
 	}
 
+
 	formatVersionNumber(version) {
-		return version % 1 === 0
+		return Number.isInteger(version)
 			? version.toFixed(1)
-			: version.toFixed(2).replace(/(\.\d+?)0$/, "$1");
+			: String(version).replace(/(\.\d)0$/, "$1");
 	}
 
 	capitalize(str) {
@@ -144,7 +154,7 @@ class CalendarManager {
 
 	buildEvent(text, currentDate, patchType, date, version) {
 		const highlightRange = version.highlightRange ?? DEFAULT_RANGE;
-		return {
+		return Object.freeze({
 			text,
 			currentDate,
 			patchType,
@@ -153,7 +163,7 @@ class CalendarManager {
 			// bannerOne threshold — splits banner-one / banner-two CSS classes
 			bannerOne: version.bannerOne ?? Math.floor(highlightRange / 2),
 			dateType: date.type
-		};
+		});
 	}
 
 	// ─── Styling ───────────────────────────────────────────────────────────────
@@ -331,18 +341,26 @@ class CalendarManager {
 		const dateStr = dayDiv.getAttribute("data-date");
 		if (!dateStr) return;
 		const dateObj = CalendarManager.parseLocalDate(dateStr);
+		const month = dateObj.getMonth();
+		const day = dateObj.getDate();
 
 		const dayEvents = game.versions.flatMap(version =>
 			version.dates
-				.filter(date => this.isDateMatch(date, dateObj))
+				.filter(date => this.isDateMatch(date, month, day))
 				.map(date => ({
 					type: date.type,
 					className: CalendarManager.getClassName(game.shorthand, date.type)
 				}))
 		);
 
+
 		this.sortByTypePriority(dayEvents, e => e.type)
-			.forEach(e => dayDiv.classList.add(e.className));
+			.forEach(e => {
+				dayDiv.classList.add(e.className);
+				if (e.type === "patch") dayDiv.classList.add("is-patch");
+				else if (e.type === "livestream") dayDiv.classList.add("is-livestream");
+			});
+
 
 		this.reorderDayClasses(dayDiv);
 		this.updateSplitBackground(dayDiv);
@@ -582,19 +600,18 @@ class CalendarManager {
 		return row;
 	}
 
-	createDaysGrid(month, year, today) {
+
+	createDaysGrid(month, year) {
 		const grid = document.createElement("div");
 		grid.className = "days";
-
-		// Offset empty cells so day 1 lands on the correct weekday column
 		this.addEmptyDays(grid, month, year);
-
 		const total = CalendarManager.daysInMonth(month, year);
 		for (let day = 1; day <= total; day++) {
-			grid.appendChild(this.createDayElement(day, month, year, today));
+			grid.appendChild(this.createDayElement(day, month, year));
 		}
 		return grid;
 	}
+
 
 	addEmptyDays(grid, month, year) {
 		// (getDay() + 6) % 7 converts Sun-start (0) to Mon-start (0) to match WEEKDAYS_SHORT
@@ -606,30 +623,32 @@ class CalendarManager {
 		}
 	}
 
-	createDayElement(day, month, year, today) {
+
+	createDayElement(day, month, year) {
 		const dayDiv = document.createElement("div");
 		dayDiv.className = "day";
 		dayDiv.textContent = day;
-
 		const date = new Date(year, month, day);
 		const dateStr = CalendarManager.formatLocalDate(date);
 		dayDiv.setAttribute("data-date", dateStr);
-
-		if (+date === +today) dayDiv.classList.add("today");
-
+		if (+date === +this.today) dayDiv.classList.add("today");
 		this.setupDayEvents(dayDiv, date);
 		return dayDiv;
 	}
 
+
+
 	setupDayEvents(dayDiv, date) {
 		const sorted = this.sortEventsByPriority(this.getEventsForDate(date));
 		for (const event of sorted) {
-			// holiday → .highlight-holiday (flat CSS class)
-			// others  → .highlight-{shorthand}-{type} (generated by generateGameStyles)
 			const cls = event.patchType === "holiday"
 				? "highlight-holiday"
 				: CalendarManager.getClassName(event.patchType, event.dateType);
 			dayDiv.classList.add(cls);
+
+			// ← ADD base type class for cheaper CSS selectors
+			if (event.dateType === "patch") dayDiv.classList.add("is-patch");
+			else if (event.dateType === "livestream") dayDiv.classList.add("is-livestream");
 		}
 		this.reorderDayClasses(dayDiv);
 		if (sorted.length > 0) this.attachHoverEvents(dayDiv, sorted);
