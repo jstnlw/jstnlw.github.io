@@ -136,11 +136,9 @@ class CalendarManager {
 		}
 	}
 
-
 	isDateMatch(date, month, day) {
 		return MONTH_INDEX[date.month] === month && date.day === day;
 	}
-
 
 	formatVersionNumber(version) {
 		return Number.isInteger(version)
@@ -353,7 +351,6 @@ class CalendarManager {
 				}))
 		);
 
-
 		this.sortByTypePriority(dayEvents, e => e.type)
 			.forEach(e => {
 				dayDiv.classList.add(e.className);
@@ -515,43 +512,49 @@ class CalendarManager {
 	}
 
 	// Forward-fills patch versions for the rest of the current year
+	// Fills gaps between listed versions, then forward-fills to end of year
 	autoPopulatePatchesForYear(games, year) {
 		for (const game of games) {
 			if (!game.versions?.length) continue;
 
-			const lastVersion = game.versions[game.versions.length - 1];
-			const lastPatchDate = this.getLastPatchDate(lastVersion);
-			if (!lastPatchDate) continue;
-
-			// autoInterval: gap between patch starts. Distinct from highlightRange (visual length).
-			// Falls back to DEFAULT_INTERVAL (42), not highlightRange, to keep concepts separate.
 			const autoInterval = game.autoInterval ?? DEFAULT_INTERVAL;
+			const filled = [];
 
-			// Cursor starts directly on the next expected patch date
-			const cursor = new Date(lastPatchDate);
-			// cursor.setDate(cursor.getDate() + autoInterval);
-			const lastHighlightRange = lastVersion.highlightRange ?? DEFAULT_RANGE;
-			cursor.setDate(cursor.getDate() + lastHighlightRange + 1);
+			for (let i = 0; i < game.versions.length; i++) {
+				const curr = game.versions[i];
+				filled.push(curr);
 
-			let vNum = Math.round((lastVersion.version + 0.1) * 10) / 10;
+				const currPatchDate = this.getLastPatchDate(curr);
+				if (!currPatchDate) continue;
 
-			while (cursor.getFullYear() === year) {
-				const newVersion = {
-					version: vNum,
-					// Auto-populated patches use the interval as their highlight range.
-					// bannerOne is intentionally omitted so buildEvent calculates the correct
-					// default (floor(highlightRange / 2)) from the new range, not the last version's.
-					highlightRange: autoInterval - 1,
-					dates: [{
-						type: "patch",
-						month: MONTHS[cursor.getMonth()],
-						day: cursor.getDate()
-					}]
-				};
-				game.versions.push(newVersion);
-				cursor.setDate(cursor.getDate() + autoInterval);
-				vNum = Math.round((vNum + 0.1) * 10) / 10;
+				const currRange = curr.highlightRange ?? DEFAULT_RANGE;
+				const cursor = new Date(currPatchDate);
+				cursor.setDate(cursor.getDate() + currRange + 1);
+
+				let vNum = Math.round((curr.version + 0.1) * 10) / 10;
+
+				// If a next listed version exists, stop before its patch date
+				const next = game.versions[i + 1];
+				const boundary = next ? this.getLastPatchDate(next) : null;
+
+				while (cursor.getFullYear() === year) {
+					if (boundary && cursor >= boundary) break;
+					filled.push({
+						version: vNum,
+						// bannerOne intentionally omitted so buildEvent uses the default
+						highlightRange: autoInterval - 1,
+						dates: [{
+							type: "patch",
+							month: MONTHS[cursor.getMonth()],
+							day: cursor.getDate()
+						}]
+					});
+					cursor.setDate(cursor.getDate() + autoInterval);
+					vNum = Math.round((vNum + 0.1) * 10) / 10;
+				}
 			}
+
+			game.versions = filled;
 		}
 	}
 
@@ -600,7 +603,6 @@ class CalendarManager {
 		return row;
 	}
 
-
 	createDaysGrid(month, year) {
 		const grid = document.createElement("div");
 		grid.className = "days";
@@ -612,7 +614,6 @@ class CalendarManager {
 		return grid;
 	}
 
-
 	addEmptyDays(grid, month, year) {
 		// (getDay() + 6) % 7 converts Sun-start (0) to Mon-start (0) to match WEEKDAYS_SHORT
 		const offset = (new Date(year, month, 1).getDay() + 6) % 7;
@@ -622,7 +623,6 @@ class CalendarManager {
 			grid.appendChild(empty);
 		}
 	}
-
 
 	createDayElement(day, month, year) {
 		const dayDiv = document.createElement("div");
@@ -635,8 +635,6 @@ class CalendarManager {
 		this.setupDayEvents(dayDiv, date);
 		return dayDiv;
 	}
-
-
 
 	setupDayEvents(dayDiv, date) {
 		const sorted = this.sortEventsByPriority(this.getEventsForDate(date));

@@ -97,6 +97,16 @@
                         "day": 24
                     }
                 ]
+            },
+            {
+                "version": 3.0,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 17
+                    }
+                ]
             }
         ]
     },
@@ -113,16 +123,6 @@
                         "type": "patch",
                         "month": "February",
                         "day": 5
-                    }
-                ]
-            },
-            {
-                "version": 3.2,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 19
                     }
                 ]
             }
