@@ -132,7 +132,7 @@
         "shorthand": "end",
         "icon": "assets/end-icon.webp",
         "color": "#E3DD07",
-        "autoInterval": 34,
+        "autoInterval": 35,
         "versions": [
             {
                 "version": 1.0,
