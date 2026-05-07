@@ -7,10 +7,7 @@ const MONTHS = [
 const MONTH_INDEX = Object.fromEntries(MONTHS.map((m, i) => [m, i]));
 const WEEKDAYS_SHORT = ["M", "T", "W", "T", "F", "S", "S"];
 const CURRENT_YEAR = new Date().getFullYear();
-// DEFAULT_RANGE  = visual duration of a patch (days after the patch date that are highlighted)
-// DEFAULT_INTERVAL = gap in days between consecutive patch start dates
-// They are intentionally different: 42-day cycle, 41-day highlight (patch day is day 0)
-const DEFAULT_RANGE = 41;
+// DEFAULT_INTERVAL = 6 weeks patch cycle if not specified in JSON; can be overridden per-game with autoInterval or per-version with highlightRange
 const DEFAULT_INTERVAL = 42;
 const STORAGE_KEY = "gachaverse_toggles";
 const DATA_URL = "highlight-dates.json";
@@ -146,7 +143,7 @@ class CalendarManager {
 	}
 
 	buildEvent(text, currentDate, patchType, date, version) {
-		const highlightRange = version.highlightRange ?? DEFAULT_RANGE;
+		const highlightRange = version.highlightRange ?? DEFAULT_INTERVAL - 1;
 		return Object.freeze({
 			text,
 			currentDate,
@@ -519,7 +516,7 @@ class CalendarManager {
 				const currPatchDate = this.getLastPatchDate(curr);
 				if (!currPatchDate) continue;
 
-				const currRange = curr.highlightRange ?? DEFAULT_RANGE;
+				const currRange = curr.highlightRange ?? DEFAULT_INTERVAL - 1;
 				const cursor = new Date(currPatchDate);
 				cursor.setDate(cursor.getDate() + currRange + 1);
 
