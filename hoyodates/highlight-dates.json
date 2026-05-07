@@ -235,17 +235,17 @@
             {
                 "month": "March",
                 "day": 21,
-                "name": "Hari Raya Aidilfitri"
+                "name": "Hari Raya"
             },
             {
                 "month": "March",
                 "day": 22,
-                "name": "Hari Raya Aidilfitri Holiday"
+                "name": "Hari Raya Holiday"
             },
             {
                 "month": "March",
                 "day": 23,
-                "name": "Hari Raya Aidilfitri Holiday"
+                "name": "Hari Raya Holiday"
             },
             {
                 "month": "May",
@@ -265,7 +265,12 @@
             {
                 "month": "June",
                 "day": 1,
-                "name": "Agong's Birthday"
+                "name": "King's Birthday"
+            },
+            {
+                "month": "June",
+                "day": 2,
+                "name": "Wesak Day (Observed)"
             },
             {
                 "month": "June",
