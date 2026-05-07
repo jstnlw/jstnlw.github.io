@@ -4,12 +4,8 @@ const MONTHS = [
 	"January", "February", "March", "April", "May", "June",
 	"July", "August", "September", "October", "November", "December"
 ];
-
 const MONTH_INDEX = Object.fromEntries(MONTHS.map((m, i) => [m, i]));
-
-// Mon-start weekday labels, matching the CSS grid of 7 columns in .weekdays
 const WEEKDAYS_SHORT = ["M", "T", "W", "T", "F", "S", "S"];
-
 const CURRENT_YEAR = new Date().getFullYear();
 // DEFAULT_RANGE  = visual duration of a patch (days after the patch date that are highlighted)
 // DEFAULT_INTERVAL = gap in days between consecutive patch start dates
@@ -17,9 +13,9 @@ const CURRENT_YEAR = new Date().getFullYear();
 const DEFAULT_RANGE = 41;
 const DEFAULT_INTERVAL = 42;
 const STORAGE_KEY = "gachaverse_toggles";
-const DATA_URL = "highlight-dates.json"; // matches <link rel="preload"> in <head>
-const SITE_TITLE_PREFIX = "Gachaverse";  // matches <title> and <meta name="title">
-const MOBILE_BREAKPOINT = 480;           // matches @media (max-width: 480px) in CSS
+const DATA_URL = "highlight-dates.json";
+const SITE_TITLE_PREFIX = "Gachaverse";
+const MOBILE_BREAKPOINT = 480;
 
 // ─── CalendarManager ─────────────────────────────────────────────────────────
 
@@ -34,7 +30,6 @@ class CalendarManager {
 		this.today = new Date();
 		this.todayStr = CalendarManager.formatLocalDate(this.today);
 
-		// IDs/selectors match index.html exactly
 		this.calendarEl = document.getElementById("calendar");
 		this.toggleContainer = document.getElementById("toggle-container");
 		this.footerEl = document.querySelector("footer");
@@ -130,8 +125,8 @@ class CalendarManager {
 		const day = dateObj.getDate();
 		for (const date of game.dates) {
 			if (this.isDateMatch(date, month, day)) {
-				// patchType "holiday" → CSS class "highlight-holiday" (defined in index.html)
-				events.push(this.buildEvent(date.name, dateObj, "holiday", date, {}));
+				const d = date.type ? date : { ...date, type: "holiday" };
+				events.push(this.buildEvent(date.name, dateObj, "holiday", d, {}));
 			}
 		}
 	}
@@ -212,20 +207,20 @@ class CalendarManager {
 			: "";
 
 		return `
-      .label-${s},
-      .highlight-${s}-livestream,
-      .highlight-${s}-patch {
-        background: ${color};
-      }
-      .highlight-${s}-patch-banner-one,
-      .highlight-${s}-patch-banner-two {
-        background: ${color} !important;
-      }
-      .label-${s}::before {
-        background: url("${icon}");
-      }
-      ${holidayRule}
-    `;
+		.label-${s},
+		.highlight-${s}-livestream,
+		.highlight-${s}-patch {
+			background: ${color};
+		}
+		.highlight-${s}-patch-banner-one,
+		.highlight-${s}-patch-banner-two {
+			background: ${color} !important;
+		}
+		.label-${s}::before {
+			background: url("${icon}");
+		}
+		${holidayRule}
+		`;
 	}
 
 	// ─── Toggle Management ─────────────────────────────────────────────────────
@@ -266,7 +261,6 @@ class CalendarManager {
 
 	createToggleButton(game) {
 		// Games with active:false or no versions are fully skipped (e.g. Template entry in JSON)
-		// No hidden placeholder is needed since we don't rely on CSS nth-child for toggle ordering
 		if (game.active === false || !this.hasValidVersions(game)) return null;
 		const saved = this.loadToggleState(game.shorthand);
 		const isActive = saved !== null ? saved : game.toggle !== false;
@@ -423,7 +417,6 @@ class CalendarManager {
 
 	createTooltip(text, x, y) {
 		this.removeTooltip();
-		// Matches .custom-tooltip in index.html CSS
 		const tooltip = document.createElement("div");
 		tooltip.className = "custom-tooltip";
 		tooltip.setAttribute("role", "tooltip");
@@ -501,7 +494,6 @@ class CalendarManager {
 	}
 
 	async fetchCalendarData() {
-		// DATA_URL matches the <link rel="preload" href="highlight-dates.json"> in <head>
 		const res = await fetch(DATA_URL, { priority: "high" });
 		if (!res.ok) {
 			throw new Error(`Failed to fetch ${DATA_URL}: ${res.status} ${res.statusText}`);
@@ -671,7 +663,6 @@ class CalendarManager {
 	}
 
 	updatePageMetadata(year) {
-		// Matches <title>, <meta name="title">, and <footer> in index.html
 		this.footerEl.textContent = year;
 		document.title = `${SITE_TITLE_PREFIX} ${year}`;
 		document.querySelector(`meta[name="title"]`)
@@ -680,13 +671,12 @@ class CalendarManager {
 
 	displayError(err) {
 		console.error("Error loading calendar data:", err);
-		// Replace <main id="calendar"> with a user-friendly error panel
 		this.calendarEl.outerHTML = `
-      <main class="error-message">
-        <h3>Unable to load calendar data</h3>
-        <p>Please check that ${DATA_URL} is available and try refreshing the page.</p>
-        <p>Error: ${err.message}</p>
-      </main>
+		<main class="error-message">
+			<h3>Unable to load calendar data</h3>
+			<p>Please check that ${DATA_URL} is available and try refreshing the page.</p>
+			<p>Error: ${err.message}</p>
+		</main>
     `;
 	}
 }
