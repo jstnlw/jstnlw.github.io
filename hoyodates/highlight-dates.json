@@ -6,7 +6,6 @@
         "color": "#333333",
         "autoInterval": 41,
         "active": false,
-        "toggle": false,
         "versions": [
             {
                 "version": 1.0,
