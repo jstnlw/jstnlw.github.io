@@ -225,7 +225,7 @@
             {
                 "month": "February",
                 "day": 18,
-                "name": "Chinese New Year Holiday"
+                "name": "Chinese New Year"
             },
             {
                 "month": "March",
@@ -235,17 +235,17 @@
             {
                 "month": "March",
                 "day": 21,
-                "name": "Hari Raya Aidilfitri"
+                "name": "Hari Raya"
             },
             {
                 "month": "March",
                 "day": 22,
-                "name": "Hari Raya Aidilfitri Holiday"
+                "name": "Hari Raya Aidilfitri"
             },
             {
                 "month": "March",
                 "day": 23,
-                "name": "Hari Raya Aidilfitri Holiday"
+                "name": "Hari Raya Aidilfitri"
             },
             {
                 "month": "May",
@@ -265,7 +265,12 @@
             {
                 "month": "June",
                 "day": 1,
-                "name": "Agong's Birthday"
+                "name": "King's Birthday"
+            },
+            {
+                "month": "June",
+                "day": 2,
+                "name": "Wesak Day (Observed)"
             },
             {
                 "month": "June",
