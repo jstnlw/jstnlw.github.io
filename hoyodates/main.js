@@ -551,26 +551,24 @@ class CalendarManager {
 		if (!version.dates?.length) return null;
 		const patch = version.dates.find(d => d.type === "patch");
 		if (!patch) return null;
-		return new Date(CURRENT_YEAR, MONTHS.indexOf(patch.month), patch.day);
+		return new Date(CURRENT_YEAR, MONTH_INDEX[patch.month], patch.day);
 	}
 
 	renderCalendarGrid(year) {
 		this.calendarEl.innerHTML = "";
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
 		const fragment = document.createDocumentFragment();
 		for (let month = 0; month < 12; month++) {
-			fragment.appendChild(this.createMonthElement(month, year, today));
+			fragment.appendChild(this.createMonthElement(month, year));
 		}
 		this.calendarEl.appendChild(fragment);
 	}
 
-	createMonthElement(month, year, today) {
+	createMonthElement(month, year) {
 		const monthDiv = document.createElement("div");
 		monthDiv.className = "month";
 		monthDiv.appendChild(this.createMonthHeader(month));
 		monthDiv.appendChild(this.createWeekdaysRow());
-		monthDiv.appendChild(this.createDaysGrid(month, year, today));
+		monthDiv.appendChild(this.createDaysGrid(month, year));
 		return monthDiv;
 	}
 
