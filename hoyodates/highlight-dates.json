@@ -132,7 +132,6 @@
         "shorthand": "end",
         "icon": "assets/end-icon.webp",
         "color": "#E3DD07",
-        "autoInterval": 35,
         "versions": [
             {
                 "version": 1.0,
@@ -159,7 +158,7 @@
             },
             {
                 "version": 1.2,
-                "highlightRange": 34,
+                "highlightRange": 48,
                 "bannerOne": 34,
                 "dates": [
                     {
@@ -196,116 +195,28 @@
         "shorthand": "hol",
         "color": "#aa0000",
         "dates": [
-            {
-                "month": "January",
-                "day": 1,
-                "name": "New Year's Day"
-            },
-            {
-                "month": "February",
-                "day": 1,
-                "name": "Thaipusam"
-            },
-            {
-                "month": "February",
-                "day": 2,
-                "name": "Federal Territory Day"
-            },
-            {
-                "month": "February",
-                "day": 3,
-                "name": "Federal Territory Day (Observed)"
-            },
-            {
-                "month": "February",
-                "day": 17,
-                "name": "Chinese New Year"
-            },
-            {
-                "month": "February",
-                "day": 18,
-                "name": "Chinese New Year"
-            },
-            {
-                "month": "March",
-                "day": 7,
-                "name": "Nuzul Al-Quran"
-            },
-            {
-                "month": "March",
-                "day": 21,
-                "name": "Hari Raya"
-            },
-            {
-                "month": "March",
-                "day": 22,
-                "name": "Hari Raya Aidilfitri"
-            },
-            {
-                "month": "March",
-                "day": 23,
-                "name": "Hari Raya Aidilfitri"
-            },
-            {
-                "month": "May",
-                "day": 1,
-                "name": "Labour Day"
-            },
-            {
-                "month": "May",
-                "day": 27,
-                "name": "Hari Raya Haji"
-            },
-            {
-                "month": "May",
-                "day": 31,
-                "name": "Wesak Day"
-            },
-            {
-                "month": "June",
-                "day": 1,
-                "name": "King's Birthday"
-            },
-            {
-                "month": "June",
-                "day": 2,
-                "name": "Wesak Day (Observed)"
-            },
-            {
-                "month": "June",
-                "day": 17,
-                "name": "Awal Muharram"
-            },
-            {
-                "month": "August",
-                "day": 25,
-                "name": "Prophet Muhammad's Birthday"
-            },
-            {
-                "month": "August",
-                "day": 31,
-                "name": "National Day"
-            },
-            {
-                "month": "September",
-                "day": 16,
-                "name": "Malaysia Day"
-            },
-            {
-                "month": "November",
-                "day": 8,
-                "name": "Deepavali"
-            },
-            {
-                "month": "November",
-                "day": 9,
-                "name": "Deepavali (Observed)"
-            },
-            {
-                "month": "December",
-                "day": 25,
-                "name": "Christmas Day"
-            }
+            { "month": "January", "day": 1, "name": "New Year's Day" },
+            { "month": "February", "day": 1, "name": "Thaipusam" },
+            { "month": "February", "day": 2, "name": "Thaipusam (Observed)" },
+            { "month": "February", "day": 3, "name": "Federal Territory Day (Observed)" },
+            { "month": "February", "day": 17, "name": "Chinese New Year" },
+            { "month": "February", "day": 18, "name": "Chinese New Year" },
+            { "month": "March", "day": 7, "name": "Nuzul Al-Quran" },
+            { "month": "March", "day": 21, "name": "Hari Raya Aidilfitri" },
+            { "month": "March", "day": 22, "name": "Hari Raya Aidilfitri" },
+            { "month": "March", "day": 23, "name": "Hari Raya Aidilfitri" },
+            { "month": "May", "day": 1, "name": "Labour Day" },
+            { "month": "May", "day": 27, "name": "Hari Raya Haji" },
+            { "month": "May", "day": 31, "name": "Wesak Day" },
+            { "month": "June", "day": 1, "name": "Agong's Birthday" },
+            { "month": "June", "day": 2, "name": "Wesak Day (Observed)" },
+            { "month": "June", "day": 17, "name": "Awal Muharram" },
+            { "month": "August", "day": 25, "name": "Prophet Muhammad's Birthday" },
+            { "month": "August", "day": 31, "name": "National Day" },
+            { "month": "September", "day": 16, "name": "Malaysia Day" },
+            { "month": "November", "day": 8, "name": "Deepavali" },
+            { "month": "November", "day": 9, "name": "Deepavali (Observed)" },
+            { "month": "December", "day": 25, "name": "Christmas Day" }
         ]
     }
 ]
