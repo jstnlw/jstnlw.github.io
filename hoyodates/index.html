@@ -41,7 +41,7 @@
             background: linear-gradient(to bottom, var(--bg-color), rgba(0, 0, 0, 0));
         }
 
-        .label {
+        .toggle {
             margin: 0 auto;
             padding: 1rem 0 0;
             display: flex;
@@ -50,7 +50,7 @@
             gap: 0.5vw;
         }
 
-        .label button {
+        .toggle button {
             width: 100%;
             max-width: 4rem;
             display: flex;
@@ -67,8 +67,8 @@
             transition: opacity 0.2s ease;
         }
 
-        /* Label Icons */
-        .label [class*="label"]:before {
+        /* Toggle Icons */
+        .toggle [class*="toggle"]:before {
             width: 100%;
             height: auto;
             aspect-ratio: 1;
@@ -228,12 +228,12 @@
                 padding: 0.5rem;
             }
 
-            .label {
+            .toggle {
                 width: 100%;
                 max-width: unset;
             }
 
-            .label button {
+            .toggle button {
                 padding: 0.2rem;
             }
         }
@@ -243,7 +243,7 @@
 
 <body>
     <header>
-        <div id="toggle-container" class="label" aria-label="Toggles" aria-live="polite"></div>
+        <div id="toggle" class="toggle" aria-label="Toggles" aria-live="polite"></div>
     </header>
     <main id="calendar" class="calendar" aria-label="Calendar"></main>
     <footer></footer>

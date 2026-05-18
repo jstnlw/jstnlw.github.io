@@ -28,7 +28,7 @@ class CalendarManager {
 		this.todayStr = CalendarManager.formatLocalDate(this.today);
 
 		this.calendarEl = document.getElementById("calendar");
-		this.toggleContainer = document.getElementById("toggle-container");
+		this.toggle = document.getElementById("toggle");
 		this.footerEl = document.querySelector("footer");
 
 		this.refreshAllDayHoverBindings = this.refreshAllDayHoverBindings.bind(this);
@@ -204,7 +204,7 @@ class CalendarManager {
 			: "";
 
 		return `
-		.label-${s},
+		.toggle-${s},
 		.highlight-${s}-livestream,
 		.highlight-${s}-patch {
 			background: ${color};
@@ -213,7 +213,7 @@ class CalendarManager {
 		.highlight-${s}-patch-banner-two {
 			background: ${color} !important;
 		}
-		.label-${s}::before {
+		.toggle-${s}::before {
 			background: url("${icon}");
 		}
 		${holidayRule}
@@ -247,13 +247,13 @@ class CalendarManager {
 
 	createToggleButtons(games) {
 		this.applyStylesFromJSON(games);
-		this.toggleContainer.innerHTML = "";
+		this.toggle.innerHTML = "";
 		const fragment = document.createDocumentFragment();
 		for (const game of games) {
 			const btn = this.createToggleButton(game);
 			if (btn) fragment.appendChild(btn);
 		}
-		this.toggleContainer.appendChild(fragment);
+		this.toggle.appendChild(fragment);
 	}
 
 	createToggleButton(game) {
@@ -272,7 +272,7 @@ class CalendarManager {
 
 	buildToggleButton(game, isActive) {
 		const btn = document.createElement("button");
-		btn.className = `label-${game.shorthand.toLowerCase()}`;
+		btn.className = `toggle-${game.shorthand.toLowerCase()}`;
 		btn.dataset.game = game.shorthand;
 		btn.setAttribute("aria-label", `Toggle ${game.game} events`);
 		if (!isActive) {
