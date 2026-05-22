@@ -126,6 +126,27 @@
                         "day": 5
                     }
                 ]
+            },
+            {
+                "version": 3.3,
+                "highlightRange": 38,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "April",
+                        "day": 30
+                    }
+                ]
+            },
+            {
+                "version": 3.4,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 8
+                    }
+                ]
             }
         ]
     },
