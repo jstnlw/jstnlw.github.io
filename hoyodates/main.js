@@ -506,7 +506,9 @@ class CalendarManager {
 		for (const game of games) {
 			if (!game.versions?.length) continue;
 
-			const autoInterval = game.autoInterval ?? DEFAULT_INTERVAL;
+			const autoInterval = game.autoInterval !== undefined
+				? game.autoInterval + 1
+				: DEFAULT_INTERVAL;
 			const filled = [];
 
 			for (let i = 0; i < game.versions.length; i++) {
