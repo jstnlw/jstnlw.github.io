@@ -146,7 +146,7 @@ class CalendarManager {
 			for (const date of version.dates) {
 				if (!this.isDateMatch(date, month, day)) continue;
 				const vNum = this.formatVersionNumber(version.version);
-				const label = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} ${vNum}`;
+				const label = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} v${vNum}`;
 				events.push(this.buildEvent(label, dateObj, game.shorthand, date, version));
 			}
 		}
@@ -807,20 +807,27 @@ class DayEventHandler {
 
 	handleMouseEnter() {
 		if (this.isHovering) return;
-		// Collect all visible events for this day (supports multiple games on same date)
 		const visibleEvents = this.eventTexts.filter(e => this._isVisible(e));
 		if (visibleEvents.length === 0) return;
 		this.isHovering = true;
 
-		// Show .custom-tooltip with all event names for this day
+		let text = visibleEvents.map(e => e.text).join("\n");
+
+		// If today, append countdown to next patch
+		if (this.dayDiv.classList.contains("today")) {
+			const countdown = this.calendar.getNextPatchCountdown();
+			if (countdown?.length) {
+				const label = countdown
+					.map(p => `${p.shorthand} v${this.calendar.formatVersionNumber(p.version)}`)
+					.join(" / ");
+				const days = countdown[0].days;
+				text += `\n${label} in ${days} day${days !== 1 ? "s" : ""}`;
+			}
+		}
+
 		const rect = this.dayDiv.getBoundingClientRect();
 		const scrollY = window.scrollY ?? window.pageYOffset;
-		this.calendar.createTooltip(
-			visibleEvents.map(e => e.text).join("\n"),
-			rect.left,
-			rect.top + scrollY
-		);
-		// Paint banner ranges for all visible patch events, not just the first
+		this.calendar.createTooltip(text, rect.left, rect.top + scrollY);
 		visibleEvents.forEach(e => this._mutateHighlightRange(e, true));
 	}
 
