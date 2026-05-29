@@ -69,6 +69,40 @@ class CalendarManager {
 
 	// ─── Event Processing ──────────────────────────────────────────────────────
 
+	/**
+	 * Finds the next closest patch date across all active games
+	 * Returns { gameName, days, date } or null if no future patches exist
+	 */
+	getNextPatchCountdown() {
+		let closestPatch = null;
+		let minDays = Infinity;
+
+		for (const game of this.globalData) {
+			if (!game.versions || !this.activeGames.has(game.shorthand)) continue;
+
+			for (const version of game.versions) {
+				const patchDate = version.dates?.find(d => d.type === "patch");
+				if (!patchDate) continue;
+
+				const patchDateObj = new Date(CURRENT_YEAR, MONTH_INDEX[patchDate.month], patchDate.day);
+				const daysUntil = Math.ceil((patchDateObj - this.today) / (1000 * 60 * 60 * 24));
+
+				// Only consider future patches (skip today even if there's a patch)
+				if (daysUntil > 0 && daysUntil < minDays) {
+					minDays = daysUntil;
+					closestPatch = {
+						shorthand: game.shorthand.toUpperCase(),
+						version: version.version,
+						days: daysUntil,
+						date: patchDateObj
+					};
+				}
+			}
+		}
+
+		return closestPatch;
+	}
+
 	getEventsForDate(dateObj) {
 		const events = [];
 		for (const game of this.globalData) {
@@ -133,9 +167,11 @@ class CalendarManager {
 	}
 
 	formatVersionNumber(version) {
-		return Number.isInteger(version)
-			? version.toFixed(1)
-			: String(version).replace(/(\.\d)0$/, "$1");
+		// Ensure precision-safe formatting to avoid floating-point errors
+		const formatted = parseFloat(version.toFixed(1));
+		return Number.isInteger(formatted)
+			? formatted.toFixed(1)
+			: String(formatted).replace(/(\.(\d))0$/, "$1");
 	}
 
 	capitalize(str) {
@@ -450,6 +486,38 @@ class CalendarManager {
 		dayDiv._dayHandler = handler;
 	}
 
+	attachTodayHoverHandler(dayDiv) {
+		const handleTodayHover = (e) => {
+			const countdown = this.getNextPatchCountdown();
+			if (!countdown) {
+				this.removeTooltip();
+				return;
+			}
+
+		const tooltipText = `${countdown.shorthand} v${this.formatVersionNumber(countdown.version)} in ${countdown.days} day${countdown.days !== 1 ? "s" : ""}`;
+
+			const rect = dayDiv.getBoundingClientRect();
+			const scrollY = window.scrollY ?? window.pageYOffset;
+			this.createTooltip(tooltipText, rect.left, rect.top + scrollY);
+		};
+
+		const handleTodayMove = (e) => {
+			const tooltip = this.currentTooltip;
+			if (!tooltip) return;
+			const rect = dayDiv.getBoundingClientRect();
+			tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+			tooltip.style.top = `${e.pageY - 48}px`;
+		};
+
+		const handleTodayLeave = () => {
+			this.removeTooltip();
+		};
+
+		dayDiv.addEventListener("mouseenter", handleTodayHover);
+		dayDiv.addEventListener("mousemove", handleTodayMove);
+		dayDiv.addEventListener("mouseleave", handleTodayLeave);
+	}
+
 	refreshAllDayHoverBindings() {
 		document.querySelectorAll(".day").forEach(dayDiv => {
 			// Explicitly detach old listeners instead of cloning the node
@@ -620,7 +688,10 @@ class CalendarManager {
 		const date = new Date(year, month, day);
 		const dateStr = CalendarManager.formatLocalDate(date);
 		dayDiv.setAttribute("data-date", dateStr);
-		if (dateStr === this.todayStr) dayDiv.classList.add("today");
+		if (dateStr === this.todayStr) {
+			dayDiv.classList.add("today");
+			this.attachTodayHoverHandler(dayDiv);
+		}
 		this.setupDayEvents(dayDiv, date);
 		return dayDiv;
 	}
