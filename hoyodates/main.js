@@ -69,6 +69,41 @@ class CalendarManager {
 
 	// ─── Event Processing ──────────────────────────────────────────────────────
 
+	/**
+	 * Finds the next closest patch date across all active games
+	 * Returns { gameName, days, date } or null if no future patches exist
+	 */
+	getNextPatchCountdown() {
+		let minDays = Infinity;
+		const upcoming = [];
+
+		for (const game of this.globalData) {
+			if (!game.versions || !this.activeGames.has(game.shorthand)) continue;
+
+			for (const version of game.versions) {
+				const patchDate = version.dates?.find(d => d.type === "patch");
+				if (!patchDate) continue;
+
+				const patchDateObj = new Date(CURRENT_YEAR, MONTH_INDEX[patchDate.month], patchDate.day);
+				const daysUntil = Math.ceil((patchDateObj - this.today) / 86400000);
+
+				if (daysUntil > 0 && daysUntil <= minDays) {
+					if (daysUntil < minDays) {
+						minDays = daysUntil;
+						upcoming.length = 0;
+					}
+					upcoming.push({
+						shorthand: game.shorthand.toUpperCase(),
+						version: version.version,
+						days: daysUntil
+					});
+				}
+			}
+		}
+
+		return upcoming.length ? upcoming : null;
+	}
+
 	getEventsForDate(dateObj) {
 		const events = [];
 		for (const game of this.globalData) {
@@ -111,7 +146,7 @@ class CalendarManager {
 			for (const date of version.dates) {
 				if (!this.isDateMatch(date, month, day)) continue;
 				const vNum = this.formatVersionNumber(version.version);
-				const label = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} ${vNum}`;
+				const label = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} v${vNum}`;
 				events.push(this.buildEvent(label, dateObj, game.shorthand, date, version));
 			}
 		}
@@ -133,9 +168,11 @@ class CalendarManager {
 	}
 
 	formatVersionNumber(version) {
-		return Number.isInteger(version)
-			? version.toFixed(1)
-			: String(version).replace(/(\.\d)0$/, "$1");
+		// Ensure precision-safe formatting to avoid floating-point errors
+		const formatted = parseFloat(version.toFixed(1));
+		return Number.isInteger(formatted)
+			? formatted.toFixed(1)
+			: String(formatted).replace(/(\.(\d))0$/, "$1");
 	}
 
 	capitalize(str) {
@@ -450,6 +487,41 @@ class CalendarManager {
 		dayDiv._dayHandler = handler;
 	}
 
+	attachTodayHoverHandler(dayDiv) {
+		const handleTodayHover = (e) => {
+			const countdown = this.getNextPatchCountdown();
+			if (!countdown || !countdown.length) {
+				this.removeTooltip();
+				return;
+			}
+
+		const label = countdown
+			.map(p => `${p.shorthand} v${this.formatVersionNumber(p.version)}`)
+			.join(" / ");
+		const days = countdown[0].days;
+		const tooltipText = `${label} in ${days} day${days !== 1 ? "s" : ""}`;
+			const rect = dayDiv.getBoundingClientRect();
+			const scrollY = window.scrollY ?? window.pageYOffset;
+			this.createTooltip(tooltipText, rect.left, rect.top + scrollY);
+		};
+
+		const handleTodayMove = (e) => {
+			const tooltip = this.currentTooltip;
+			if (!tooltip) return;
+			const rect = dayDiv.getBoundingClientRect();
+			tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+			tooltip.style.top = `${e.pageY - 48}px`;
+		};
+
+		const handleTodayLeave = () => {
+			this.removeTooltip();
+		};
+
+		dayDiv.addEventListener("mouseenter", handleTodayHover);
+		dayDiv.addEventListener("mousemove", handleTodayMove);
+		dayDiv.addEventListener("mouseleave", handleTodayLeave);
+	}
+
 	refreshAllDayHoverBindings() {
 		document.querySelectorAll(".day").forEach(dayDiv => {
 			// Explicitly detach old listeners instead of cloning the node
@@ -620,7 +692,10 @@ class CalendarManager {
 		const date = new Date(year, month, day);
 		const dateStr = CalendarManager.formatLocalDate(date);
 		dayDiv.setAttribute("data-date", dateStr);
-		if (dateStr === this.todayStr) dayDiv.classList.add("today");
+		if (dateStr === this.todayStr) {
+			dayDiv.classList.add("today");
+			this.attachTodayHoverHandler(dayDiv);
+		}
 		this.setupDayEvents(dayDiv, date);
 		return dayDiv;
 	}
@@ -732,20 +807,27 @@ class DayEventHandler {
 
 	handleMouseEnter() {
 		if (this.isHovering) return;
-		// Collect all visible events for this day (supports multiple games on same date)
 		const visibleEvents = this.eventTexts.filter(e => this._isVisible(e));
 		if (visibleEvents.length === 0) return;
 		this.isHovering = true;
 
-		// Show .custom-tooltip with all event names for this day
+		let text = visibleEvents.map(e => e.text).join("\n");
+
+		// If today, append countdown to next patch
+		if (this.dayDiv.classList.contains("today")) {
+			const countdown = this.calendar.getNextPatchCountdown();
+			if (countdown?.length) {
+				const label = countdown
+					.map(p => `${p.shorthand} v${this.calendar.formatVersionNumber(p.version)}`)
+					.join(" / ");
+				const days = countdown[0].days;
+				text += `\n${label} in ${days} day${days !== 1 ? "s" : ""}`;
+			}
+		}
+
 		const rect = this.dayDiv.getBoundingClientRect();
 		const scrollY = window.scrollY ?? window.pageYOffset;
-		this.calendar.createTooltip(
-			visibleEvents.map(e => e.text).join("\n"),
-			rect.left,
-			rect.top + scrollY
-		);
-		// Paint banner ranges for all visible patch events, not just the first
+		this.calendar.createTooltip(text, rect.left, rect.top + scrollY);
 		visibleEvents.forEach(e => this._mutateHighlightRange(e, true));
 	}
 
