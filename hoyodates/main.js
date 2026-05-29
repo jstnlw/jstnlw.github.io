@@ -74,8 +74,8 @@ class CalendarManager {
 	 * Returns { gameName, days, date } or null if no future patches exist
 	 */
 	getNextPatchCountdown() {
-		let closestPatch = null;
 		let minDays = Infinity;
+		const upcoming = [];
 
 		for (const game of this.globalData) {
 			if (!game.versions || !this.activeGames.has(game.shorthand)) continue;
@@ -85,22 +85,23 @@ class CalendarManager {
 				if (!patchDate) continue;
 
 				const patchDateObj = new Date(CURRENT_YEAR, MONTH_INDEX[patchDate.month], patchDate.day);
-				const daysUntil = Math.ceil((patchDateObj - this.today) / (1000 * 60 * 60 * 24));
+				const daysUntil = Math.ceil((patchDateObj - this.today) / 86400000);
 
-				// Only consider future patches (skip today even if there's a patch)
-				if (daysUntil > 0 && daysUntil < minDays) {
-					minDays = daysUntil;
-					closestPatch = {
+				if (daysUntil > 0 && daysUntil <= minDays) {
+					if (daysUntil < minDays) {
+						minDays = daysUntil;
+						upcoming.length = 0;
+					}
+					upcoming.push({
 						shorthand: game.shorthand.toUpperCase(),
 						version: version.version,
-						days: daysUntil,
-						date: patchDateObj
-					};
+						days: daysUntil
+					});
 				}
 			}
 		}
 
-		return closestPatch;
+		return upcoming.length ? upcoming : null;
 	}
 
 	getEventsForDate(dateObj) {
@@ -489,13 +490,16 @@ class CalendarManager {
 	attachTodayHoverHandler(dayDiv) {
 		const handleTodayHover = (e) => {
 			const countdown = this.getNextPatchCountdown();
-			if (!countdown) {
+			if (!countdown || !countdown.length) {
 				this.removeTooltip();
 				return;
 			}
 
-		const tooltipText = `${countdown.shorthand} v${this.formatVersionNumber(countdown.version)} in ${countdown.days} day${countdown.days !== 1 ? "s" : ""}`;
-
+		const label = countdown
+			.map(p => `${p.shorthand} v${this.formatVersionNumber(p.version)}`)
+			.join(" / ");
+		const days = countdown[0].days;
+		const tooltipText = `${label} in ${days} day${days !== 1 ? "s" : ""}`;
 			const rect = dayDiv.getBoundingClientRect();
 			const scrollY = window.scrollY ?? window.pageYOffset;
 			this.createTooltip(tooltipText, rect.left, rect.top + scrollY);
