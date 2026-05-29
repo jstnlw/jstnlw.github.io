@@ -140,11 +140,23 @@
             },
             {
                 "version": 3.4,
+                "highlightRange": 31,
+                "bannerOne": 31,
                 "dates": [
                     {
                         "type": "patch",
                         "month": "June",
                         "day": 8
+                    }
+                ]
+            },
+            {
+                "version": 3.5,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 10
                     }
                 ]
             }
