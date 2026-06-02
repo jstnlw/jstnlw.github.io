@@ -67,6 +67,18 @@
                         "day": 22
                     }
                 ]
+            },
+            {
+                "version": 4.3,
+                "highlightRange": 43,
+                "bannerOne": 22,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "June",
+                        "day": 1
+                    }
+                ]
             }
         ]
     },
