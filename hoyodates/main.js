@@ -7,8 +7,7 @@ const MONTHS = [
 const MONTH_INDEX = Object.fromEntries(MONTHS.map((m, i) => [m, i]));
 const WEEKDAYS_SHORT = ["M", "T", "W", "T", "F", "S", "S"];
 const CURRENT_YEAR = new Date().getFullYear();
-// DEFAULT_INTERVAL = 6 weeks patch cycle if not specified in JSON; can be overridden per-game with autoInterval or per-version with highlightRange
-const DEFAULT_INTERVAL = 42;
+const DEFAULT_INTERVAL = 42; // 6 weeks patch cycle if not specified in JSON; can be overridden per-game with autoInterval or per-version with highlightRange
 const STORAGE_KEY = "gachaverse_toggles";
 const DATA_URL = "highlight-dates.json";
 const SITE_TITLE_PREFIX = "Gachaverse";
