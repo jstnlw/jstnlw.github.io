@@ -223,6 +223,7 @@
         "icon": "assets/nte-icon.webp",
         "color": "#FF69B4",
         "autoInterval": 34,
+        "active": false,
         "versions": [
             {
                 "version": 1.0,
