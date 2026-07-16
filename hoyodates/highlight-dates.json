@@ -225,6 +225,18 @@
                         "day": 5
                     }
                 ]
+            },
+            {
+                "version": 1.4,
+                "highlightRange": 47,
+                "bannerOne": 23,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "July",
+                        "day": 16
+                    }
+                ]
             }
         ]
     },
