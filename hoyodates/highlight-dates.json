@@ -29,7 +29,6 @@
     {
         "game": "HonkaiStarRail",
         "shorthand": "hsr",
-        "icon": "assets/hsr-icon.webp",
         "color": "#33ccff",
         "versions": [
             {
@@ -85,7 +84,6 @@
     {
         "game": "ZenlessZoneZero",
         "shorthand": "zzz",
-        "icon": "assets/zzz-icon.webp",
         "color": "#EF780C",
         "versions": [
             {
@@ -126,7 +124,6 @@
     {
         "game": "WutheringWaves",
         "shorthand": "ww",
-        "icon": "assets/ww-icon.webp",
         "color": "#0066ee",
         "versions": [
             {
@@ -177,7 +174,6 @@
     {
         "game": "Endfield",
         "shorthand": "end",
-        "icon": "assets/end-icon.webp",
         "color": "#E3DD07",
         "versions": [
             {
@@ -243,7 +239,6 @@
     {
         "game": "NevernessToEverness",
         "shorthand": "nte",
-        "icon": "assets/nte-icon.webp",
         "color": "#FF69B4",
         "autoInterval": 34,
         "active": false,
