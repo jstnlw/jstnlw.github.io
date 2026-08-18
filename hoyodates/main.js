@@ -62,6 +62,10 @@ class CalendarManager {
 		return `highlight-${shorthand.toLowerCase()}-${type}${suffix}`;
 	}
 
+	static getIconPath(shorthand) {
+		return `assets/${shorthand.toLowerCase()}-icon.webp`;
+	}
+
 	static isMobile() {
 		return window.innerWidth <= MOBILE_BREAKPOINT;
 	}
@@ -206,12 +210,13 @@ class CalendarManager {
 		// Preload game icons declared in highlight-dates.json
 		// Guard against duplicate <link rel="preload"> on re-renders
 		for (const game of games) {
-			if (!game.icon || game.icon === "none" || game.icon === "") continue;
-			if (document.querySelector(`link[rel="preload"][href="${game.icon}"]`)) continue;
+			if (!game.versions || game.active === false) continue;
+			const iconPath = CalendarManager.getIconPath(game.shorthand);
+			if (document.querySelector(`link[rel="preload"][href="${iconPath}"]`)) continue;
 			const link = document.createElement("link");
 			link.rel = "preload";
 			link.as = "image";
-			link.href = game.icon;
+			link.href = iconPath;
 			link.type = "image/webp";
 			link.fetchPriority = "high";
 			document.head.appendChild(link);
@@ -232,11 +237,15 @@ class CalendarManager {
 	 *   .label-{s}::before                  → icon background image
 	 *   .highlight-holiday                  → colored text for holiday dates
 	 */
-	generateGameStyles({ shorthand, color, icon = "none", dates }) {
+	generateGameStyles({ shorthand, color, dates, versions, active }) {
 		const s = shorthand.toLowerCase();
-		// Only emit .highlight-holiday rule for the Holidays entry (has flat dates[], no versions)
 		const holidayRule = dates
 			? `.highlight-holiday { color: ${color} !important; }`
+			: "";
+
+		// Only emit ::before icon rule for real games
+		const iconRule = (versions && active !== false)
+			? `.toggle-${s}::before { background: url("${CalendarManager.getIconPath(s)}"); }`
 			: "";
 
 		return `
@@ -249,9 +258,7 @@ class CalendarManager {
 		.highlight-${s}-patch-banner-two {
 			background: ${color} !important;
 		}
-		.toggle-${s}::before {
-			background: url("${icon}");
-		}
+		${iconRule}
 		${holidayRule}
 		`;
 	}
