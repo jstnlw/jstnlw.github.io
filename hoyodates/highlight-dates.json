@@ -78,6 +78,18 @@
                         "day": 1
                     }
                 ]
+            },
+            {
+                "version": 4.5,
+                "highlightRange": 32,
+                "bannerOne": 16,
+                "dates": [
+                    {
+                        "type": "patch",
+                        "month": "August",
+                        "day": 26
+                    }
+                ]
             }
         ]
     },
