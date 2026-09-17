@@ -107,6 +107,40 @@ class CalendarManager {
 		return upcoming.length ? upcoming : null;
 	}
 
+	/**
+	 * Finds the first patch of a game that lands after the given date.
+	 * Scans game.versions, which by this point already contains the entries
+	 * created by autoPopulatePatchesForYear, so auto-interval patches count too.
+	 * days is measured from afterDate, not from today, so the gap matches the
+	 * actual interval between the two patches.
+	 */
+	getNextVersionAfter(shorthand, afterDate) {
+		const game = this.globalData.find(g => g.shorthand === shorthand);
+		if (!game?.versions) return null;
+
+		const from = new Date(afterDate.getFullYear(), afterDate.getMonth(), afterDate.getDate());
+		let best = null;
+
+		for (const version of game.versions) {
+			const patchDate = version.dates?.find(d => d.type === "patch");
+			if (!patchDate) continue;
+
+			const patchDateObj = new Date(CURRENT_YEAR, MONTH_INDEX[patchDate.month], patchDate.day);
+			if (patchDateObj <= from) continue;
+			if (best && patchDateObj >= best.date) continue;
+
+			best = { version: version.version, date: patchDateObj };
+		}
+		if (!best) return null;
+
+		return {
+			shorthand: shorthand.toUpperCase(),
+			version: best.version,
+			date: best.date,
+			days: Math.round((best.date - from) / 86400000)
+		};
+	}
+
 	getEventsForDate(dateObj) {
 		const events = [];
 		for (const game of this.globalData) {
@@ -192,7 +226,9 @@ class CalendarManager {
 			highlightRange,
 			// bannerOne threshold — splits banner-one / banner-two CSS classes
 			bannerOne: version.bannerOne ?? Math.floor(highlightRange / 2),
-			dateType: date.type
+			dateType: date.type,
+			// Used by the tooltip to look up the following patch of the same game
+			version: version.version ?? null
 		});
 	}
 
@@ -817,7 +853,25 @@ class DayEventHandler {
 		if (visibleEvents.length === 0) return;
 		this.isHovering = true;
 
-		let text = visibleEvents.map(e => e.text).join("\n");
+		const lines = [];
+		const seenGames = new Set();
+
+		for (const e of visibleEvents) {
+			lines.push(e.text);
+
+			// Game events get an extra line pointing at the following patch.
+			// Skipped for holidays and for a game already covered on this day.
+			if (e.patchType === "holiday" || seenGames.has(e.patchType)) continue;
+			seenGames.add(e.patchType);
+
+			const next = this.calendar.getNextVersionAfter(e.patchType, e.currentDate);
+			if (!next) continue;
+
+			const nextVer = this.calendar.formatVersionNumber(next.version);
+			lines.push(`${next.shorthand} v${nextVer} in ${next.days} day${next.days !== 1 ? "s" : ""}`);
+		}
+
+		let text = lines.join("\n");
 
 		// If today, append countdown to next patch
 		if (this.dayDiv.classList.contains("today")) {
