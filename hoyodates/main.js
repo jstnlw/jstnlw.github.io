@@ -392,7 +392,7 @@ class CalendarManager {
 		badge.className = "toggle-badge";
 		badge.setAttribute("aria-hidden", "true");
 		btn.appendChild(badge);
-		this.updateToggleBadge(btn, game.shorthand);
+		// this.updateToggleBadge(btn, game.shorthand);
 
 		return btn;
 	}
@@ -414,8 +414,8 @@ class CalendarManager {
 			return;
 		}
 
-		badge.textContent = `v${this.formatVersionNumber(next.version)} ${next.days}d`;
-		// badge.textContent = `${next.days}d`;
+		// badge.textContent = `v${this.formatVersionNumber(next.version)} ${next.days}d`;
+		badge.textContent = `${next.days}d`;
 		badge.classList.remove("is-empty");
 		badge.title = `v${this.formatVersionNumber(next.version)} in ${CalendarManager.pluralDays(next.days)}`;
 	}
