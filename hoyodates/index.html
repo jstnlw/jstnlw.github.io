@@ -17,6 +17,8 @@
             --bg-color: #000000;
             --calendar-color: #222222;
             --font-color: #ffffff;
+            --radius-day: 0.25rem;
+            --radius-toggle: 25%;
         }
 
         /* General Body Styles */
@@ -32,7 +34,7 @@
             color: var(--font-color);
         }
 
-        /* Label Styles */
+        /* Header & Toggles */
         header {
             width: 100%;
             position: sticky;
@@ -51,14 +53,15 @@
         }
 
         .toggle button {
+            position: relative;
             width: 100%;
             max-width: 4rem;
             display: flex;
             margin: 0;
             padding: 0.25rem;
-            border-radius: 25%;
             border: 0;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+            border-radius: var(--radius-toggle);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
             align-items: center;
             font-weight: bold;
             color: var(--font-color);
@@ -67,32 +70,50 @@
             transition: opacity 0.2s ease;
         }
 
-        /* Toggle Icons */
-        .toggle [class*="toggle"]:before {
+        /* Toggle icon — scoped to the button so the badge is not affected */
+        .toggle button::before {
+            content: "";
             width: 100%;
             height: auto;
             aspect-ratio: 1;
-            content: "";
             background-size: cover;
             background-repeat: no-repeat;
             border-radius: 22.5%;
         }
 
+        /* Countdown badge */
+        .toggle-badge {
+            position: absolute;
+            right: 0.25rem;
+            bottom: 0.25rem;
+            left: 0.25rem;
+            padding: 50% 0.125rem 0.125rem;
+            border-bottom-left-radius: var(--radius-toggle);
+            border-bottom-right-radius: var(--radius-toggle);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+            font-size: 0.75rem;
+            font-weight: normal;
+            pointer-events: none;
+        }
+
+        .toggle-badge.is-empty {
+            display: none;
+        }
+
         .inactive {
             opacity: 0.75;
-            transition: opacity 0.2s ease;
             filter: grayscale(100%);
         }
 
         /* Calendar Layout */
         .calendar {
+            position: relative;
             max-width: 1200px;
+            width: 100%;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 1rem;
             margin: 1rem;
-            width: 100%;
-            position: relative;
         }
 
         .month {
@@ -103,9 +124,9 @@
         }
 
         .month-header {
+            margin: 0.5rem;
             font-weight: bold;
             font-size: 1.2rem;
-            margin: 0.5rem;
             color: var(--font-color);
         }
 
@@ -114,11 +135,6 @@
         .days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-        }
-
-        .weekdays div {
-            font-weight: bold;
-            color: var(--font-color);
         }
 
         .weekdays div,
@@ -132,9 +148,14 @@
             transition: 0.2s ease;
         }
 
-        .days div {
+        .weekdays div {
+            font-weight: bold;
             color: var(--font-color);
+        }
+
+        .days div {
             margin: 2px;
+            color: var(--font-color);
         }
 
         /* Empty grid cells for spacing */
@@ -144,12 +165,12 @@
 
         .today {
             border: 2px solid var(--font-color);
-            border-radius: 0.25rem;
+            border-radius: var(--radius-day);
         }
 
         /* Highlighted Dates */
         .is-patch {
-            border-radius: 0.25rem;
+            border-radius: var(--radius-day);
         }
 
         .is-livestream {
@@ -157,14 +178,15 @@
         }
 
         .is-patch,
-        .is-livestream {
+        .is-livestream,
+        .highlight-holiday {
             font-weight: bold;
         }
 
         [class*="banner-one"],
         [class*="banner-two"] {
             font-weight: normal;
-            border-radius: 0.25rem !important;
+            border-radius: var(--radius-day) !important;
             transition: 0.2s ease;
         }
 
@@ -172,22 +194,18 @@
             opacity: 0.6;
         }
 
-        .highlight-holiday {
-            font-weight: bold;
-        }
-
         /* Tooltip */
         .custom-tooltip {
             position: absolute;
+            z-index: 1;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-day);
             background-color: rgba(0, 0, 0, 0.8);
             color: var(--font-color);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
             font-size: 0.9rem;
-            pointer-events: none;
-            z-index: 1;
             white-space: nowrap;
             text-align: center;
+            pointer-events: none;
         }
 
         /* Footer */
@@ -202,17 +220,16 @@
             .calendar {
                 grid-template-columns: repeat(3, 1fr);
             }
-
-            .month-header,
-            .days div {
-                font-size: 1rem;
-            }
         }
 
         @media (max-width: 480px) {
             .calendar {
                 gap: 0.5rem;
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .month {
+                padding: 0.5rem;
             }
 
             .month-header {
@@ -224,10 +241,6 @@
                 font-size: 0.75rem;
             }
 
-            .month {
-                padding: 0.5rem;
-            }
-
             .toggle {
                 width: 100%;
                 max-width: unset;
@@ -237,8 +250,21 @@
                 padding: 0.2rem;
             }
         }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+
+            .toggle button,
+            .weekdays div,
+            .days div,
+            [class*="banner-one"],
+            [class*="banner-two"] {
+                transition: none;
+            }
+        }
     </style>
-    <link rel="preload" href="highlight-dates.json" as="fetch" type="application/json" crossorigin="anonymous" fetchpriority="high" />
+    <link rel="preload" href="highlight-dates.json" as="fetch" type="application/json" crossorigin="anonymous"
+        fetchpriority="high" />
 </head>
 
 <body>
