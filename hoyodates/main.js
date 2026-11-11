@@ -9,12 +9,21 @@ const WEEKDAYS_SHORT = ["M", "T", "W", "T", "F", "S", "S"];
 
 const CURRENT_YEAR = new Date().getFullYear();
 const DAY_MS = 86400000;
-const DEFAULT_INTERVAL = 42; // 6 weeks patch cycle if not specified in JSON; can be overridden per-game with autoInterval or per-version with highlightRange
+// Full patch cycle in days. highlightRange defaults to DEFAULT_INTERVAL - 1,
+// so a patch's last day is the day before the next one starts
+const DEFAULT_INTERVAL = 42;
 
 const STORAGE_KEY = "gachaverse_toggles";
 const DATA_URL = "highlight-dates.json";
 const SITE_TITLE_PREFIX = "Gachaverse";
 const MOBILE_BREAKPOINT = 480;
+
+// Sort weight for day classes: patch wins over livestream, holiday last
+const TYPE_PRIORITY = { patch: 0, livestream: 1 };
+const TYPE_PRIORITY_DEFAULT = 2;
+
+const TOOLTIP_GAP = 12;
+const TOOLTIP_EDGE_PAD = 8;
 
 // ─── CalendarManager ─────────────────────────────────────────────────────────
 
@@ -24,6 +33,8 @@ class CalendarManager {
 		this.activeGames = new Set();
 		this.currentTooltip = null;
 		this.colorCache = new Map();
+		// dateStr → .day element, so hover ranges never re-query the document
+		this.dayElements = new Map();
 
 		// Cache today once to avoid repeated Date constructions
 		this.today = CalendarManager.startOfDay(new Date());
@@ -55,6 +66,12 @@ class CalendarManager {
 		return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 	}
 
+	static addDays(date, amount) {
+		const next = new Date(date);
+		next.setDate(next.getDate() + amount);
+		return next;
+	}
+
 	static daysBetween(from, to) {
 		return Math.round((to - from) / DAY_MS);
 	}
@@ -65,6 +82,16 @@ class CalendarManager {
 
 	static pluralDays(n) {
 		return `${n} day${n !== 1 ? "s" : ""}`;
+	}
+
+	static clamp(value, min, max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	// Sorts in place by patch → livestream → everything else
+	static sortByType(items, getType) {
+		const rank = type => TYPE_PRIORITY[type] ?? TYPE_PRIORITY_DEFAULT;
+		return items.sort((a, b) => rank(getType(a)) - rank(getType(b)));
 	}
 
 	/**
@@ -88,39 +115,22 @@ class CalendarManager {
 
 	// ─── Patch Lookups ─────────────────────────────────────────────────────────
 
-	/**
-	 * Yields { version, date } for every patch of a game.
-	 * Reads game.versions, which by this point already contains the entries
-	 * created by autoPopulatePatchesForYear, so auto-interval patches are included.
-	 */
-	*patchDates(game) {
-		for (const version of game.versions ?? []) {
-			const patch = version.dates?.find(d => d.type === "patch");
-			if (!patch) continue;
-			yield {
-				version: version.version,
-				date: new Date(CURRENT_YEAR, MONTH_INDEX[patch.month], patch.day)
-			};
-		}
+	// Single source of truth for reading a patch start date off a version entry
+	getPatchDate(version) {
+		const patch = version?.dates?.find(d => d.type === "patch");
+		return patch ? new Date(CURRENT_YEAR, MONTH_INDEX[patch.month], patch.day) : null;
 	}
 
 	/**
-	 * Days from today until one game's next patch.
-	 * Returns { version, date, days } or null if no patch remains this year.
+	 * Yields { version, date, days } for every patch of a game still ahead of today.
+	 * Reads game.versions after autoPopulatePatchesForYear, so filled patches count.
 	 */
-	getNextPatchForGame(shorthand) {
-		const game = this.globalData.find(g => g.shorthand === shorthand);
-		if (!game) return null;
-
-		let best = null;
-		for (const patch of this.patchDates(game)) {
-			if (patch.date <= this.today) continue;
-			if (best && patch.date >= best.date) continue;
-			best = patch;
+	*upcomingPatches(game) {
+		for (const version of game?.versions ?? []) {
+			const date = this.getPatchDate(version);
+			if (!date || date <= this.today) continue;
+			yield { version: version.version, date, days: CalendarManager.daysBetween(this.today, date) };
 		}
-		if (!best) return null;
-
-		return { ...best, days: CalendarManager.daysBetween(this.today, best.date) };
 	}
 
 	/**
@@ -128,21 +138,16 @@ class CalendarManager {
 	 * Returns an array so simultaneous patches can share the same countdown.
 	 */
 	getNextPatchCountdown() {
-		let minDays = Infinity;
 		let upcoming = [];
 
 		for (const game of this.globalData) {
 			if (!this.activeGames.has(game.shorthand)) continue;
 
-			for (const patch of this.patchDates(game)) {
-				const days = CalendarManager.daysBetween(this.today, patch.date);
-				if (days <= 0 || days > minDays) continue;
-
-				if (days < minDays) {
-					minDays = days;
-					upcoming = [];
-				}
-				upcoming.push({ shorthand: game.shorthand.toUpperCase(), version: patch.version, days });
+			for (const patch of this.upcomingPatches(game)) {
+				const best = upcoming[0]?.days ?? Infinity;
+				if (patch.days > best) continue;
+				if (patch.days < best) upcoming = [];
+				upcoming.push({ shorthand: game.shorthand.toUpperCase(), ...patch });
 			}
 		}
 		return upcoming;
@@ -159,9 +164,10 @@ class CalendarManager {
 
 	// ─── Event Processing ──────────────────────────────────────────────────────
 
-	getEventsForDate(dateObj) {
+	// Pass `games` to limit the lookup, e.g. a single game being toggled back on
+	getEventsForDate(dateObj, games = this.globalData) {
 		const events = [];
-		for (const game of this.globalData) {
+		for (const game of games) {
 			// game.versions → patch/livestream events; only shown when toggled on
 			if (game.versions && this.activeGames.has(game.shorthand)) {
 				this.collectVersionEvents(game, dateObj, events);
@@ -171,36 +177,13 @@ class CalendarManager {
 				this.collectHolidayEvents(game, dateObj, events);
 			}
 		}
-		return events;
-	}
-
-	/**
-	 * Sort priority: patch → livestream → holiday
-	 * Drives class ordering on .day divs (patch border-radius wins over livestream)
-	 */
-	sortByTypePriority(items, getType) {
-		items.sort((a, b) => {
-			const ta = getType(a), tb = getType(b);
-			if (ta === tb) return 0;
-			if (ta === "patch") return -1;
-			if (tb === "patch") return 1;
-			if (ta === "livestream") return -1;
-			return 1;
-		});
-		return items;
-	}
-
-	sortEventsByPriority(events) {
-		return this.sortByTypePriority(events, e => e.dateType);
+		return CalendarManager.sortByType(events, e => e.dateType);
 	}
 
 	collectVersionEvents(game, dateObj, events) {
-		const month = dateObj.getMonth();
-		const day = dateObj.getDate();
-
 		for (const version of game.versions) {
 			for (const date of version.dates) {
-				if (!this.isDateMatch(date, month, day)) continue;
+				if (!this.isDateMatch(date, dateObj)) continue;
 				const vNum = this.formatVersionNumber(version.version);
 				const label = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} v${vNum}`;
 				events.push(this.buildEvent(label, dateObj, game.shorthand, date, version));
@@ -209,32 +192,34 @@ class CalendarManager {
 	}
 
 	collectHolidayEvents(game, dateObj, events) {
-		const month = dateObj.getMonth();
-		const day = dateObj.getDate();
-
 		for (const date of game.dates) {
-			if (!this.isDateMatch(date, month, day)) continue;
+			if (!this.isDateMatch(date, dateObj)) continue;
 			const d = date.type ? date : { ...date, type: "holiday" };
 			events.push(this.buildEvent(date.name, dateObj, "holiday", d, {}));
 		}
 	}
 
-	isDateMatch(date, month, day) {
-		return MONTH_INDEX[date.month] === month && date.day === day;
+	isDateMatch(date, dateObj) {
+		return MONTH_INDEX[date.month] === dateObj.getMonth() && date.day === dateObj.getDate();
 	}
 
+	// toFixed(1) also rounds away float drift from the auto-fill increments
 	formatVersionNumber(version) {
-		// Ensure precision-safe formatting to avoid floating-point errors
-		const formatted = parseFloat(version.toFixed(1));
-		return Number.isInteger(formatted)
-			? formatted.toFixed(1)
-			: String(formatted).replace(/(\.(\d))0$/, "$1");
+		return version.toFixed(1);
 	}
 
 	capitalize(str) {
 		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 
+	/**
+	 * Date model for a patch, counted in days after the patch start day:
+	 *   start        = patch day
+	 *   phase 1      = days 1 to bannerOne          (banner-one)
+	 *   phase 2      = days bannerOne + 1 to range  (banner-two)
+	 *   end          = start + highlightRange
+	 * Setting bannerOne equal to highlightRange makes a single phase patch.
+	 */
 	buildEvent(text, currentDate, patchType, date, version) {
 		const highlightRange = version.highlightRange ?? DEFAULT_INTERVAL - 1;
 		return Object.freeze({
@@ -243,7 +228,6 @@ class CalendarManager {
 			patchType,
 			isPatch: date.type === "patch",
 			highlightRange,
-			// bannerOne threshold — splits banner-one / banner-two CSS classes
 			bannerOne: version.bannerOne ?? Math.floor(highlightRange / 2),
 			dateType: date.type
 		});
@@ -271,7 +255,7 @@ class CalendarManager {
 	// Preloads icons declared in highlight-dates.json, guarding against duplicates
 	preloadGameIcons(games) {
 		for (const game of games) {
-			if (!game.versions || game.active === false) continue;
+			if (!this.isPlayableGame(game)) continue;
 
 			const iconPath = CalendarManager.getIconPath(game.shorthand);
 			if (document.querySelector(`link[rel="preload"][href="${iconPath}"]`)) continue;
@@ -290,12 +274,13 @@ class CalendarManager {
 	 * Generates CSS for each game using class names that match index.html selectors:
 	 *   .toggle-{s}                         → toggle button background
 	 *   .highlight-{s}-livestream           → border-radius: 50%  (from CSS .is-livestream)
-	 *   .highlight-{s}-patch                → border-radius: 0.25rem (from CSS .is-patch)
+	 *   .highlight-{s}-patch                → border-radius: var(--radius-day) (from CSS .is-patch)
 	 *   .highlight-{s}-patch-banner-one/two → from CSS [class*="banner-one/two"]
 	 *   .toggle-{s}::before                 → icon background image
 	 *   .highlight-holiday                  → colored text for holiday dates
 	 */
-	generateGameStyles({ shorthand, color, dates, versions, active }) {
+	generateGameStyles(game) {
+		const { shorthand, color, dates } = game;
 		const s = shorthand.toLowerCase();
 
 		const holidayRule = dates
@@ -303,7 +288,7 @@ class CalendarManager {
 			: "";
 
 		// Only emit ::before icon rule for real games
-		const iconRule = (versions && active !== false)
+		const iconRule = this.isPlayableGame(game)
 			? `.toggle-${s}::before { background: url("${CalendarManager.getIconPath(s)}"); }`
 			: "";
 
@@ -324,7 +309,12 @@ class CalendarManager {
 
 	// ─── Toggle Management ─────────────────────────────────────────────────────
 
-	_getToggleStates() {
+	// Skips the Template entry and anything marked active:false in the JSON
+	isPlayableGame(game) {
+		return game.active !== false && Array.isArray(game.versions) && game.versions.length > 0;
+	}
+
+	readToggleStates() {
 		try {
 			return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? {};
 		} catch {
@@ -332,14 +322,9 @@ class CalendarManager {
 		}
 	}
 
-	loadToggleState(shorthand) {
-		const states = this._getToggleStates();
-		return states[shorthand] !== undefined ? states[shorthand] : null;
-	}
-
 	saveToggleState(shorthand, isActive) {
 		try {
-			const states = this._getToggleStates();
+			const states = this.readToggleStates();
 			states[shorthand] = isActive;
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(states));
 		} catch (e) {
@@ -351,82 +336,33 @@ class CalendarManager {
 		this.applyStylesFromJSON(games);
 		this.toggle.innerHTML = "";
 
+		// Read storage once for all buttons
+		const states = this.readToggleStates();
 		const fragment = document.createDocumentFragment();
+
 		for (const game of games) {
-			const btn = this.createToggleButton(game);
-			if (btn) fragment.appendChild(btn);
+			if (!this.isPlayableGame(game)) continue;
+			fragment.appendChild(this.createToggleButton(game, states));
 		}
 		this.toggle.appendChild(fragment);
 	}
 
-	createToggleButton(game) {
-		// Games with active:false or no versions are fully skipped (e.g. Template entry in JSON)
-		if (game.active === false || !this.hasValidVersions(game)) return null;
+	createToggleButton(game, states) {
+		// Saved state wins; otherwise fall back to the JSON default
+		const isActive = states[game.shorthand] ?? game.toggle !== false;
+		if (isActive) this.activeGames.add(game.shorthand);
 
-		const saved = this.loadToggleState(game.shorthand);
-		const isActive = saved !== null ? saved : game.toggle !== false;
-
-		const btn = this.buildToggleButton(game, isActive);
-		this.setupToggleHandler(btn, game);
-		return btn;
-	}
-
-	hasValidVersions(game) {
-		return Array.isArray(game.versions) && game.versions.length > 0;
-	}
-
-	buildToggleButton(game, isActive) {
 		const btn = document.createElement("button");
 		btn.className = `toggle-${game.shorthand.toLowerCase()}`;
 		btn.dataset.game = game.shorthand;
 		btn.setAttribute("aria-label", `Toggle ${game.game} events`);
+		btn.classList.toggle("inactive", !isActive);
 
-		if (!isActive) {
-			btn.classList.add("inactive");
-		} else {
-			this.activeGames.add(game.shorthand);
-		}
-
-		// Corner badge counting down to this game's next patch
-		const badge = document.createElement("span");
-		badge.className = "toggle-badge";
-		badge.setAttribute("aria-hidden", "true");
-		btn.appendChild(badge);
-		// this.updateToggleBadge(btn, game.shorthand);
-
+		this.setupToggleHandler(btn, game.shorthand);
 		return btn;
 	}
 
-	/**
-	 * Writes the countdown into one button's badge.
-	 * Badge is emptied and given .is-empty when the game has no upcoming patch,
-	 * so CSS controls whether it shows without the JS needing to change.
-	 */
-	updateToggleBadge(btn, shorthand) {
-		const badge = btn.querySelector(".toggle-badge");
-		if (!badge) return;
-
-		const next = this.getNextPatchForGame(shorthand);
-		if (!next) {
-			badge.textContent = "";
-			badge.removeAttribute("title");
-			badge.classList.add("is-empty");
-			return;
-		}
-
-		// badge.textContent = `v${this.formatVersionNumber(next.version)} ${next.days}d`;
-		badge.textContent = `${next.days}d`;
-		badge.classList.remove("is-empty");
-		badge.title = `v${this.formatVersionNumber(next.version)} in ${CalendarManager.pluralDays(next.days)}`;
-	}
-
-	updateAllToggleBadges() {
-		this.toggle.querySelectorAll("button[data-game]").forEach(btn => {
-			this.updateToggleBadge(btn, btn.dataset.game);
-		});
-	}
-
-	setupToggleHandler(btn, { shorthand }) {
+	setupToggleHandler(btn, shorthand) {
 		btn.addEventListener("click", () => {
 			const isNowInactive = btn.classList.toggle("inactive");
 
@@ -456,47 +392,36 @@ class CalendarManager {
 			CalendarManager.getClassName(shorthand, "patch", "-banner-two")
 		];
 
-		const selector = classes.map(c => `.${c}`).join(", ");
-		document.querySelectorAll(selector).forEach(el => {
-			classes.forEach(cls => el.classList.remove(cls));
+		this.dayElements.forEach(dayDiv => {
+			dayDiv.classList.remove(...classes);
+			this.refreshDayAppearance(dayDiv);
 		});
-
-		document.querySelectorAll(`.day.is-patch, .day.is-livestream`).forEach(el => {
-			this.syncDayTypeClasses(el);
-		});
-		this.updateAllDaysBackgrounds();
 	}
 
 	reapplyHighlights(shorthand) {
 		const game = this.globalData.find(g => g.shorthand === shorthand);
 		if (!game?.versions) return;
 
-		document.querySelectorAll(".day").forEach(dayDiv => {
-			this.applyHighlightsToDay(dayDiv, game);
+		this.dayElements.forEach((dayDiv, dateStr) => {
+			const events = this.getEventsForDate(CalendarManager.parseLocalDate(dateStr), [game]);
+			if (!events.length) return;
+			this.applyEventClasses(dayDiv, events);
 		});
-		this.updateAllDaysBackgrounds();
 	}
 
-	applyHighlightsToDay(dayDiv, game) {
-		const dateStr = dayDiv.getAttribute("data-date");
-		if (!dateStr) return;
+	// Shared by first render and toggle-on so both add classes the same way
+	applyEventClasses(dayDiv, events) {
+		for (const event of events) {
+			const cls = event.patchType === "holiday"
+				? "highlight-holiday"
+				: CalendarManager.getClassName(event.patchType, event.dateType);
+			dayDiv.classList.add(cls);
+		}
+		this.refreshDayAppearance(dayDiv);
+	}
 
-		const dateObj = CalendarManager.parseLocalDate(dateStr);
-		const month = dateObj.getMonth();
-		const day = dateObj.getDate();
-
-		const dayEvents = game.versions.flatMap(version =>
-			version.dates
-				.filter(date => this.isDateMatch(date, month, day))
-				.map(date => ({
-					type: date.type,
-					className: CalendarManager.getClassName(game.shorthand, date.type)
-				}))
-		);
-
-		this.sortByTypePriority(dayEvents, e => e.type)
-			.forEach(e => dayDiv.classList.add(e.className));
-
+	// The three class/background passes every day needs after its classes change
+	refreshDayAppearance(dayDiv) {
 		this.syncDayTypeClasses(dayDiv);
 		this.reorderDayClasses(dayDiv);
 		this.updateSplitBackground(dayDiv);
@@ -513,10 +438,6 @@ class CalendarManager {
 		dayDiv.classList.toggle("is-livestream", classes.some(c => c.endsWith("-livestream")));
 	}
 
-	updateAllDaysBackgrounds() {
-		document.querySelectorAll(".day").forEach(d => this.updateSplitBackground(d));
-	}
-
 	/**
 	 * Returns only the primary highlight classes (patch/livestream),
 	 * excluding banner-one/two — those are transient hover-only classes.
@@ -525,6 +446,23 @@ class CalendarManager {
 		return Array.from(classList).filter(
 			c => c.startsWith("highlight-") && (c.endsWith("-patch") || c.endsWith("-livestream"))
 		);
+	}
+
+	/**
+	 * Re-orders highlight classes so patch always precedes livestream in classList.
+	 * This matters because both set border-radius — the last one in the class list
+	 * wins for specificity ties.
+	 */
+	reorderDayClasses(dayDiv) {
+		const highlights = this.getHighlightClasses(dayDiv.classList);
+		if (highlights.length <= 1) return;
+
+		const sorted = CalendarManager.sortByType([...highlights], cls =>
+			cls.endsWith("-patch") ? "patch" : "livestream"
+		);
+
+		dayDiv.classList.remove(...highlights);
+		dayDiv.classList.add(...sorted);
 	}
 
 	/**
@@ -542,10 +480,13 @@ class CalendarManager {
 
 		const hasLivestream = classes.some(c => c.endsWith("-livestream"));
 		const hasPatch = classes.some(c => c.endsWith("-patch"));
+		const radius = "var(--radius-day, 0.25rem)";
 
 		dayDiv.style.background = this.createGradientString(this.getColorsFromClasses(classes));
-		// 50% top-left → circle side for livestream; 0.25rem for patch corners
-		dayDiv.style.borderRadius = (hasLivestream && hasPatch) ? "50% 0.25rem 0.25rem 0.25rem" : "";
+		// 50% top-left → circle side for livestream, patch corners for the rest
+		dayDiv.style.borderRadius = (hasLivestream && hasPatch)
+			? `50% ${radius} ${radius} ${radius}`
+			: "";
 	}
 
 	getColorsFromClasses(classes) {
@@ -558,7 +499,7 @@ class CalendarManager {
 			temp.classList.add(cls);
 			document.body.appendChild(temp);
 			const color = getComputedStyle(temp).backgroundColor || "transparent";
-			document.body.removeChild(temp);
+			temp.remove();
 
 			this.colorCache.set(cls, color);
 			return color;
@@ -575,7 +516,7 @@ class CalendarManager {
 
 	// ─── Tooltip ───────────────────────────────────────────────────────────────
 
-	createTooltip(lines, x, y) {
+	createTooltip(lines, dayDiv, pageY) {
 		this.removeTooltip();
 
 		const tooltip = document.createElement("div");
@@ -589,26 +530,33 @@ class CalendarManager {
 		}
 		document.body.appendChild(tooltip);
 
-		const pad = 8;
-		const left = Math.min(Math.max(pad, x), window.innerWidth - tooltip.offsetWidth - pad);
-		const topAbove = y - tooltip.offsetHeight - 12;
-		const top = topAbove > pad
-			? topAbove
-			: Math.min(y + pad, window.innerHeight - tooltip.offsetHeight - pad);
-
-		tooltip.style.left = `${left}px`;
-		tooltip.style.top = `${top}px`;
 		this.currentTooltip = tooltip;
+		this.positionTooltip(dayDiv, pageY);
 	}
 
-	// Re-centres the tooltip over its day while the pointer moves
-	positionTooltipAtDay(dayDiv, pageY) {
+	/**
+	 * Centres the tooltip over its day and keeps it inside the viewport.
+	 * Used on create and on every mousemove so both paths clamp the same way.
+	 */
+	positionTooltip(dayDiv, pageY) {
 		const tooltip = this.currentTooltip;
 		if (!tooltip) return;
 
 		const rect = dayDiv.getBoundingClientRect();
-		tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
-		tooltip.style.top = `${pageY - 48}px`;
+		const scrollY = window.scrollY ?? window.pageYOffset;
+
+		const left = CalendarManager.clamp(
+			rect.left + rect.width / 2 - tooltip.offsetWidth / 2,
+			TOOLTIP_EDGE_PAD,
+			window.innerWidth - tooltip.offsetWidth - TOOLTIP_EDGE_PAD
+		);
+
+		// Prefer sitting above the cursor, drop below when there is no room
+		const above = pageY - tooltip.offsetHeight - TOOLTIP_GAP;
+		const top = above > scrollY + TOOLTIP_EDGE_PAD ? above : pageY + TOOLTIP_GAP;
+
+		tooltip.style.left = `${left}px`;
+		tooltip.style.top = `${top}px`;
 	}
 
 	removeTooltip() {
@@ -618,29 +566,24 @@ class CalendarManager {
 
 	// ─── Hover Bindings ────────────────────────────────────────────────────────
 
-	attachHoverEvents(dayDiv, events) {
+	/**
+	 * Binds one day, replacing any handler already on it.
+	 * Today always gets a handler so its countdown tooltip works on a bare day.
+	 */
+	bindDayHandler(dayDiv, dateStr, events = this.getEventsForDate(CalendarManager.parseLocalDate(dateStr))) {
+		dayDiv._dayHandler?.detach();
+		dayDiv._dayHandler = null;
+
+		if (events.length === 0 && dateStr !== this.todayStr) return;
+
 		const handler = new DayEventHandler(this, dayDiv, events);
 		handler.attach();
-		// Store reference for explicit cleanup — avoids DOM cloning on refresh
+		// Stored for explicit cleanup — avoids cloning the node to drop listeners
 		dayDiv._dayHandler = handler;
 	}
 
 	refreshAllDayHoverBindings() {
-		document.querySelectorAll(".day").forEach(dayDiv => {
-			// Explicitly detach old listeners instead of cloning the node
-			dayDiv._dayHandler?.detach();
-			dayDiv._dayHandler = null;
-
-			const dateStr = dayDiv.getAttribute("data-date");
-			if (!dateStr) return;
-
-			const dateObj = CalendarManager.parseLocalDate(dateStr);
-			const events = this.sortEventsByPriority(this.getEventsForDate(dateObj));
-			// Today always gets a handler so its countdown tooltip works on bare days
-			if (events.length > 0 || dateStr === this.todayStr) {
-				this.attachHoverEvents(dayDiv, events);
-			}
-		});
+		this.dayElements.forEach((dayDiv, dateStr) => this.bindDayHandler(dayDiv, dateStr));
 	}
 
 	// ─── Mobile ────────────────────────────────────────────────────────────────
@@ -648,7 +591,7 @@ class CalendarManager {
 	scrollToCurrentMonth() {
 		if (!CalendarManager.isMobile()) return;
 
-		const el = document.querySelector(`.month:nth-child(${this.today.getMonth() + 1})`);
+		const el = this.calendarEl.children[this.today.getMonth()];
 		if (!el) return;
 
 		setTimeout(() =>
@@ -680,61 +623,89 @@ class CalendarManager {
 		return data;
 	}
 
-	// Forward-fills patch versions for the rest of the current year
-	// Fills gaps between listed versions, then forward-fills to end of year
+	// ─── Auto Interval ─────────────────────────────────────────────────────────
+
+	/**
+	 * Fills missing patches for the current year, per game:
+	 *   1. Cycle length = autoInterval + 1 (or DEFAULT_INTERVAL). autoInterval uses the
+	 *      same meaning as highlightRange, so autoInterval 41 means a 42 day cycle.
+	 *   2. After each listed patch, the next one is expected on start + highlightRange + 1.
+	 *   3. Between two listed patches, a patch is only inserted when at least half a
+	 *      cycle is left before the next listed one, and its version stays below it.
+	 *      A shorter gap is treated as the current patch running long, not a missing one.
+	 *   4. After the last listed patch, patches are added until the year ends.
+	 *   5. Every patch's range is then trimmed so it ends the day before the next starts.
+	 * Optional per-game lastMinor (e.g. 8) rolls x.8 over to (x+1).0.
+	 */
 	autoPopulatePatchesForYear(games, year) {
 		for (const game of games) {
 			if (!game.versions?.length) continue;
 
-			const autoInterval = game.autoInterval !== undefined
-				? game.autoInterval + 1
-				: DEFAULT_INTERVAL;
-
+			const cycle = game.autoInterval !== undefined ? game.autoInterval + 1 : DEFAULT_INTERVAL;
+			const minGap = Math.ceil(cycle / 2);
 			const filled = [];
-			for (let i = 0; i < game.versions.length; i++) {
-				const curr = game.versions[i];
+
+			game.versions.forEach((curr, i) => {
 				filled.push(curr);
 
-				const currPatchDate = this.getLastPatchDate(curr);
-				if (!currPatchDate) continue;
+				const start = this.getPatchDate(curr);
+				if (!start) return;
 
-				const currRange = curr.highlightRange ?? DEFAULT_INTERVAL - 1;
-				const cursor = new Date(currPatchDate);
-				cursor.setDate(cursor.getDate() + currRange + 1);
-				let vNum = Math.round((curr.version + 0.1) * 10) / 10;
+				const next = game.versions[i + 1];
+				const boundary = this.getPatchDate(next);
 
-				// If a next listed version exists, stop before its patch date
-				const boundary = this.getLastPatchDate(game.versions[i + 1] ?? {});
+				let cursor = CalendarManager.addDays(start, (curr.highlightRange ?? cycle - 1) + 1);
+				let vNum = this.nextVersionNumber(curr.version, game.lastMinor);
 
 				while (cursor.getFullYear() === year) {
-					if (boundary && cursor >= boundary) break;
+					if (boundary) {
+						if (CalendarManager.daysBetween(cursor, boundary) < minGap) break;
+						if (vNum >= next.version) break;
+					}
 
 					filled.push({
 						version: vNum,
 						// bannerOne intentionally omitted so buildEvent uses the default
-						highlightRange: autoInterval - 1,
-						dates: [{
-							type: "patch",
-							month: MONTHS[cursor.getMonth()],
-							day: cursor.getDate()
-						}]
+						highlightRange: cycle - 1,
+						dates: [{ type: "patch", month: MONTHS[cursor.getMonth()], day: cursor.getDate() }]
 					});
-					cursor.setDate(cursor.getDate() + autoInterval);
-					vNum = Math.round((vNum + 0.1) * 10) / 10;
+					cursor = CalendarManager.addDays(cursor, cycle);
+					vNum = this.nextVersionNumber(vNum, game.lastMinor);
 				}
-			}
+			});
+
 			game.versions = filled;
+			this.trimOverlappingRanges(game.versions, cycle);
 		}
 	}
 
-	getLastPatchDate(version) {
-		const patch = version?.dates?.find(d => d.type === "patch");
-		if (!patch) return null;
-		return new Date(CURRENT_YEAR, MONTH_INDEX[patch.month], patch.day);
+	// A patch never runs past the day before the next patch of the same game
+	trimOverlappingRanges(versions, cycle) {
+		versions.forEach((curr, i) => {
+			const start = this.getPatchDate(curr);
+			const nextStart = this.getPatchDate(versions[i + 1]);
+			if (!start || !nextStart) return;
+
+			const maxRange = CalendarManager.daysBetween(start, nextStart) - 1;
+			const range = curr.highlightRange ?? cycle - 1;
+			if (range > maxRange) curr.highlightRange = maxRange;
+		});
 	}
+
+	nextVersionNumber(version, lastMinor) {
+		const next = Math.round((version + 0.1) * 10) / 10;
+		if (lastMinor === undefined) return next;
+
+		const major = Math.floor(version + 1e-9);
+		const minor = Math.round((version - major) * 10);
+		return minor >= lastMinor ? major + 1 : next;
+	}
+
+	// ─── Grid ──────────────────────────────────────────────────────────────────
 
 	renderCalendarGrid(year) {
 		this.calendarEl.innerHTML = "";
+		this.dayElements.clear();
 
 		const fragment = document.createDocumentFragment();
 		for (let month = 0; month < 12; month++) {
@@ -746,17 +717,13 @@ class CalendarManager {
 	createMonthElement(month, year) {
 		const monthDiv = document.createElement("div");
 		monthDiv.className = "month";
-		monthDiv.appendChild(this.createMonthHeader(month));
-		monthDiv.appendChild(this.createWeekdaysRow());
-		monthDiv.appendChild(this.createDaysGrid(month, year));
-		return monthDiv;
-	}
 
-	createMonthHeader(month) {
 		const header = document.createElement("div");
 		header.className = "month-header";
 		header.textContent = MONTHS[month];
-		return header;
+
+		monthDiv.append(header, this.createWeekdaysRow(), this.createDaysGrid(month, year));
+		return monthDiv;
 	}
 
 	createWeekdaysRow() {
@@ -775,7 +742,13 @@ class CalendarManager {
 		const grid = document.createElement("div");
 		grid.className = "days";
 
-		this.addEmptyDays(grid, month, year);
+		// (getDay() + 6) % 7 converts Sun-start (0) to Mon-start (0) to match WEEKDAYS_SHORT
+		const offset = (new Date(year, month, 1).getDay() + 6) % 7;
+		for (let i = 0; i < offset; i++) {
+			const empty = document.createElement("div");
+			empty.className = "empty";
+			grid.appendChild(empty);
+		}
 
 		const total = CalendarManager.daysInMonth(month, year);
 		for (let day = 1; day <= total; day++) {
@@ -784,75 +757,29 @@ class CalendarManager {
 		return grid;
 	}
 
-	addEmptyDays(grid, month, year) {
-		// (getDay() + 6) % 7 converts Sun-start (0) to Mon-start (0) to match WEEKDAYS_SHORT
-		const offset = (new Date(year, month, 1).getDay() + 6) % 7;
-		for (let i = 0; i < offset; i++) {
-			const empty = document.createElement("div");
-			empty.className = "empty";
-			grid.appendChild(empty);
-		}
-	}
-
 	createDayElement(day, month, year) {
 		const dayDiv = document.createElement("div");
 		dayDiv.className = "day";
 		dayDiv.textContent = day;
 
-		const date = new Date(year, month, day);
-		const dateStr = CalendarManager.formatLocalDate(date);
-		dayDiv.setAttribute("data-date", dateStr);
+		const dateObj = new Date(year, month, day);
+		const dateStr = CalendarManager.formatLocalDate(dateObj);
+		dayDiv.dataset.date = dateStr;
+		this.dayElements.set(dateStr, dayDiv);
 
 		if (dateStr === this.todayStr) dayDiv.classList.add("today");
 
-		this.setupDayEvents(dayDiv, date);
+		const events = this.getEventsForDate(dateObj);
+		this.applyEventClasses(dayDiv, events);
+		this.bindDayHandler(dayDiv, dateStr, events);
 		return dayDiv;
 	}
 
-	setupDayEvents(dayDiv, date) {
-		const events = this.sortEventsByPriority(this.getEventsForDate(date));
-
-		for (const event of events) {
-			const cls = event.patchType === "holiday"
-				? "highlight-holiday"
-				: CalendarManager.getClassName(event.patchType, event.dateType);
-			dayDiv.classList.add(cls);
-		}
-
-		this.syncDayTypeClasses(dayDiv);
-		this.reorderDayClasses(dayDiv);
-		this.updateSplitBackground(dayDiv);
-
-		// One handler per day; it covers both the event tooltip and the today countdown
-		if (events.length > 0 || dayDiv.classList.contains("today")) {
-			this.attachHoverEvents(dayDiv, events);
-		}
-	}
-
-	/**
-	 * Re-orders highlight classes so patch always precedes livestream in classList.
-	 * This matters because both set border-radius — the last one in the class list
-	 * wins for specificity ties.
-	 */
-	reorderDayClasses(dayDiv) {
-		const highlights = this.getHighlightClasses(dayDiv.classList);
-		if (highlights.length <= 1) return;
-
-		const sorted = this.sortByTypePriority([...highlights], cls => {
-			if (cls.endsWith("-patch")) return "patch";
-			if (cls.endsWith("-livestream")) return "livestream";
-			return "other";
-		});
-
-		highlights.forEach(cls => dayDiv.classList.remove(cls));
-		sorted.forEach(cls => dayDiv.classList.add(cls));
-	}
-
 	updatePageMetadata(year) {
+		const title = `${SITE_TITLE_PREFIX} ${year}`;
 		this.footerEl.textContent = year;
-		document.title = `${SITE_TITLE_PREFIX} ${year}`;
-		document.querySelector(`meta[name="title"]`)
-			?.setAttribute("content", `${SITE_TITLE_PREFIX} ${year}`);
+		document.title = title;
+		document.querySelector(`meta[name="title"]`)?.setAttribute("content", title);
 	}
 
 	displayError(err) {
@@ -895,37 +822,34 @@ class DayEventHandler {
 	}
 
 	// Holiday events are always visible; game events depend on active toggle state
-	_visibleEvents() {
+	visibleEvents() {
 		return this.events.filter(
 			e => e.patchType === "holiday" || this.calendar.activeGames.has(e.patchType)
 		);
 	}
 
 	/**
-	 * Single method to add or remove banner-one/two classes over the highlight range.
-	 * Banner classes match [class*="banner-one"] and [class*="banner-two"] in CSS.
+	 * Adds or removes banner-one/two classes from the day after the start up to the end.
+	 * See buildEvent for the phase 1 / phase 2 split.
 	 */
-	_mutateHighlightRange(event, add) {
+	setHighlightRange(event, add) {
 		if (!event.isPatch) return;
 
-		const base = new Date(event.currentDate);
 		for (let i = 1; i <= event.highlightRange; i++) {
-			const future = new Date(base);
-			future.setDate(base.getDate() + i);
-
-			const dateKey = CalendarManager.formatLocalDate(future);
-			const target = document.querySelector(`.day[data-date="${dateKey}"]`);
+			const dateKey = CalendarManager.formatLocalDate(
+				CalendarManager.addDays(event.currentDate, i)
+			);
+			const target = this.calendar.dayElements.get(dateKey);
 			if (!target) continue;
 
-			// banner-one for first half of patch cycle, banner-two for second half
 			const suffix = i <= event.bannerOne ? "-banner-one" : "-banner-two";
 			const cls = CalendarManager.getClassName(event.patchType, event.dateType, suffix);
-			target.classList[add ? "add" : "remove"](cls);
+			target.classList.toggle(cls, add);
 		}
 	}
 
 	// Event labels, plus the next-patch countdown when this day is today
-	_tooltipLines(visibleEvents) {
+	tooltipLines(visibleEvents) {
 		const lines = visibleEvents.map(e => e.text);
 
 		if (this.isToday) {
@@ -935,24 +859,21 @@ class DayEventHandler {
 		return lines;
 	}
 
-	handleMouseEnter() {
+	handleMouseEnter(e) {
 		if (this.isHovering) return;
 
-		const visibleEvents = this._visibleEvents();
-		const lines = this._tooltipLines(visibleEvents);
+		const visibleEvents = this.visibleEvents();
+		const lines = this.tooltipLines(visibleEvents);
 		if (lines.length === 0) return;
 
 		this.isHovering = true;
-
-		const rect = this.dayDiv.getBoundingClientRect();
-		const scrollY = window.scrollY ?? window.pageYOffset;
-		this.calendar.createTooltip(lines, rect.left, rect.top + scrollY);
-
-		visibleEvents.forEach(e => this._mutateHighlightRange(e, true));
+		this.calendar.createTooltip(lines, this.dayDiv, e.pageY);
+		visibleEvents.forEach(ev => this.setHighlightRange(ev, true));
 	}
 
 	handleMouseMove(e) {
-		this.calendar.positionTooltipAtDay(this.dayDiv, e.pageY);
+		if (!this.isHovering) return;
+		this.calendar.positionTooltip(this.dayDiv, e.pageY);
 	}
 
 	handleMouseLeave() {
@@ -961,7 +882,7 @@ class DayEventHandler {
 		this.isHovering = false;
 		this.calendar.removeTooltip();
 		// Clear banner ranges for all visible patch events
-		this._visibleEvents().forEach(e => this._mutateHighlightRange(e, false));
+		this.visibleEvents().forEach(e => this.setHighlightRange(e, false));
 	}
 }
 
