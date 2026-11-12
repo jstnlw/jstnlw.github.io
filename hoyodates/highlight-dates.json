@@ -6,23 +6,7 @@
         "autoInterval": 41,
         "active": false,
         "versions": [
-            {
-                "version": 1.0,
-                "highlightRange": 41,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "livestream",
-                        "month": "Month",
-                        "day": 0
-                    },
-                    {
-                        "type": "patch",
-                        "month": "Month",
-                        "day": 0
-                    }
-                ]
-            }
+            { "version": 1.0, "livestream": "YYYY-MM-DD", "phaseOne": "YYYY-MM-DD", "phaseTwo": "YYYY-MM-DD" }
         ]
     },
     {
@@ -30,100 +14,15 @@
         "shorthand": "hsr",
         "color": "#33ccff",
         "versions": [
-            {
-                "version": 4.0,
-                "highlightRange": 39,
-                "bannerOne": 17,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "February",
-                        "day": 13
-                    }
-                ]
-            },
-            {
-                "version": 4.1,
-                "highlightRange": 27,
-                "bannerOne": 27,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 25
-                    }
-                ]
-            },
-            {
-                "version": 4.2,
-                "highlightRange": 39,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "April",
-                        "day": 22
-                    }
-                ]
-            },
-            {
-                "version": 4.3,
-                "highlightRange": 43,
-                "bannerOne": 22,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 1
-                    }
-                ]
-            },
-            {
-                "version": 4.4,
-                "highlightRange": 41,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 15
-                    }
-                ]
-            },
-            {
-                "version": 4.5,
-                "highlightRange": 32,
-                "bannerOne": 16,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "August",
-                        "day": 26
-                    }
-                ]
-            },
-            {
-                "version": 4.6,
-                "highlightRange": 43,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 28
-                    }
-                ]
-            },
-            {
-                "version": 4.7,
-                "highlightRange": 41,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "November",
-                        "day": 11
-                    }
-                ]
-            }
+            { "version": 4.0, "phaseOne": "2026-02-13", "phaseTwo": "2026-03-03" },
+            { "version": 4.1, "phaseOne": "2026-03-25", "phaseTwo": "2026-04-08" },
+            { "version": 4.2, "phaseOne": "2026-04-22", "phaseTwo": "2026-05-13" },
+            { "version": 4.3, "phaseOne": "2026-06-01", "phaseTwo": "2026-06-24" },
+            { "version": 4.4, "phaseOne": "2026-07-15", "phaseTwo": "2026-08-05" },
+            { "version": 4.5, "phaseOne": "2026-08-26", "phaseTwo": "2026-09-12" },
+            { "version": 4.6, "phaseOne": "2026-09-28", "phaseTwo": "2026-10-21" },
+            { "version": 4.7, "phaseOne": "2026-11-11", "phaseTwo": "2026-12-02" },
+            { "version": 4.8, "phaseOne": "2026-12-23", "phaseTwo": "2027-01-13" }
         ]
     },
     {
@@ -131,98 +30,14 @@
         "shorthand": "zzz",
         "color": "#EF780C",
         "versions": [
-            {
-                "version": 2.6,
-                "highlightRange": 45,
-                "bannerOne": 25,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "February",
-                        "day": 6
-                    }
-                ]
-            },
-            {
-                "version": 2.7,
-                "highlightRange": 42,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 24
-                    }
-                ]
-            },
-            {
-                "version": 2.8,
-                "highlightRange": 41,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "May",
-                        "day": 6
-                    }
-                ]
-            },
-            {
-                "version": 3.0,
-                "highlightRange": 41,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 17
-                    }
-                ]
-            },
-            {
-                "version": 3.1,
-                "highlightRange": 41,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 29
-                    }
-                ]
-            },
-            {
-                "version": 3.2,
-                "highlightRange": 41,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 9
-                    }
-                ]
-            },
-            {
-                "version": 3.3,
-                "highlightRange": 41,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 21
-                    }
-                ]
-            },
-            {
-                "version": 3.4,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "December",
-                        "day": 2
-                    }
-                ]
-            }
+            { "version": 2.6, "phaseOne": "2026-02-06", "phaseTwo": "2026-03-04" },
+            { "version": 2.7, "phaseOne": "2026-03-24", "phaseTwo": "2026-04-15" },
+            { "version": 2.8, "phaseOne": "2026-05-06", "phaseTwo": "2026-05-27" },
+            { "version": 3.0, "phaseOne": "2026-06-17", "phaseTwo": "2026-07-08" },
+            { "version": 3.1, "phaseOne": "2026-07-29", "phaseTwo": "2026-08-19" },
+            { "version": 3.2, "phaseOne": "2026-09-09", "phaseTwo": "2026-09-30" },
+            { "version": 3.3, "phaseOne": "2026-10-21", "phaseTwo": "2026-11-11" },
+            { "version": 3.4, "phaseOne": "2026-12-02" }
         ]
     },
     {
@@ -230,95 +45,14 @@
         "shorthand": "ww",
         "color": "#0066ee",
         "versions": [
-            {
-                "version": 3.1,
-                "highlightRange": 41,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "February",
-                        "day": 5
-                    }
-                ]
-            },
-            {
-                "version": 3.2,
-                "highlightRange": 41,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 19
-                    }
-                ]
-            },
-            {
-                "version": 3.3,
-                "highlightRange": 38,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "April",
-                        "day": 30
-                    }
-                ]
-            },
-            {
-                "version": 3.4,
-                "highlightRange": 31,
-                "bannerOne": 31,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 8
-                    }
-                ]
-            },
-            {
-                "version": 3.5,
-                "highlightRange": 40,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 10
-                    }
-                ]
-            },
-            {
-                "version": 3.6,
-                "highlightRange": 40,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "August",
-                        "day": 20
-                    }
-                ]
-            },
-            {
-                "version": 3.7,
-                "highlightRange": 42,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 30
-                    }
-                ]
-            },
-            {
-                "version": 3.8,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "November",
-                        "day": 12
-                    }
-                ]
-            }
+            { "version": 3.1, "phaseOne": "2026-02-05", "phaseTwo": "2026-02-26" },
+            { "version": 3.2, "phaseOne": "2026-03-19", "phaseTwo": "2026-04-09" },
+            { "version": 3.3, "phaseOne": "2026-04-30", "phaseTwo": "2026-05-21" },
+            { "version": 3.4, "phaseOne": "2026-06-08" },
+            { "version": 3.5, "phaseOne": "2026-07-10", "phaseTwo": "2026-07-30" },
+            { "version": 3.6, "phaseOne": "2026-08-20", "phaseTwo": "2026-09-10" },
+            { "version": 3.7, "phaseOne": "2026-09-30", "phaseTwo": "2026-10-22" },
+            { "version": 3.8, "phaseOne": "2026-11-12", "phaseTwo": "2026-12-03" }
         ]
     },
     {
@@ -326,88 +60,13 @@
         "shorthand": "end",
         "color": "#E3DD07",
         "versions": [
-            {
-                "version": 1.0,
-                "highlightRange": 48,
-                "bannerOne": 48,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "January",
-                        "day": 22
-                    }
-                ]
-            },
-            {
-                "version": 1.1,
-                "highlightRange": 35,
-                "bannerOne": 16,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "March",
-                        "day": 12
-                    }
-                ]
-            },
-            {
-                "version": 1.2,
-                "highlightRange": 48,
-                "bannerOne": 26,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "April",
-                        "day": 17
-                    }
-                ]
-            },
-            {
-                "version": 1.3,
-                "highlightRange": 40,
-                "bannerOne": 20,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "June",
-                        "day": 5
-                    }
-                ]
-            },
-            {
-                "version": 1.4,
-                "highlightRange": 47,
-                "bannerOne": 23,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "July",
-                        "day": 16
-                    }
-                ]
-            },
-            {
-                "version": 1.5,
-                "highlightRange": 42,
-                "bannerOne": 21,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "September",
-                        "day": 2
-                    }
-                ]
-            },
-            {
-                "version": 1.6,
-                "dates": [
-                    {
-                        "type": "patch",
-                        "month": "October",
-                        "day": 15
-                    }
-                ]
-            }
+            { "version": 1.0, "phaseOne": "2026-01-22", "phaseTwo": "2026-02-07" },
+            { "version": 1.1, "phaseOne": "2026-03-12", "phaseTwo": "2026-03-29" },
+            { "version": 1.2, "phaseOne": "2026-04-17", "phaseTwo": "2026-05-14" },
+            { "version": 1.3, "phaseOne": "2026-06-05", "phaseTwo": "2026-06-26" },
+            { "version": 1.4, "phaseOne": "2026-07-16", "phaseTwo": "2026-08-09" },
+            { "version": 1.5, "phaseOne": "2026-09-02", "phaseTwo": "2026-09-24" },
+            { "version": 1.6, "phaseOne": "2026-10-15", "phaseTwo": "2026-11-05" }
         ]
     },
     {
@@ -415,28 +74,28 @@
         "shorthand": "hol",
         "color": "#aa0000",
         "dates": [
-            { "month": "January", "day": 1, "name": "New Year's Day" },
-            { "month": "February", "day": 1, "name": "Thaipusam" },
-            { "month": "February", "day": 2, "name": "Thaipusam (Observed)" },
-            { "month": "February", "day": 3, "name": "Federal Territory Day (Observed)" },
-            { "month": "February", "day": 17, "name": "Chinese New Year" },
-            { "month": "February", "day": 18, "name": "Chinese New Year" },
-            { "month": "March", "day": 7, "name": "Nuzul Al-Quran" },
-            { "month": "March", "day": 21, "name": "Hari Raya Aidilfitri" },
-            { "month": "March", "day": 22, "name": "Hari Raya Aidilfitri" },
-            { "month": "March", "day": 23, "name": "Hari Raya Aidilfitri" },
-            { "month": "May", "day": 1, "name": "Labour Day" },
-            { "month": "May", "day": 27, "name": "Hari Raya Haji" },
-            { "month": "May", "day": 31, "name": "Wesak Day" },
-            { "month": "June", "day": 1, "name": "Agong's Birthday" },
-            { "month": "June", "day": 2, "name": "Wesak Day (Observed)" },
-            { "month": "June", "day": 17, "name": "Awal Muharram" },
-            { "month": "August", "day": 25, "name": "Prophet Muhammad's Birthday" },
-            { "month": "August", "day": 31, "name": "National Day" },
-            { "month": "September", "day": 16, "name": "Malaysia Day" },
-            { "month": "November", "day": 8, "name": "Deepavali" },
-            { "month": "November", "day": 9, "name": "Deepavali (Observed)" },
-            { "month": "December", "day": 25, "name": "Christmas Day" }
+            { "date": "2026-01-01", "name": "New Year's Day" },
+            { "date": "2026-02-01", "name": "Thaipusam" },
+            { "date": "2026-02-02", "name": "Thaipusam (Observed)" },
+            { "date": "2026-02-03", "name": "Federal Territory Day (Observed)" },
+            { "date": "2026-02-17", "name": "Chinese New Year" },
+            { "date": "2026-02-18", "name": "Chinese New Year" },
+            { "date": "2026-03-07", "name": "Nuzul Al-Quran" },
+            { "date": "2026-03-21", "name": "Hari Raya Aidilfitri" },
+            { "date": "2026-03-22", "name": "Hari Raya Aidilfitri" },
+            { "date": "2026-03-23", "name": "Hari Raya Aidilfitri" },
+            { "date": "2026-05-01", "name": "Labour Day" },
+            { "date": "2026-05-27", "name": "Hari Raya Haji" },
+            { "date": "2026-05-31", "name": "Wesak Day" },
+            { "date": "2026-06-01", "name": "Agong's Birthday" },
+            { "date": "2026-06-02", "name": "Wesak Day (Observed)" },
+            { "date": "2026-06-17", "name": "Awal Muharram" },
+            { "date": "2026-08-25", "name": "Prophet Muhammad's Birthday" },
+            { "date": "2026-08-31", "name": "National Day" },
+            { "date": "2026-09-16", "name": "Malaysia Day" },
+            { "date": "2026-11-08", "name": "Deepavali" },
+            { "date": "2026-11-09", "name": "Deepavali (Observed)" },
+            { "date": "2026-12-25", "name": "Christmas Day" }
         ]
     }
 ]

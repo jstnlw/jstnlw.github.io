@@ -4,14 +4,13 @@ const MONTHS = [
 	"January", "February", "March", "April", "May", "June",
 	"July", "August", "September", "October", "November", "December"
 ];
-const MONTH_INDEX = Object.fromEntries(MONTHS.map((m, i) => [m, i]));
 const WEEKDAYS_SHORT = ["M", "T", "W", "T", "F", "S", "S"];
 
 const CURRENT_YEAR = new Date().getFullYear();
 const DAY_MS = 86400000;
-// Full patch cycle in days. highlightRange defaults to DEFAULT_INTERVAL - 1,
-// so a patch's last day is the day before the next one starts
+// Full patch cycle in days when a game has no autoInterval (autoInterval + 1 otherwise)
 const DEFAULT_INTERVAL = 42;
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 const STORAGE_KEY = "gachaverse_toggles";
 const DATA_URL = "highlight-dates.json";
@@ -98,8 +97,8 @@ class CalendarManager {
 	 * Builds CSS class names used by index.html:
 	 *   highlight-{shorthand}-patch
 	 *   highlight-{shorthand}-livestream
-	 *   highlight-{shorthand}-patch-banner-one
-	 *   highlight-{shorthand}-patch-banner-two
+	 *   highlight-{shorthand}-patch-phase-one
+	 *   highlight-{shorthand}-patch-phase-two
 	 */
 	static getClassName(shorthand, type, suffix = "") {
 		return `highlight-${shorthand.toLowerCase()}-${type}${suffix}`;
@@ -115,21 +114,15 @@ class CalendarManager {
 
 	// ─── Patch Lookups ─────────────────────────────────────────────────────────
 
-	// Single source of truth for reading a patch start date off a version entry
-	getPatchDate(version) {
-		const patch = version?.dates?.find(d => d.type === "patch");
-		return patch ? new Date(CURRENT_YEAR, MONTH_INDEX[patch.month], patch.day) : null;
-	}
-
 	/**
 	 * Yields { version, date, days } for every patch of a game still ahead of today.
-	 * Reads game.versions after autoPopulatePatchesForYear, so filled patches count.
+	 * Reads game.versions after normalizeGames, so auto-filled patches count.
 	 */
 	*upcomingPatches(game) {
-		for (const version of game?.versions ?? []) {
-			const date = this.getPatchDate(version);
-			if (!date || date <= this.today) continue;
-			yield { version: version.version, date, days: CalendarManager.daysBetween(this.today, date) };
+		for (const patch of game?.versions ?? []) {
+			const date = CalendarManager.parseLocalDate(patch.phaseOne);
+			if (date <= this.today) continue;
+			yield { version: patch.version, date, days: CalendarManager.daysBetween(this.today, date) };
 		}
 	}
 
@@ -165,42 +158,41 @@ class CalendarManager {
 	// ─── Event Processing ──────────────────────────────────────────────────────
 
 	// Pass `games` to limit the lookup, e.g. a single game being toggled back on
-	getEventsForDate(dateObj, games = this.globalData) {
+	getEventsForDate(dateStr, games = this.globalData) {
 		const events = [];
 		for (const game of games) {
 			// game.versions → patch/livestream events; only shown when toggled on
 			if (game.versions && this.activeGames.has(game.shorthand)) {
-				this.collectVersionEvents(game, dateObj, events);
+				this.collectVersionEvents(game, dateStr, events);
 			}
 			// game.dates → holiday entries (Holidays game); always visible
 			if (game.dates) {
-				this.collectHolidayEvents(game, dateObj, events);
+				this.collectHolidayEvents(game, dateStr, events);
 			}
 		}
 		return CalendarManager.sortByType(events, e => e.dateType);
 	}
 
-	collectVersionEvents(game, dateObj, events) {
-		for (const version of game.versions) {
-			for (const date of version.dates) {
-				if (!this.isDateMatch(date, dateObj)) continue;
-				const vNum = this.formatVersionNumber(version.version);
-				const label = `${game.shorthand.toUpperCase()} ${this.capitalize(date.type)} v${vNum}`;
-				events.push(this.buildEvent(label, dateObj, game.shorthand, date, version));
+	collectVersionEvents(game, dateStr, events) {
+		const shorthand = game.shorthand.toUpperCase();
+
+		for (const patch of game.versions) {
+			const vNum = this.formatVersionNumber(patch.version);
+
+			if (patch.phaseOne === dateStr) {
+				events.push(this.buildEvent(`${shorthand} Patch v${vNum}`, game.shorthand, "patch", patch));
+			}
+			if (patch.livestream === dateStr) {
+				events.push(this.buildEvent(`${shorthand} Livestream v${vNum}`, game.shorthand, "livestream", patch));
 			}
 		}
 	}
 
-	collectHolidayEvents(game, dateObj, events) {
-		for (const date of game.dates) {
-			if (!this.isDateMatch(date, dateObj)) continue;
-			const d = date.type ? date : { ...date, type: "holiday" };
-			events.push(this.buildEvent(date.name, dateObj, "holiday", d, {}));
+	collectHolidayEvents(game, dateStr, events) {
+		for (const holiday of game.dates) {
+			if (holiday.date !== dateStr) continue;
+			events.push(this.buildEvent(holiday.name, "holiday", "holiday", null));
 		}
-	}
-
-	isDateMatch(date, dateObj) {
-		return MONTH_INDEX[date.month] === dateObj.getMonth() && date.day === dateObj.getDate();
 	}
 
 	// toFixed(1) also rounds away float drift from the auto-fill increments
@@ -208,29 +200,8 @@ class CalendarManager {
 		return version.toFixed(1);
 	}
 
-	capitalize(str) {
-		return str.charAt(0).toUpperCase() + str.slice(1);
-	}
-
-	/**
-	 * Date model for a patch, counted in days after the patch start day:
-	 *   start        = patch day
-	 *   phase 1      = days 1 to bannerOne          (banner-one)
-	 *   phase 2      = days bannerOne + 1 to range  (banner-two)
-	 *   end          = start + highlightRange
-	 * Setting bannerOne equal to highlightRange makes a single phase patch.
-	 */
-	buildEvent(text, currentDate, patchType, date, version) {
-		const highlightRange = version.highlightRange ?? DEFAULT_INTERVAL - 1;
-		return Object.freeze({
-			text,
-			currentDate,
-			patchType,
-			isPatch: date.type === "patch",
-			highlightRange,
-			bannerOne: version.bannerOne ?? Math.floor(highlightRange / 2),
-			dateType: date.type
-		});
+	buildEvent(text, patchType, dateType, patch) {
+		return Object.freeze({ text, patchType, dateType, patch });
 	}
 
 	// ─── Styling ───────────────────────────────────────────────────────────────
@@ -275,7 +246,7 @@ class CalendarManager {
 	 *   .toggle-{s}                         → toggle button background
 	 *   .highlight-{s}-livestream           → border-radius: 50%  (from CSS .is-livestream)
 	 *   .highlight-{s}-patch                → border-radius: var(--radius-day) (from CSS .is-patch)
-	 *   .highlight-{s}-patch-banner-one/two → from CSS [class*="banner-one/two"]
+	 *   .highlight-{s}-patch-phase-one/two → from CSS [class*="phase-one/two"]
 	 *   .toggle-{s}::before                 → icon background image
 	 *   .highlight-holiday                  → colored text for holiday dates
 	 */
@@ -298,8 +269,8 @@ class CalendarManager {
 		.highlight-${s}-patch {
 			background: ${color};
 		}
-		.highlight-${s}-patch-banner-one,
-		.highlight-${s}-patch-banner-two {
+		.highlight-${s}-patch-phase-one,
+		.highlight-${s}-patch-phase-two {
 			background: ${color} !important;
 		}
 		${iconRule}
@@ -384,12 +355,12 @@ class CalendarManager {
 	// ─── Highlight Management ──────────────────────────────────────────────────
 
 	removeHighlights(shorthand) {
-		// Built via getClassName so the banner suffixes match what hover actually adds
+		// Built via getClassName so the phase suffixes match what hover actually adds
 		const classes = [
 			CalendarManager.getClassName(shorthand, "livestream"),
 			CalendarManager.getClassName(shorthand, "patch"),
-			CalendarManager.getClassName(shorthand, "patch", "-banner-one"),
-			CalendarManager.getClassName(shorthand, "patch", "-banner-two")
+			CalendarManager.getClassName(shorthand, "patch", "-phase-one"),
+			CalendarManager.getClassName(shorthand, "patch", "-phase-two")
 		];
 
 		this.dayElements.forEach(dayDiv => {
@@ -403,7 +374,7 @@ class CalendarManager {
 		if (!game?.versions) return;
 
 		this.dayElements.forEach((dayDiv, dateStr) => {
-			const events = this.getEventsForDate(CalendarManager.parseLocalDate(dateStr), [game]);
+			const events = this.getEventsForDate(dateStr, [game]);
 			if (!events.length) return;
 			this.applyEventClasses(dayDiv, events);
 		});
@@ -440,7 +411,7 @@ class CalendarManager {
 
 	/**
 	 * Returns only the primary highlight classes (patch/livestream),
-	 * excluding banner-one/two — those are transient hover-only classes.
+	 * excluding phase-one/two — those are transient hover-only classes.
 	 */
 	getHighlightClasses(classList) {
 		return Array.from(classList).filter(
@@ -570,7 +541,7 @@ class CalendarManager {
 	 * Binds one day, replacing any handler already on it.
 	 * Today always gets a handler so its countdown tooltip works on a bare day.
 	 */
-	bindDayHandler(dayDiv, dateStr, events = this.getEventsForDate(CalendarManager.parseLocalDate(dateStr))) {
+	bindDayHandler(dayDiv, dateStr, events = this.getEventsForDate(dateStr)) {
 		dayDiv._dayHandler?.detach();
 		dayDiv._dayHandler = null;
 
@@ -619,86 +590,116 @@ class CalendarManager {
 			throw new Error(`Failed to fetch ${DATA_URL}: ${res.status} ${res.statusText}`);
 		}
 		const data = await res.json();
-		this.autoPopulatePatchesForYear(data, CURRENT_YEAR);
+		this.normalizeGames(data, CURRENT_YEAR);
 		return data;
 	}
 
-	// ─── Auto Interval ─────────────────────────────────────────────────────────
+	// ─── Patch Dates ───────────────────────────────────────────────────────────
 
 	/**
-	 * Fills missing patches for the current year, per game:
-	 *   1. Cycle length = autoInterval + 1 (or DEFAULT_INTERVAL). autoInterval uses the
-	 *      same meaning as highlightRange, so autoInterval 41 means a 42 day cycle.
-	 *   2. After each listed patch, the next one is expected on start + highlightRange + 1.
-	 *   3. Between two listed patches, a patch is only inserted when at least half a
-	 *      cycle is left before the next listed one, and its version stays below it.
-	 *      A shorter gap is treated as the current patch running long, not a missing one.
-	 *   4. After the last listed patch, patches are added until the year ends.
-	 *   5. Every patch's range is then trimmed so it ends the day before the next starts.
-	 * Optional per-game lastMinor (e.g. 8) rolls x.8 over to (x+1).0.
+	 * Turns each game's JSON versions into complete patches, all dates as "YYYY-MM-DD":
+	 *   { version, livestream, phaseOne, phaseTwo, end }
+	 *
+	 * Date rules:
+	 *   Phase 1 = phaseOne up to the day before phaseTwo
+	 *   Phase 2 = phaseTwo up to end
+	 *   end     = the day before the next patch's phaseOne, or one cycle after
+	 *             phaseOne for the last patch
+	 *   A JSON entry without phaseTwo is Phase 1 for the whole patch.
+	 *
+	 * Auto-fill (cycle = autoInterval + 1, or DEFAULT_INTERVAL):
+	 *   After each JSON entry the next patch is expected one cycle later.
+	 *   Between two JSON entries, a patch is only added when at least half a cycle
+	 *   is left and its version stays below the next listed one.
+	 *   After the last JSON entry, patches are added until the year ends.
+	 *   Auto-filled patches always get phaseTwo at the halfway point.
 	 */
-	autoPopulatePatchesForYear(games, year) {
+	normalizeGames(games, year) {
 		for (const game of games) {
-			if (!game.versions?.length) continue;
+			if (!Array.isArray(game.versions)) continue;
+			if (game.active === false) {
+				game.versions = [];
+				continue;
+			}
 
 			const cycle = game.autoInterval !== undefined ? game.autoInterval + 1 : DEFAULT_INTERVAL;
-			const minGap = Math.ceil(cycle / 2);
-			const filled = [];
+			const listed = this.readListedVersions(game);
+			const patches = [];
 
-			game.versions.forEach((curr, i) => {
-				filled.push(curr);
-
-				const start = this.getPatchDate(curr);
-				if (!start) return;
-
-				const next = game.versions[i + 1];
-				const boundary = this.getPatchDate(next);
-
-				let cursor = CalendarManager.addDays(start, (curr.highlightRange ?? cycle - 1) + 1);
-				let vNum = this.nextVersionNumber(curr.version, game.lastMinor);
-
-				while (cursor.getFullYear() === year) {
-					if (boundary) {
-						if (CalendarManager.daysBetween(cursor, boundary) < minGap) break;
-						if (vNum >= next.version) break;
-					}
-
-					filled.push({
-						version: vNum,
-						// bannerOne intentionally omitted so buildEvent uses the default
-						highlightRange: cycle - 1,
-						dates: [{ type: "patch", month: MONTHS[cursor.getMonth()], day: cursor.getDate() }]
-					});
-					cursor = CalendarManager.addDays(cursor, cycle);
-					vNum = this.nextVersionNumber(vNum, game.lastMinor);
-				}
+			listed.forEach((curr, i) => {
+				patches.push(curr);
+				this.fillGap(patches, curr, listed[i + 1], cycle, year);
 			});
 
-			game.versions = filled;
-			this.trimOverlappingRanges(game.versions, cycle);
+			this.setEndDates(patches, cycle);
+			game.versions = patches;
 		}
 	}
 
-	// A patch never runs past the day before the next patch of the same game
-	trimOverlappingRanges(versions, cycle) {
-		versions.forEach((curr, i) => {
-			const start = this.getPatchDate(curr);
-			const nextStart = this.getPatchDate(versions[i + 1]);
-			if (!start || !nextStart) return;
+	// Keeps valid JSON entries, sorted by start date
+	readListedVersions(game) {
+		return game.versions
+			.filter(v => {
+				const ok = DATE_PATTERN.test(v.phaseOne ?? "");
+				if (!ok) console.warn(`${game.shorthand} v${v.version}: phaseOne must be YYYY-MM-DD`, v);
+				return ok;
+			})
+			.map(v => ({
+				version: v.version,
+				livestream: DATE_PATTERN.test(v.livestream ?? "") ? v.livestream : null,
+				phaseOne: v.phaseOne,
+				phaseTwo: DATE_PATTERN.test(v.phaseTwo ?? "") ? v.phaseTwo : null
+			}))
+			.sort((a, b) => a.phaseOne.localeCompare(b.phaseOne));
+	}
 
-			const maxRange = CalendarManager.daysBetween(start, nextStart) - 1;
-			const range = curr.highlightRange ?? cycle - 1;
-			if (range > maxRange) curr.highlightRange = maxRange;
+	// Adds auto-filled patches after `curr`, up to `next` or the end of the year
+	fillGap(patches, curr, next, cycle, year) {
+		const halfCycle = Math.ceil(cycle / 2);
+		const boundary = next ? CalendarManager.parseLocalDate(next.phaseOne) : null;
+
+		let cursor = CalendarManager.addDays(CalendarManager.parseLocalDate(curr.phaseOne), cycle);
+		let vNum = this.nextVersionNumber(curr.version);
+
+		while (cursor.getFullYear() === year) {
+			if (boundary) {
+				if (CalendarManager.daysBetween(cursor, boundary) < halfCycle) break;
+				if (vNum >= next.version) break;
+			}
+
+			patches.push({
+				version: vNum,
+				livestream: null,
+				phaseOne: CalendarManager.formatLocalDate(cursor),
+				phaseTwo: CalendarManager.formatLocalDate(
+					CalendarManager.addDays(cursor, Math.floor((cycle - 1) / 2) + 1)
+				)
+			});
+			cursor = CalendarManager.addDays(cursor, cycle);
+			vNum = this.nextVersionNumber(vNum);
+		}
+	}
+
+	// Each patch ends the day before the next one starts; the last runs one cycle
+	setEndDates(patches, cycle) {
+		patches.forEach((patch, i) => {
+			const start = CalendarManager.parseLocalDate(patch.phaseOne);
+			const next = patches[i + 1];
+			const end = next
+				? CalendarManager.addDays(CalendarManager.parseLocalDate(next.phaseOne), -1)
+				: CalendarManager.addDays(start, cycle - 1);
+
+			patch.end = CalendarManager.formatLocalDate(end);
+			// A phaseTwo outside the patch would never show, so drop it
+			if (patch.phaseTwo && (patch.phaseTwo <= patch.phaseOne || patch.phaseTwo > patch.end)) {
+				console.warn(`v${patch.version}: phaseTwo ${patch.phaseTwo} is outside the patch`, patch);
+				patch.phaseTwo = null;
+			}
 		});
 	}
 
-	nextVersionNumber(version, lastMinor) {
-		const next = Math.round((version + 0.1) * 10) / 10;
-		if (lastMinor === undefined) return next;
-
-		const major = Math.floor(version + 1e-9);
-		const minor = Math.round((version - major) * 10);
-		return minor >= lastMinor ? major + 1 : next;
+	nextVersionNumber(version) {
+		return Math.round((version + 0.1) * 10) / 10;
 	}
 
 	// ─── Grid ──────────────────────────────────────────────────────────────────
@@ -769,7 +770,7 @@ class CalendarManager {
 
 		if (dateStr === this.todayStr) dayDiv.classList.add("today");
 
-		const events = this.getEventsForDate(dateObj);
+		const events = this.getEventsForDate(dateStr);
 		this.applyEventClasses(dayDiv, events);
 		this.bindDayHandler(dayDiv, dateStr, events);
 		return dayDiv;
@@ -829,22 +830,25 @@ class DayEventHandler {
 	}
 
 	/**
-	 * Adds or removes banner-one/two classes from the day after the start up to the end.
-	 * See buildEvent for the phase 1 / phase 2 split.
+	 * Adds or removes phase-one/two classes from the day after phaseOne up to end.
+	 * Days before phaseTwo are Phase 1; from phaseTwo onward they are Phase 2.
+	 * ISO date strings compare correctly as plain strings.
 	 */
 	setHighlightRange(event, add) {
-		if (!event.isPatch) return;
+		if (event.dateType !== "patch") return;
 
-		for (let i = 1; i <= event.highlightRange; i++) {
-			const dateKey = CalendarManager.formatLocalDate(
-				CalendarManager.addDays(event.currentDate, i)
-			);
+		const { phaseOne, phaseTwo, end } = event.patch;
+		let cursor = CalendarManager.addDays(CalendarManager.parseLocalDate(phaseOne), 1);
+		let dateKey = CalendarManager.formatLocalDate(cursor);
+
+		while (dateKey <= end) {
 			const target = this.calendar.dayElements.get(dateKey);
-			if (!target) continue;
-
-			const suffix = i <= event.bannerOne ? "-banner-one" : "-banner-two";
-			const cls = CalendarManager.getClassName(event.patchType, event.dateType, suffix);
-			target.classList.toggle(cls, add);
+			if (target) {
+				const suffix = phaseTwo && dateKey >= phaseTwo ? "-phase-two" : "-phase-one";
+				target.classList.toggle(CalendarManager.getClassName(event.patchType, "patch", suffix), add);
+			}
+			cursor = CalendarManager.addDays(cursor, 1);
+			dateKey = CalendarManager.formatLocalDate(cursor);
 		}
 	}
 
@@ -881,7 +885,7 @@ class DayEventHandler {
 
 		this.isHovering = false;
 		this.calendar.removeTooltip();
-		// Clear banner ranges for all visible patch events
+		// Clear phase ranges for all visible patch events
 		this.visibleEvents().forEach(e => this.setHighlightRange(e, false));
 	}
 }
