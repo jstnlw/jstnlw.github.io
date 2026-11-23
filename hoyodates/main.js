@@ -17,6 +17,9 @@ const DATA_URL = "highlight-dates.json";
 const SITE_TITLE_PREFIX = "Gachaverse";
 const MOBILE_BREAKPOINT = 480;
 
+const NEXT_YEAR_PREVIEW = true;
+const NEXT_YEAR_PREVIEW_MONTHS = 4;
+
 // Sort weight for day classes: patch wins over livestream, holiday last
 const TYPE_PRIORITY = { patch: 0, livestream: 1 };
 const TYPE_PRIORITY_DEFAULT = 2;
@@ -34,6 +37,8 @@ class CalendarManager {
 		this.colorCache = new Map();
 		// dateStr → .day element, so hover ranges never re-query the document
 		this.dayElements = new Map();
+		// Months appended from the next year; 0 when there is no preview
+		this.previewMonths = 0;
 
 		// Cache today once to avoid repeated Date constructions
 		this.today = CalendarManager.startOfDay(new Date());
@@ -562,7 +567,8 @@ class CalendarManager {
 	scrollToCurrentMonth() {
 		if (!CalendarManager.isMobile()) return;
 
-		const el = this.calendarEl.children[this.today.getMonth()];
+		const monthKey = this.todayStr.slice(0, 7);
+		const el = this.calendarEl.querySelector(`.month[data-month="${monthKey}"]`);
 		if (!el) return;
 
 		setTimeout(() =>
@@ -590,8 +596,39 @@ class CalendarManager {
 			throw new Error(`Failed to fetch ${DATA_URL}: ${res.status} ${res.statusText}`);
 		}
 		const data = await res.json();
-		this.normalizeGames(data, CURRENT_YEAR);
+
+		this.previewMonths = NEXT_YEAR_PREVIEW && this.hasDatesAfterYear(data, CURRENT_YEAR)
+			? NEXT_YEAR_PREVIEW_MONTHS
+			: 0;
+		this.normalizeGames(data, this.getRangeEnd(CURRENT_YEAR));
 		return data;
+	}
+
+	// ─── Calendar Range ────────────────────────────────────────────────────────
+
+	/**
+	 * True when any active game or holiday in the JSON has a date after `year`.
+	 * Only JSON dates count, so auto-filled patches never trigger the preview.
+	 */
+	hasDatesAfterYear(games, year) {
+		const limit = `${year}-12-31`;
+		const isAfter = d => DATE_PATTERN.test(d ?? "") && d > limit;
+
+		return games.some(game => {
+			if (game.active === false) return false;
+			const versionHit = (game.versions ?? []).some(v =>
+				isAfter(v.phaseOne) || isAfter(v.phaseTwo) || isAfter(v.livestream)
+			);
+			const holidayHit = (game.dates ?? []).some(h => isAfter(h.date));
+			return versionHit || holidayHit;
+		});
+	}
+
+	// Last rendered day: Dec 31, or the last day of the final preview month
+	getRangeEnd(year) {
+		return this.previewMonths
+			? new Date(year + 1, this.previewMonths, 0)
+			: new Date(year, 11, 31);
 	}
 
 	// ─── Patch Dates ───────────────────────────────────────────────────────────
@@ -611,10 +648,12 @@ class CalendarManager {
 	 *   After each JSON entry the next patch is expected one cycle later.
 	 *   Between two JSON entries, a patch is only added when at least half a cycle
 	 *   is left and its version stays below the next listed one.
-	 *   After the last JSON entry, patches are added until the year ends.
+	 *   After the last JSON entry, patches are added until rangeEnd, which is the
+	 *   end of the year or the end of the next-year preview. Because it fills by
+	 *   date rather than by year, last year's JSON still fills into a new year.
 	 *   Auto-filled patches always get phaseTwo at the halfway point.
 	 */
-	normalizeGames(games, year) {
+	normalizeGames(games, rangeEnd) {
 		for (const game of games) {
 			if (!Array.isArray(game.versions)) continue;
 			if (game.active === false) {
@@ -628,7 +667,7 @@ class CalendarManager {
 
 			listed.forEach((curr, i) => {
 				patches.push(curr);
-				this.fillGap(patches, curr, listed[i + 1], cycle, year);
+				this.fillGap(patches, curr, listed[i + 1], cycle, rangeEnd);
 			});
 
 			this.setEndDates(patches, cycle);
@@ -653,15 +692,15 @@ class CalendarManager {
 			.sort((a, b) => a.phaseOne.localeCompare(b.phaseOne));
 	}
 
-	// Adds auto-filled patches after `curr`, up to `next` or the end of the year
-	fillGap(patches, curr, next, cycle, year) {
+	// Adds auto-filled patches after `curr`, up to `next` or rangeEnd
+	fillGap(patches, curr, next, cycle, rangeEnd) {
 		const halfCycle = Math.ceil(cycle / 2);
 		const boundary = next ? CalendarManager.parseLocalDate(next.phaseOne) : null;
 
 		let cursor = CalendarManager.addDays(CalendarManager.parseLocalDate(curr.phaseOne), cycle);
 		let vNum = this.nextVersionNumber(curr.version);
 
-		while (cursor.getFullYear() === year) {
+		while (cursor <= rangeEnd) {
 			if (boundary) {
 				if (CalendarManager.daysBetween(cursor, boundary) < halfCycle) break;
 				if (vNum >= next.version) break;
@@ -712,12 +751,32 @@ class CalendarManager {
 		for (let month = 0; month < 12; month++) {
 			fragment.appendChild(this.createMonthElement(month, year));
 		}
+
+		if (this.previewMonths) {
+			fragment.appendChild(this.createYearTitle(year + 1));
+			for (let month = 0; month < this.previewMonths; month++) {
+				const monthDiv = this.createMonthElement(month, year + 1);
+				monthDiv.classList.add("is-preview");
+				// 1-based, so CSS can hide [data-preview="4"] on tablet and 3+ on mobile
+				monthDiv.dataset.preview = month + 1;
+				fragment.appendChild(monthDiv);
+			}
+		}
 		this.calendarEl.appendChild(fragment);
+	}
+
+	// Full-width heading placed in the grid above the preview months
+	createYearTitle(year) {
+		const title = document.createElement("h2");
+		title.className = "year-title";
+		title.textContent = year;
+		return title;
 	}
 
 	createMonthElement(month, year) {
 		const monthDiv = document.createElement("div");
 		monthDiv.className = "month";
+		monthDiv.dataset.month = `${year}-${String(month + 1).padStart(2, "0")}`;
 
 		const header = document.createElement("div");
 		header.className = "month-header";
